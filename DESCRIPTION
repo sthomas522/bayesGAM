@@ -1,0 +1,51 @@
+Package: mvgamHMC
+Title: Fit Multivariate Response Generalized Additive Models using Hamiltonian Monte Carlo
+Version: 0.0.1
+Authors@R: 
+    c(person(given = "Samuel",
+             family = "Thomas",
+             role = c("cre", "aut"),
+             email = "samthoma@iu.edu"),
+      person(given = "Wanzhu",
+             family = "Tu",
+             role = "ctb",
+             email = "wtu1@iu.edu"), 
+      person(given = "Trustees of Columbia University (R/rstanMethods.R)", 
+             role = "cph"))
+Description: The mvgamHMC package is designed to provide a user friendly option to fit univariate and multivariate response Generalized Additive Models (GAM) using Hamiltonian Monte Carlo (HMC) with few technical burdens.  The R functions in this package use rstan (Stan Development Team 2020)  to call Stan routines that run the HMC simulations. The Stan code for these models is already translated to C++ and pre-compiled for the user. The programming formulation for models in mvgamHMC is designed to be familiar to statisticians and analysts who fit statistical models in R.
+Maintainer: Samuel Thomas <samthoma@iu.edu>
+Depends: R (>= 3.6)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Biarch: true
+Imports: 
+    methods,
+    Rcpp,
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    rstantools (>= 2.1.0.9000),
+    stats,
+    graphics,
+    cluster,
+    SemiPar,
+    ggplot2,
+    corrplot,
+    mlbench,
+    bayesplot,
+    boot,
+    gridExtra,
+    loo,
+    robustbase
+LinkingTo: 
+    BH (>= 1.66.0),
+    Rcpp (>= 0.12.0),
+    RcppEigen (>= 0.3.3.3.0),
+    RcppParallel (>= 5.0.1),
+    rstan (>= 2.18.1),
+    StanHeaders (>= 2.18.0)
+Suggests: 
+    testthat
+SystemRequirements: GNU make
