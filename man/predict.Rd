@@ -2,15 +2,15 @@
 % Please edit documentation in R/AllMethods.R
 \name{predict}
 \alias{predict}
-\alias{predict,mvgamHMCfit-method}
-\title{Posterior predictive samples from models fit by \code{mvgamHMC}, but with new data}
+\alias{predict,bayesGAMfit-method}
+\title{Posterior predictive samples from models fit by \code{bayesGAM}, but with new data}
 \usage{
-\S4method{predict}{mvgamHMCfit}(object, newdata, draws = NULL, ...)
+\S4method{predict}{bayesGAMfit}(object, newdata, draws = NULL, ...)
 }
 \arguments{
-\item{object}{Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.}
+\item{object}{Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.}
 
-\item{newdata}{A data frame with new data applied to the \code{mvgamHMCfit} object}
+\item{newdata}{A data frame with new data applied to the \code{bayesGAMfit} object}
 
 \item{draws}{An integer indicating the number of draws to return. The default and maximum number of draws is the size of the posterior sample.}
 
@@ -24,7 +24,7 @@ Draw from the posterior predictive distribution applied to new data
 }
 \examples{
 set.seed(432)
-f <- mvgamHMC(weight ~ np(height), data = women,
+f <- bayesGAM(weight ~ np(height), data = women,
               family = gaussian, iter=500, chains = 1)
 newheights <- with(women, rnorm(10, mean = mean(height)), sd=sd(height))
 women2 <- data.frame(height=newheights)

@@ -3,46 +3,46 @@
 \name{mcmc_plots}
 \alias{mcmc_plots}
 \alias{mcmc_intervals}
-\alias{mcmc_intervals,mvgamHMCfit-method}
+\alias{mcmc_intervals,bayesGAMfit-method}
 \alias{mcmc_areas}
-\alias{mcmc_areas,mvgamHMCfit-method}
+\alias{mcmc_areas,bayesGAMfit-method}
 \alias{mcmc_hist}
-\alias{mcmc_hist,mvgamHMCfit-method}
+\alias{mcmc_hist,bayesGAMfit-method}
 \alias{mcmc_hist_by_chain}
-\alias{mcmc_hist_by_chain,mvgamHMCfit-method}
+\alias{mcmc_hist_by_chain,bayesGAMfit-method}
 \alias{mcmc_dens}
-\alias{mcmc_dens,mvgamHMCfit-method}
+\alias{mcmc_dens,bayesGAMfit-method}
 \alias{mcmc_scatter}
-\alias{mcmc_scatter,mvgamHMCfit-method}
+\alias{mcmc_scatter,bayesGAMfit-method}
 \alias{mcmc_hex}
-\alias{mcmc_hex,mvgamHMCfit-method}
+\alias{mcmc_hex,bayesGAMfit-method}
 \alias{mcmc_pairs}
-\alias{mcmc_pairs,mvgamHMCfit-method}
+\alias{mcmc_pairs,bayesGAMfit-method}
 \alias{mcmc_acf}
-\alias{mcmc_acf,mvgamHMCfit-method}
+\alias{mcmc_acf,bayesGAMfit-method}
 \alias{mcmc_acf_bar}
-\alias{mcmc_acf_bar,mvgamHMCfit-method}
+\alias{mcmc_acf_bar,bayesGAMfit-method}
 \alias{mcmc_trace}
-\alias{mcmc_trace,mvgamHMCfit-method}
+\alias{mcmc_trace,bayesGAMfit-method}
 \alias{mcmc_rhat}
-\alias{mcmc_rhat,mvgamHMCfit-method}
+\alias{mcmc_rhat,bayesGAMfit-method}
 \alias{mcmc_rhat_hist}
-\alias{mcmc_rhat_hist,mvgamHMCfit-method}
+\alias{mcmc_rhat_hist,bayesGAMfit-method}
 \alias{mcmc_rhat_data}
-\alias{mcmc_rhat_data,mvgamHMCfit-method}
+\alias{mcmc_rhat_data,bayesGAMfit-method}
 \alias{mcmc_neff}
-\alias{mcmc_neff,mvgamHMCfit-method}
+\alias{mcmc_neff,bayesGAMfit-method}
 \alias{mcmc_neff_hist}
-\alias{mcmc_neff_hist,mvgamHMCfit-method}
+\alias{mcmc_neff_hist,bayesGAMfit-method}
 \alias{mcmc_neff_data}
-\alias{mcmc_neff_data,mvgamHMCfit-method}
+\alias{mcmc_neff_data,bayesGAMfit-method}
 \alias{mcmc_violin}
-\alias{mcmc_violin,mvgamHMCfit-method}
+\alias{mcmc_violin,bayesGAMfit-method}
 \title{Plotting for MCMC visualization and diagnostics provided by \code{bayesplot} package}
 \usage{
 mcmc_intervals(object, ...)
 
-\S4method{mcmc_intervals}{mvgamHMCfit}(
+\S4method{mcmc_intervals}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -50,7 +50,7 @@ mcmc_intervals(object, ...)
 
 mcmc_areas(object, ...)
 
-\S4method{mcmc_areas}{mvgamHMCfit}(
+\S4method{mcmc_areas}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -58,7 +58,7 @@ mcmc_areas(object, ...)
 
 mcmc_hist(object, ...)
 
-\S4method{mcmc_hist}{mvgamHMCfit}(
+\S4method{mcmc_hist}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -66,7 +66,7 @@ mcmc_hist(object, ...)
 
 mcmc_hist_by_chain(object, ...)
 
-\S4method{mcmc_hist_by_chain}{mvgamHMCfit}(
+\S4method{mcmc_hist_by_chain}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -74,7 +74,7 @@ mcmc_hist_by_chain(object, ...)
 
 mcmc_dens(object, ...)
 
-\S4method{mcmc_dens}{mvgamHMCfit}(
+\S4method{mcmc_dens}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -82,7 +82,7 @@ mcmc_dens(object, ...)
 
 mcmc_scatter(object, ...)
 
-\S4method{mcmc_scatter}{mvgamHMCfit}(
+\S4method{mcmc_scatter}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -90,7 +90,7 @@ mcmc_scatter(object, ...)
 
 mcmc_hex(object, ...)
 
-\S4method{mcmc_hex}{mvgamHMCfit}(
+\S4method{mcmc_hex}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -98,7 +98,7 @@ mcmc_hex(object, ...)
 
 mcmc_pairs(object, ...)
 
-\S4method{mcmc_pairs}{mvgamHMCfit}(
+\S4method{mcmc_pairs}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -106,7 +106,7 @@ mcmc_pairs(object, ...)
 
 mcmc_acf(object, ...)
 
-\S4method{mcmc_acf}{mvgamHMCfit}(
+\S4method{mcmc_acf}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -114,7 +114,7 @@ mcmc_acf(object, ...)
 
 mcmc_acf_bar(object, ...)
 
-\S4method{mcmc_acf_bar}{mvgamHMCfit}(
+\S4method{mcmc_acf_bar}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -122,7 +122,7 @@ mcmc_acf_bar(object, ...)
 
 mcmc_trace(object, ...)
 
-\S4method{mcmc_trace}{mvgamHMCfit}(
+\S4method{mcmc_trace}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -130,7 +130,7 @@ mcmc_trace(object, ...)
 
 mcmc_rhat(object, ...)
 
-\S4method{mcmc_rhat}{mvgamHMCfit}(
+\S4method{mcmc_rhat}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -138,7 +138,7 @@ mcmc_rhat(object, ...)
 
 mcmc_rhat_hist(object, ...)
 
-\S4method{mcmc_rhat_hist}{mvgamHMCfit}(
+\S4method{mcmc_rhat_hist}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -146,7 +146,7 @@ mcmc_rhat_hist(object, ...)
 
 mcmc_rhat_data(object, ...)
 
-\S4method{mcmc_rhat_data}{mvgamHMCfit}(
+\S4method{mcmc_rhat_data}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -154,7 +154,7 @@ mcmc_rhat_data(object, ...)
 
 mcmc_neff(object, ...)
 
-\S4method{mcmc_neff}{mvgamHMCfit}(
+\S4method{mcmc_neff}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -162,7 +162,7 @@ mcmc_neff(object, ...)
 
 mcmc_neff_hist(object, ...)
 
-\S4method{mcmc_neff_hist}{mvgamHMCfit}(
+\S4method{mcmc_neff_hist}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -170,7 +170,7 @@ mcmc_neff_hist(object, ...)
 
 mcmc_neff_data(object, ...)
 
-\S4method{mcmc_neff_data}{mvgamHMCfit}(
+\S4method{mcmc_neff_data}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
@@ -178,14 +178,14 @@ mcmc_neff_data(object, ...)
 
 mcmc_violin(object, ...)
 
-\S4method{mcmc_violin}{mvgamHMCfit}(
+\S4method{mcmc_violin}{bayesGAMfit}(
   object,
   regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
   ...
 )
 }
 \arguments{
-\item{object}{an object of class \code{mvgamHMCfit}}
+\item{object}{an object of class \code{bayesGAMfit}}
 
 \item{...}{optional additional arguments to pass to the \code{bayesplot} functions}
 
@@ -281,7 +281,7 @@ barplot.
 }
 
 \examples{
-f <- mvgamHMC(weight ~ np(height), data = women, 
+f <- bayesGAM(weight ~ np(height), data = women, 
               family = gaussian, iter=1000, chains = 1)
 mcmc_trace(f)
 }

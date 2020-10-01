@@ -1,4 +1,4 @@
-Package: mvgamHMC
+Package: bayesGAM
 Title: Fit Multivariate Response Generalized Additive Models using Hamiltonian Monte Carlo
 Version: 0.0.1
 Authors@R: 
@@ -12,33 +12,33 @@ Authors@R:
              email = "wtu1@iu.edu"), 
       person(given = "Trustees of Columbia University (R/rstanMethods.R)", 
              role = "cph"))
-Description: The mvgamHMC package is designed to provide a user friendly option to fit univariate and multivariate response Generalized Additive Models (GAM) using Hamiltonian Monte Carlo (HMC) with few technical burdens.  The R functions in this package use rstan (Stan Development Team 2020)  to call Stan routines that run the HMC simulations. The Stan code for these models is already translated to C++ and pre-compiled for the user. The programming formulation for models in mvgamHMC is designed to be familiar to statisticians and analysts who fit statistical models in R.
+Description: The bayesGAM package is designed to provide a user friendly option to fit univariate and multivariate response Generalized Additive Models (GAM) using Hamiltonian Monte Carlo (HMC) with few technical burdens.  The R functions in this package use rstan (Stan Development Team 2020)  to call Stan routines that run the HMC simulations. The Stan code for these models is already translated to C++ and pre-compiled for the user. The programming formulation for models in bayesGAM is designed to be familiar to statisticians and analysts who fit statistical models in R.
 Maintainer: Samuel Thomas <samthoma@iu.edu>
 Depends: R (>= 3.6)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Biarch: true
 Imports: 
-    methods,
-    Rcpp,
-    RcppParallel (>= 5.0.1),
-    rstan (>= 2.18.1),
-    rstantools (>= 2.1.0.9000),
-    stats,
-    graphics,
-    cluster,
-    SemiPar,
-    ggplot2,
-    corrplot,
-    mlbench,
     bayesplot,
     boot,
+    cluster,
+    corrplot,
+    ggplot2,
+    graphics,
     gridExtra,
     loo,
-    robustbase
+    methods,
+    mlbench,
+    Rcpp (>= 0.12.0),
+    RcppParallel (>= 5.0.1),
+    robustbase,
+    rstan (>= 2.18.1),
+    rstantools (>= 2.1.0.9000),
+    SemiPar,
+    stats
 LinkingTo: 
     BH (>= 1.66.0),
     Rcpp (>= 0.12.0),

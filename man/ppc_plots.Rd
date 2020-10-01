@@ -3,63 +3,63 @@
 \name{ppc_plots}
 \alias{ppc_plots}
 \alias{ppc_dens}
-\alias{ppc_dens,mvgamHMCfit-method}
+\alias{ppc_dens,bayesGAMfit-method}
 \alias{ppc_dens,posteriorPredictObject-method}
 \alias{ppc_dens_overlay}
-\alias{ppc_dens_overlay,mvgamHMCfit-method}
+\alias{ppc_dens_overlay,bayesGAMfit-method}
 \alias{ppc_dens_overlay,posteriorPredictObject-method}
 \alias{ppc_hist}
-\alias{ppc_hist,mvgamHMCfit-method}
+\alias{ppc_hist,bayesGAMfit-method}
 \alias{ppc_hist,posteriorPredictObject-method}
 \alias{ppc_boxplot}
-\alias{ppc_boxplot,mvgamHMCfit-method}
+\alias{ppc_boxplot,bayesGAMfit-method}
 \alias{ppc_boxplot,posteriorPredictObject-method}
 \alias{ppc_freqpoly}
-\alias{ppc_freqpoly,mvgamHMCfit-method}
+\alias{ppc_freqpoly,bayesGAMfit-method}
 \alias{ppc_freqpoly,posteriorPredictObject-method}
 \alias{ppc_ecdf_overlay}
-\alias{ppc_ecdf_overlay,mvgamHMCfit-method}
+\alias{ppc_ecdf_overlay,bayesGAMfit-method}
 \alias{ppc_ecdf_overlay,posteriorPredictObject-method}
 \title{Plotting for MCMC visualization and diagnostics provided by \code{bayesplot} package}
 \usage{
 ppc_dens(object, ...)
 
-\S4method{ppc_dens}{mvgamHMCfit}(object, draws = NULL, ...)
+\S4method{ppc_dens}{bayesGAMfit}(object, draws = NULL, ...)
 
 \S4method{ppc_dens}{posteriorPredictObject}(object, ...)
 
 ppc_dens_overlay(object, ...)
 
-\S4method{ppc_dens_overlay}{mvgamHMCfit}(object, draws = NULL, ...)
+\S4method{ppc_dens_overlay}{bayesGAMfit}(object, draws = NULL, ...)
 
 \S4method{ppc_dens_overlay}{posteriorPredictObject}(object, ...)
 
 ppc_hist(object, ...)
 
-\S4method{ppc_hist}{mvgamHMCfit}(object, draws = NULL, ...)
+\S4method{ppc_hist}{bayesGAMfit}(object, draws = NULL, ...)
 
 \S4method{ppc_hist}{posteriorPredictObject}(object, ...)
 
 ppc_boxplot(object, ...)
 
-\S4method{ppc_boxplot}{mvgamHMCfit}(object, draws = NULL, ...)
+\S4method{ppc_boxplot}{bayesGAMfit}(object, draws = NULL, ...)
 
 \S4method{ppc_boxplot}{posteriorPredictObject}(object, ...)
 
 ppc_freqpoly(object, ...)
 
-\S4method{ppc_freqpoly}{mvgamHMCfit}(object, draws = NULL, ...)
+\S4method{ppc_freqpoly}{bayesGAMfit}(object, draws = NULL, ...)
 
 \S4method{ppc_freqpoly}{posteriorPredictObject}(object, ...)
 
 ppc_ecdf_overlay(object, ...)
 
-\S4method{ppc_ecdf_overlay}{mvgamHMCfit}(object, draws = NULL, ...)
+\S4method{ppc_ecdf_overlay}{bayesGAMfit}(object, draws = NULL, ...)
 
 \S4method{ppc_ecdf_overlay}{posteriorPredictObject}(object, ...)
 }
 \arguments{
-\item{object}{an object of class \code{mvgamHMCfit}}
+\item{object}{an object of class \code{bayesGAMfit}}
 
 \item{...}{optional additional arguments to pass to the \code{bayesplot} functions}
 
@@ -97,7 +97,7 @@ Empirical CDF estimates of each dataset (row) in \code{yrep} are overlaid, with 
 }
 
 \examples{
-f <- mvgamHMC(weight ~ np(height), data = women, 
+f <- bayesGAM(weight ~ np(height), data = women, 
               family = gaussian, iter=500, chains = 1)
 ppc_dens(f, draws=2)
 }

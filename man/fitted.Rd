@@ -2,13 +2,13 @@
 % Please edit documentation in R/AllMethods.R
 \name{fitted}
 \alias{fitted}
-\alias{fitted,mvgamHMCfit-method}
-\title{Extract fitted values from a model fit by \code{mvgamHMC}}
+\alias{fitted,bayesGAMfit-method}
+\title{Extract fitted values from a model fit by \code{bayesGAM}}
 \usage{
-\S4method{fitted}{mvgamHMCfit}(object, ...)
+\S4method{fitted}{bayesGAMfit}(object, ...)
 }
 \arguments{
-\item{object}{an object of class \code{mvgamHMCfit}, usually a result of a call to \code{mvgamHMC}.}
+\item{object}{an object of class \code{bayesGAMfit}, usually a result of a call to \code{bayesGAM}.}
 
 \item{...}{additional arguments to pass to \code{coefficients}}
 }
@@ -16,11 +16,11 @@
 Numeric vector of fitted values
 }
 \description{
-Method for \code{mvgamHMCfit} objects.  Extracts the fitted values based on a specified quantile for the posterior distribution. The median is the default.
+Method for \code{bayesGAMfit} objects.  Extracts the fitted values based on a specified quantile for the posterior distribution. The median is the default.
 }
 \examples{
 require(stats); require(graphics)
-f <- mvgamHMC(weight ~ np(height), data = women, family = gaussian, 
+f <- bayesGAM(weight ~ np(height), data = women, family = gaussian, 
               iter = 500, chains = 1)
 plot(fitted(f), women$weight, type='o', xlab="fitted", ylab="actual")
 }

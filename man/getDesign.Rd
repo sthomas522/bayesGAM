@@ -2,18 +2,18 @@
 % Please edit documentation in R/AllMethods.R
 \name{getDesign}
 \alias{getDesign}
-\alias{getDesign,mvgamHMCfit-method}
+\alias{getDesign,bayesGAMfit-method}
 \alias{getDesign,glmModel-method}
-\title{Design matrices from a \code{mvgamHMCfit} object}
+\title{Design matrices from a \code{bayesGAMfit} object}
 \usage{
 getDesign(object, ...)
 
-\S4method{getDesign}{mvgamHMCfit}(object, type = "X")
+\S4method{getDesign}{bayesGAMfit}(object, type = "X")
 
 \S4method{getDesign}{glmModel}(object, type = "X")
 }
 \arguments{
-\item{object}{Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}}
+\item{object}{Object of type \code{bayesGAMfit} generated from \code{bayesGAM}}
 
 \item{...}{Additional arguments for \code{getDesign}}
 
@@ -27,7 +27,7 @@ Contains the design matrices produced for model fitting. The fixed effects desig
 }
 \examples{
 require(stats); require(graphics)
-f <- mvgamHMC(weight ~ np(height), data = women, family = gaussian, 
+f <- bayesGAM(weight ~ np(height), data = women, family = gaussian, 
               iter = 500, chains = 1)
 getDesign(f, "Z")
 }

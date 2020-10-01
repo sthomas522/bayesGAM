@@ -2,24 +2,24 @@
 % Please edit documentation in R/AllMethods.R
 \name{coefficients}
 \alias{coefficients}
-\alias{coefficients,mvgamHMCfit-method}
-\alias{coef,mvgamHMCfit-method}
+\alias{coefficients,bayesGAMfit-method}
+\alias{coef,bayesGAMfit-method}
 \title{Extract Model Coefficients}
 \usage{
-\S4method{coefficients}{mvgamHMCfit}(
+\S4method{coefficients}{bayesGAMfit}(
   object,
   params = c("beta", "eps", "lambda", "u", "sigma", "a"),
   FUN = median
 )
 
-\S4method{coef}{mvgamHMCfit}(
+\S4method{coef}{bayesGAMfit}(
   object,
   params = c("beta", "eps", "lambda", "u", "sigma", "a"),
   FUN = median
 )
 }
 \arguments{
-\item{object}{an object of class \code{mvgamHMCfit}, usually a result of a call to \code{mvgamHMC}.}
+\item{object}{an object of class \code{bayesGAMfit}, usually a result of a call to \code{bayesGAM}.}
 
 \item{params}{character vector of the names of parameters to return
 \itemize{
@@ -35,12 +35,12 @@
 Numeric vector of parameter point estimates based on the given \code{prob}, with a default of the median estimate.
 }
 \description{
-Method for \code{mvgamHMCfit} objects.  Extracts the specified quantile of the posterior.
+Method for \code{bayesGAMfit} objects.  Extracts the specified quantile of the posterior.
 The user may specify all or some of the parameters \eqn{\beta}, \eqn{\epsilon}, \eqn{\lambda}, \eqn{u}, \eqn{sigma}, \eqn{a}.
 }
 \examples{
 require(stats); require(graphics)
-f <- mvgamHMC(weight ~ np(height), data = women, family = gaussian, 
+f <- bayesGAM(weight ~ np(height), data = women, family = gaussian, 
               iter = 500, chains = 1)
 coef(f, params=c("beta", "eps"))
 }

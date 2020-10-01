@@ -2,18 +2,18 @@
 % Please edit documentation in R/AllMethods.R
 \name{posterior_predict}
 \alias{posterior_predict}
-\alias{posterior_predict,mvgamHMCfit-method}
+\alias{posterior_predict,bayesGAMfit-method}
 \alias{posterior_predict,glmModel-method}
-\title{Posterior predictive samples from models fit by \code{mvgamHMC}}
+\title{Posterior predictive samples from models fit by \code{bayesGAM}}
 \usage{
 posterior_predict(object, ...)
 
-\S4method{posterior_predict}{mvgamHMCfit}(object, draws = NULL, ...)
+\S4method{posterior_predict}{bayesGAMfit}(object, draws = NULL, ...)
 
 \S4method{posterior_predict}{glmModel}(object, draws = NULL, results = NULL, ...)
 }
 \arguments{
-\item{object}{Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.}
+\item{object}{Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.}
 
 \item{...}{Additional arguments for \code{postrior_predict}}
 
@@ -28,7 +28,7 @@ a list of \emph{D} by \emph{N} matrices, where \emph{D} is the number of draws f
 Draw from the posterior predictive distribution
 }
 \examples{
-f <- mvgamHMC(weight ~ np(height), data = women, 
+f <- bayesGAM(weight ~ np(height), data = women, 
               family = gaussian, iter=1000, chains = 1)
 res <- posterior_predict(f, draws=100)
 }

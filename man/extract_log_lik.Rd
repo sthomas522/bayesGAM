@@ -2,15 +2,15 @@
 % Please edit documentation in R/AllMethods.R
 \name{extract_log_lik}
 \alias{extract_log_lik}
-\alias{extract_log_lik,mvgamHMCfit-method}
-\title{Extract the log likelihood from models fit by \code{mvgamHMC}}
+\alias{extract_log_lik,bayesGAMfit-method}
+\title{Extract the log likelihood from models fit by \code{bayesGAM}}
 \usage{
 extract_log_lik(object, ...)
 
-\S4method{extract_log_lik}{mvgamHMCfit}(object, ...)
+\S4method{extract_log_lik}{bayesGAMfit}(object, ...)
 }
 \arguments{
-\item{object}{Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.}
+\item{object}{Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.}
 
 \item{...}{Additional parameters to pass to \code{loo::extract_log_lik}}
 }
@@ -19,11 +19,11 @@ A matrix with the extracted log likelihood values post-warmup
 }
 \description{
 Convenience function for extracting the pointwise log-likelihood matrix
-or array from a model fit by \code{mvgamHMC}. Calls the \code{extract_log_lik} method
+or array from a model fit by \code{bayesGAM}. Calls the \code{extract_log_lik} method
 from the \code{loo} package
 }
 \examples{
-f <- mvgamHMC(weight ~ np(height), data = women,
+f <- bayesGAM(weight ~ np(height), data = women,
               family = gaussian, iter=500, chains = 1)
 ll <- extract_log_lik(f)
 }

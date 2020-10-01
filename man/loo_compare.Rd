@@ -2,17 +2,17 @@
 % Please edit documentation in R/AllMethods.R
 \name{loo_compare}
 \alias{loo_compare}
-\alias{loo_compare,mvgamHMCfit-method}
-\title{Calls the \code{loo} package to compare models fit by \code{mvgamHMCfit}}
+\alias{loo_compare,bayesGAMfit-method}
+\title{Calls the \code{loo} package to compare models fit by \code{bayesGAMfit}}
 \usage{
 loo_compare(object, ...)
 
-\S4method{loo_compare}{mvgamHMCfit}(object, ...)
+\S4method{loo_compare}{bayesGAMfit}(object, ...)
 }
 \arguments{
-\item{object}{Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.}
+\item{object}{Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.}
 
-\item{...}{Additional objects of type \code{mvgamHMCfit}}
+\item{...}{Additional objects of type \code{bayesGAMfit}}
 }
 \value{
 a matrix with class \code{compare.loo} that has its own print method from the \code{loo} package
@@ -22,9 +22,9 @@ Compares fitted models based on ELPD, the expected log pointwise predictive
 density for a new dataset.
 }
 \examples{
-f1 <- mvgamHMC(weight ~ height, data = women,
+f1 <- bayesGAM(weight ~ height, data = women,
               family = gaussian, iter=500, chains = 1)
-f2 <- mvgamHMC(weight ~ np(height), data=women, 
+f2 <- bayesGAM(weight ~ np(height), data=women, 
               family = gaussian, iter=500, chains = 1)
 loo_compare(f1, f2)
 }

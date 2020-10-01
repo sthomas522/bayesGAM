@@ -17,7 +17,7 @@ L(x, k = 1, id = NULL)
 numeric vector or matrix of the lagged variable(s)
 }
 \description{
-Creates lagged variables for use with \code{mvgamHMC}, including the functionality
+Creates lagged variables for use with \code{bayesGAM}, including the functionality
 to create lags for each specified subject if desired. The input data must be pre-
 sorted according by time, and within each subject id if specified.
 }
@@ -28,7 +28,7 @@ L(x, 1:2, id)
 
 # autoregressive
 ar.ols(lh, demean = FALSE, intercept=TRUE, order=1)
-f <- mvgamHMC(lh ~ L(lh), family=gaussian)
+f <- bayesGAM(lh ~ L(lh), family=gaussian)
 coef(f)
 }
 \references{

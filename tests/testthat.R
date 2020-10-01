@@ -1,5 +1,5 @@
 library(testthat)
-library(mvgamHMC)
+library(bayesGAM)
 library(SemiPar)
 
-test_check("mvgamHMC")
+test_check("bayesGAM")

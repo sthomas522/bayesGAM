@@ -2,10 +2,10 @@
 % Please edit documentation in R/AllMethods.R
 \name{summary}
 \alias{summary}
-\alias{summary,mvgamHMCfit-method}
-\title{Summarizing Model Fits from \code{mvgamHMC}}
+\alias{summary,bayesGAMfit-method}
+\title{Summarizing Model Fits from \code{bayesGAM}}
 \usage{
-\S4method{summary}{mvgamHMCfit}(object)
+\S4method{summary}{bayesGAMfit}(object)
 }
 \arguments{
 \item{object}{an object of class \code{hmclearn}, usually a result of a call to \code{mh} or \code{hmc}}
@@ -14,10 +14,10 @@
 Returns a matrix with posterior quantiles and the posterior scale reduction factor statistic for each parameter.
 }
 \description{
-summary method for class \code{mvgamHMCfit}
+summary method for class \code{bayesGAMfit}
 }
 \examples{
-f <- mvgamHMC(weight ~ np(height), data = women, 
+f <- bayesGAM(weight ~ np(height), data = women, 
               family = gaussian, iter=500, chains = 1)
 
 summary(f)

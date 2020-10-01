@@ -10,7 +10,7 @@ normal(param_values)
 \item{param_values}{Numeric vector of length 2 for the mean and standard deviation parameters}
 }
 \description{
-Used to specify Normal priors for \code{mvgamHMC} models
+Used to specify Normal priors for \code{bayesGAM} models
 }
 \details{
 For the \code{beta} and \code{a} parameters, the distribution is assumed to be unconstrained.

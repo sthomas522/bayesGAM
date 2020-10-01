@@ -2,18 +2,18 @@
 % Please edit documentation in R/AllMethods.R
 \name{loo}
 \alias{loo}
-\alias{loo,mvgamHMCfit-method}
+\alias{loo,bayesGAMfit-method}
 \alias{loo,array-method}
-\title{Calls the \code{loo} package to perform efficient approximate leave-one-out cross-validation on models fit with \code{mvgamHMC}}
+\title{Calls the \code{loo} package to perform efficient approximate leave-one-out cross-validation on models fit with \code{bayesGAM}}
 \usage{
 loo(object, ...)
 
-\S4method{loo}{mvgamHMCfit}(object, ...)
+\S4method{loo}{bayesGAMfit}(object, ...)
 
 \S4method{loo}{array}(object, ...)
 }
 \arguments{
-\item{object}{Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.}
+\item{object}{Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.}
 
 \item{...}{Additional parameters to pass to pass to \code{loo::loo}}
 }
@@ -67,7 +67,7 @@ Bayesian models using Pareto smoothed importance sampling (PSIS). This calls the
 from the \code{loo} package of the methods described in Vehtari, Gelman, and Gabry (2017a, 2017b).
 }
 \examples{
-f <- mvgamHMC(weight ~ np(height), data = women,
+f <- bayesGAM(weight ~ np(height), data = women,
               family = gaussian, iter=500, chains = 1)
 loo(f)
 }

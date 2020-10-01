@@ -2,15 +2,15 @@
 % Please edit documentation in R/AllMethods.R
 \name{showPrior}
 \alias{showPrior}
-\alias{showPrior,mvgamHMCfit-method}
-\title{Display the priors used in \code{mvgamHMC}}
+\alias{showPrior,bayesGAMfit-method}
+\title{Display the priors used in \code{bayesGAM}}
 \usage{
 showPrior(object, ...)
 
-\S4method{showPrior}{mvgamHMCfit}(object, params = "all")
+\S4method{showPrior}{bayesGAMfit}(object, params = "all")
 }
 \arguments{
-\item{object}{Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}}
+\item{object}{Object of type \code{bayesGAMfit} generated from \code{bayesGAM}}
 
 \item{...}{Additional arguments for \code{showPrior}}
 
@@ -30,7 +30,7 @@ Prints a list of priors for \eqn{\beta}, \eqn{\lambda}, \eqn{\epsilon}, and \eqn
 }
 \examples{
 require(stats); require(graphics)
-f <- mvgamHMC(weight ~ np(height), data = women, 
+f <- bayesGAM(weight ~ np(height), data = women, 
               family = gaussian, iter = 500, chains = 1)
 showPrior(f)
 }

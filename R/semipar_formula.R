@@ -1,7 +1,7 @@
 
-#' \code{mvgamHMC} fits a variety of regression models using Hamiltonian Monte Carlo
+#' \code{bayesGAM} fits a variety of regression models using Hamiltonian Monte Carlo
 #'
-#' Based on \code{\link[stats:glm]{glm}}.  \code{mvgamHMC} is used to fit a variety of statistical models, including linear models, generalized lienar models, mixed effect models with random intercept, and semiparametric regression models.
+#' Based on \code{\link[stats:glm]{glm}}.  \code{bayesGAM} is used to fit a variety of statistical models, including linear models, generalized lienar models, mixed effect models with random intercept, and semiparametric regression models.
 #'
 #' @export
 #' @param formula a \code{\link[stats:formula]{formula}} object describing the model to be fitted.
@@ -15,7 +15,7 @@
 #' @param a (optional) list of priors for the off diagonal of the LDLT decomposed covariance matrix for multivariate response models.  Vague normal priors are used as a default.
 #' @param spcontrol a list of control parameters for fitting the model in STAN.  See 'details'
 #' @param store_plot_data a logical indicator for storing the plot data frame after simulation. Defaults to \code{FALSE}
-#' @param method default currently set to 'mvgamHMCfit'.
+#' @param method default currently set to 'bayesGAMfit'.
 #' @param ... Arguments passed to `rstan::sampling` (e.g. iter, chains).
 #' @details Similar to \code{glm}, models are typically specified by formula.
 #' The formula typically takes the form \code{response ~ terms}, where the response is numeric
@@ -30,7 +30,7 @@
 #' the multivariate responses should be considered independent. Defaults to \code{FALSE}
 #' @references Hastie, T. J. (1992) Generalized additive models. Chapter 7 of \emph{Statistical Models in S} eds J. M. Chambers and T. J. Hastie, Wadsworth & Brooks/Cole.
 #' @references Dobson, A. J. (1990) \emph{An Introduction to Generalized Linear Models}. London: Chapman and Hall.
-#' @return An object of class `mvgamHMCfit`.  Includes slots:
+#' @return An object of class `bayesGAMfit`.  Includes slots:
 #' @return
 #' @return \code{results}:  `stanfit` object returned by `rstan::sampling`
 #' @return \code{model}:  `glmModel` object 
@@ -41,10 +41,10 @@
 #' counts <- c(18,17,15,20,10,20,25,13,12)
 #' outcome <- gl(3,1,9)
 #' treatment <- gl(3,3)
-#' fpois<- mvgamHMC(counts ~ outcome + treatment, family = poisson(),
+#' fpois<- bayesGAM(counts ~ outcome + treatment, family = poisson(),
 #'                  spcontrol = list(qr = TRUE))
 #' summary(fpois)
-mvgamHMC <- function (formula, random=NULL,
+bayesGAM <- function (formula, random=NULL,
                          family = gaussian, data, offset, 
                          beta = list(),
                          eps = list(),
@@ -52,7 +52,7 @@ mvgamHMC <- function (formula, random=NULL,
                          a = list(),
                          spcontrol = list(qr=TRUE, mvindep=FALSE, ...),
                          store_plot_data = FALSE, 
-                         method = "mvgamHMCfit", ...)
+                         method = "bayesGAMfit", ...)
 {
 
   # extract np terms
@@ -170,8 +170,8 @@ mvgamHMC <- function (formula, random=NULL,
   #   return(mf)
   # if (!is.character(method) && !is.function(method))
   #   stop("invalid 'method' argument")
-  # if (identical(method, "mvgamHMC.fit"))
-  #   control <- do.call("mvgamHMC.control", control)
+  # if (identical(method, "bayesGAM.fit"))
+  #   control <- do.call("bayesGAM.control", control)
   mt <- attr(mf, "terms")
 
   Y <- model.response(mf, "any")
@@ -388,11 +388,11 @@ mvgamHMC <- function (formula, random=NULL,
   if (is.null(offset))
     offset <- rep.int(0, nobs)
 
-  # call mvgamHMC fit
+  # call bayesGAM fit
 
-  if (method == "mvgamHMCfit") {
+  if (method == "bayesGAMfit") {
 
-    stanResults <- mvgamHMCfit(spMCMCmodel,
+    stanResults <- bayesGAMfit(spMCMCmodel,
                                   offset = offset,
                                   spcontrol = spcontrol,
                                   ...)
@@ -403,7 +403,7 @@ mvgamHMC <- function (formula, random=NULL,
   }
   # return(stanResults)
 
-  spResults <- new("mvgamHMCfit",
+  spResults <- new("bayesGAMfit",
                     results = stanResults,
                     model = spMCMCmodel,
                     offset = offset,

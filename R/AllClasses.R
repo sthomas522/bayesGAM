@@ -1,5 +1,5 @@
 
-## ------------- mvgamHMC Classes ----------------------------------------
+## ------------- bayesGAM Classes ----------------------------------------
 
 # # distribution class
 # #' Class distribution.
@@ -44,7 +44,7 @@ setClass("normalDistribution",
 
 #' Constructor function for Normal priors
 #' 
-#' Used to specify Normal priors for \code{mvgamHMC} models
+#' Used to specify Normal priors for \code{bayesGAM} models
 #' @param param_values Numeric vector of length 2 for the mean and standard deviation parameters
 #' @details For the \code{beta} and \code{a} parameters, the distribution is assumed to be unconstrained. 
 #' For \code{eps} and \code{lambda}, the priors are half-normal with a support of strictly positive numbers. 
@@ -66,7 +66,7 @@ setClass("tDistribution",
 
 #' Constructor function for Student-t priors
 #' 
-#' Used to specify student-t priors for \code{mvgamHMC} models
+#' Used to specify student-t priors for \code{bayesGAM} models
 #' @param param_values Numeric vector of length 3 for the degrees of freedom, location, and scale parameter. 
 #' @details For the \code{beta} and \code{a} parameters, the distribution is assumed to be unconstrained. 
 #' For \code{eps} and \code{lambda}, the priors are half-normal with a support of strictly positive numbers. 
@@ -148,20 +148,20 @@ setClass("glmModel",
 
 #' Contains results from \code{rstan} as well as the design matrices and other data for the model.
 #' 
-#' Returns object generated from model fit by \code{mvgamHMC}
+#' Returns object generated from model fit by \code{bayesGAM}
 #' 
-#' @aliases mvgamHMCfit
-#' @param object Object of type \code{mvgamHMCfit} which stores the results from \code{rstan}, design matrices, and other data for the model.
+#' @aliases bayesGAMfit
+#' @param object Object of type \code{bayesGAMfit} which stores the results from \code{rstan}, design matrices, and other data for the model.
 #' @slot results Object of type \code{stanfit} returned from calling \code{rstan::sampling}
 #' @slot model Object of custom type \code{glmModel} with the data and input parameters passed to \code{rstan}
 #' @slot offset Optionally numeric offset for the generalized additive model
-#' @slot spcontrol List of control parameters for \code{mvgamHMCfit}
+#' @slot spcontrol List of control parameters for \code{bayesGAMfit}
 #' @slot covmat Covariance matrix resulting from the MCMC simulation of the fixed effect parameters \eqn{\beta} and \eqn{u}
 #' @slot mcmcres Matrix of MCMC results for all chains, if plot data is stored
 #' @slot pdata Dataframe for default plot method, if plot data is stored.
-#' @rdname mvgamHMCfit
+#' @rdname bayesGAMfit
 #' @export
-setClass("mvgamHMCfit",
+setClass("bayesGAMfit",
          slots = c(results = "stanfit",
                    model = "glmModel",
                    offset = "numeric",

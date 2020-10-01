@@ -2,13 +2,13 @@
 % Please edit documentation in R/AllMethods.R
 \name{mvcorrplot}
 \alias{mvcorrplot}
-\alias{mvcorrplot,mvgamHMCfit-method}
-\title{Multivariate response correlation plot for \code{mvgamHMCfit} objects}
+\alias{mvcorrplot,bayesGAMfit-method}
+\title{Multivariate response correlation plot for \code{bayesGAMfit} objects}
 \usage{
-\S4method{mvcorrplot}{mvgamHMCfit}(object, ...)
+\S4method{mvcorrplot}{bayesGAMfit}(object, ...)
 }
 \arguments{
-\item{object}{model object of class \code{mvgamHMCfit}}
+\item{object}{model object of class \code{bayesGAMfit}}
 
 \item{...}{Additional parameters passed to \code{corrplot.mixed}}
 }
@@ -24,7 +24,7 @@ dat <- data.frame(id = rep(1:5, each=10),
                   y2 = rexp(50), 
                   x = runif(50))
 \dontrun{
-f <- mvgamHMC(cbind(y1, y2) ~ np(x), random = ~factor(id), data=dat, 
+f <- bayesGAM(cbind(y1, y2) ~ np(x), random = ~factor(id), data=dat, 
               chains=1, iter=500)
 mvcorrplot(f)
 }

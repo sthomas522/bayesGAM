@@ -606,11 +606,11 @@ setMethod("getDistName", signature(object="integer"),
 
 })
 
-#' Display the priors used in \code{mvgamHMC}
+#' Display the priors used in \code{bayesGAM}
 #' 
 #' Prints a list of priors for \eqn{\beta}, \eqn{\lambda}, \eqn{\epsilon}, and \eqn{a}, where applicable. 
 #' 
-#' @param object Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}
+#' @param object Object of type \code{bayesGAMfit} generated from \code{bayesGAM}
 #' @param params character vector of the names of parameters to return
 #' \itemize{
 #' \item \eqn{\beta} beta
@@ -623,7 +623,7 @@ setMethod("getDistName", signature(object="integer"),
 #' @name showPrior
 #' @examples
 #' require(stats); require(graphics)
-#' f <- mvgamHMC(weight ~ np(height), data = women, 
+#' f <- bayesGAM(weight ~ np(height), data = women, 
 #'               family = gaussian, iter = 500, chains = 1)
 #' showPrior(f)
 NULL
@@ -637,7 +637,7 @@ setGeneric("showPrior", function(object, ...) {
 
 #' @rdname showPrior
 #' @export
-setMethod("showPrior", signature(object="mvgamHMCfit"),
+setMethod("showPrior", signature(object="bayesGAMfit"),
   function(object, params = "all") {
 
     prior_obj <- object@model@prior
@@ -713,7 +713,7 @@ setMethod("showPrior", signature(object="mvgamHMCfit"),
 # ---------------- store fit ---------------------------- #
 
 
-setMethod("initialize", "mvgamHMCfit",
+setMethod("initialize", "bayesGAMfit",
           function(.Object, results, model, offset, spcontrol, covmat, ...) {
 
             if (missing(offset)) {
@@ -771,11 +771,11 @@ setMethod("getDistribution", signature(object="list"),
 
 # ----------------- Fit MCMC model---------------------------- #
 
-setGeneric("mvgamHMCfit", function(object, ...) {
-  standardGeneric("mvgamHMCfit")
+setGeneric("bayesGAMfit", function(object, ...) {
+  standardGeneric("bayesGAMfit")
 })
 
-setMethod("mvgamHMCfit", signature(object="glmModel"),
+setMethod("bayesGAMfit", signature(object="glmModel"),
           function(object, linknum, offset, spcontrol, ...) {
 
             use_Z <- length(object@Z) > 0
@@ -917,25 +917,25 @@ setGeneric("getDesign", function(object, ...) {
   standardGeneric("getDesign")
 })
 
-#' Design matrices from a \code{mvgamHMCfit} object
+#' Design matrices from a \code{bayesGAMfit} object
 #'
 #' Contains the design matrices produced for model fitting. The fixed effects design matrix \code{X} or random effects design matrix \code{Z} can be specified.
 #'
-#' @param object Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}
+#' @param object Object of type \code{bayesGAMfit} generated from \code{bayesGAM}
 #' @param type Character for fixed effect design matrix \code{X} or random effects design matrix \code{Z}
 #' @return Contents of \code{stanfit} results
 #' @name getDesign
 #' @export
 #' @examples
 #' require(stats); require(graphics)
-#' f <- mvgamHMC(weight ~ np(height), data = women, family = gaussian, 
+#' f <- bayesGAM(weight ~ np(height), data = women, family = gaussian, 
 #'               iter = 500, chains = 1)
 #' getDesign(f, "Z")
 NULL
 
 #' @rdname getDesign
 #' @export
-setMethod("getDesign", signature(object="mvgamHMCfit"),
+setMethod("getDesign", signature(object="bayesGAMfit"),
           function(object, type="X") {
             if (type == "X") {
               retval <- object@model@X
@@ -968,11 +968,11 @@ setGeneric("getModelSlots", function(object, ...) {
   standardGeneric("getModelSlots")
 })
 
-#' Return one or slots from the \code{Stan} model in \code{mvgamHMC}
+#' Return one or slots from the \code{Stan} model in \code{bayesGAM}
 #'
-#' Contains the objects and parameters passed to Stan in object of type \code{glmModel}, contained in object type \code{mvgamHMCfit}
+#' Contains the objects and parameters passed to Stan in object of type \code{glmModel}, contained in object type \code{bayesGAMfit}
 #'
-#' @param object Object of type \code{mvgamHMCfit}
+#' @param object Object of type \code{bayesGAMfit}
 #' @param name Character name of slot in \code{glmModel}
 #' \itemize{
 #' \item X Fixed effects design matrix
@@ -1004,14 +1004,14 @@ setGeneric("getModelSlots", function(object, ...) {
 #' @export
 #' @examples
 #' require(stats); require(graphics)
-#' f <- mvgamHMC(weight ~ np(height), data = women, family = gaussian, 
+#' f <- bayesGAM(weight ~ np(height), data = women, family = gaussian, 
 #'               iter = 500, chains = 1)
 #' getModelSlots(f, "X")
 NULL
 
 #' @rdname getModelSlots
 #' @export
-setMethod("getModelSlots", signature(object="mvgamHMCfit"), 
+setMethod("getModelSlots", signature(object="bayesGAMfit"), 
           function(object, name="X") {
             if (name=="X") {
               object@model@X           
@@ -1075,13 +1075,13 @@ setGeneric("getStanResults", function(object) {
 #'
 #' Contains the full content of the \code{stanfit} object
 #'
-#' @param object Object of type \code{mvgamHMCfit} returned from \code{mvgamHMC}
+#' @param object Object of type \code{bayesGAMfit} returned from \code{bayesGAM}
 #' @return Contents of \code{stanfit} results
 #' @name getStanResults
 #' @export
 #' @examples
 #' require(stats); require(graphics)
-#' f <- mvgamHMC(weight ~ np(height), data = women, family = gaussian, 
+#' f <- bayesGAM(weight ~ np(height), data = women, family = gaussian, 
 #'               iter = 500, chains = 1)
 #' sres <- getStanResults(f)
 #' plot(sres) # rstan method
@@ -1089,7 +1089,7 @@ NULL
 
 #' @rdname getStanResults
 #' @export
-setMethod("getStanResults", signature(object="mvgamHMCfit"), 
+setMethod("getStanResults", signature(object="bayesGAMfit"), 
           function(object) {
             object@results
           })
@@ -1100,7 +1100,7 @@ setGeneric("getCovmat", function(object, ...) {
   standardGeneric("getCovmat")
 })
 
-setMethod("getCovmat", signature(object="mvgamHMCfit"),
+setMethod("getCovmat", signature(object="bayesGAMfit"),
           function(object, ...) {
 
             # stan object
@@ -1129,7 +1129,7 @@ setMethod("getCovmat", signature(object="mvgamHMCfit"),
 # setGeneric("extract", function(object, ...)
 #   standardGeneric("extract") )
 
-setMethod("extract", signature("mvgamHMCfit"),
+setMethod("extract", signature("bayesGAMfit"),
           function(object, ...) {
             extract(as(object, "stanfit"), ...)
           })
@@ -1140,10 +1140,10 @@ setMethod("extract", signature("mvgamHMCfit"),
 
 #' Extract Model Coefficients
 #'
-#' Method for \code{mvgamHMCfit} objects.  Extracts the specified quantile of the posterior. 
+#' Method for \code{bayesGAMfit} objects.  Extracts the specified quantile of the posterior. 
 #' The user may specify all or some of the parameters \eqn{\beta}, \eqn{\epsilon}, \eqn{\lambda}, \eqn{u}, \eqn{sigma}, \eqn{a}.
 #'
-#' @param object an object of class \code{mvgamHMCfit}, usually a result of a call to \code{mvgamHMC}.
+#' @param object an object of class \code{bayesGAMfit}, usually a result of a call to \code{bayesGAM}.
 #' @param params character vector of the names of parameters to return
 #' \itemize{
 #' \item \eqn{\beta} beta
@@ -1157,13 +1157,13 @@ setMethod("extract", signature("mvgamHMCfit"),
 #' @name coefficients
 #' @examples
 #' require(stats); require(graphics)
-#' f <- mvgamHMC(weight ~ np(height), data = women, family = gaussian, 
+#' f <- bayesGAM(weight ~ np(height), data = women, family = gaussian, 
 #'               iter = 500, chains = 1)
 #' coef(f, params=c("beta", "eps"))
 NULL
 
 #' @rdname coefficients
-setMethod("coefficients", signature("mvgamHMCfit"),
+setMethod("coefficients", signature("bayesGAMfit"),
           function(object, params=c("beta", "eps", "lambda", "u", "sigma", "a"), FUN=median) {
 
             if (length(object@mcmcres) > 0) {
@@ -1185,29 +1185,29 @@ setMethod("coefficients", signature("mvgamHMCfit"),
 
 #' @rdname coefficients
 #' @export
-setMethod("coef", signature("mvgamHMCfit"),
+setMethod("coef", signature("bayesGAMfit"),
           function(object, params=c("beta", "eps", "lambda", "u", "sigma", "a"), FUN=median) {
             coefficients(object, params=params, FUN=FUN)
           })
 
-#' Extract fitted values from a model fit by \code{mvgamHMC}
+#' Extract fitted values from a model fit by \code{bayesGAM}
 #'
-#' Method for \code{mvgamHMCfit} objects.  Extracts the fitted values based on a specified quantile for the posterior distribution. The median is the default. 
+#' Method for \code{bayesGAMfit} objects.  Extracts the fitted values based on a specified quantile for the posterior distribution. The median is the default. 
 #'
-#' @param object an object of class \code{mvgamHMCfit}, usually a result of a call to \code{mvgamHMC}.
+#' @param object an object of class \code{bayesGAMfit}, usually a result of a call to \code{bayesGAM}.
 #' @param ... additional arguments to pass to \code{coefficients}
 #' @return Numeric vector of fitted values
 #' @export
 #' @name fitted
 #' @examples
 #' require(stats); require(graphics)
-#' f <- mvgamHMC(weight ~ np(height), data = women, family = gaussian, 
+#' f <- bayesGAM(weight ~ np(height), data = women, family = gaussian, 
 #'               iter = 500, chains = 1)
 #' plot(fitted(f), women$weight, type='o', xlab="fitted", ylab="actual")
 NULL
 
 #' @rdname fitted
-setMethod("fitted", signature("mvgamHMCfit"),
+setMethod("fitted", signature("bayesGAMfit"),
           function(object, ...) {
 
             X <- object@model@X
@@ -1271,9 +1271,9 @@ setMethod("fitted", signature("mvgamHMCfit"),
           })
 
 
-# ---------------- mvgamHMC plotting methods ---------------------------- #
+# ---------------- bayesGAM plotting methods ---------------------------- #
 
-setAs("mvgamHMCfit", "stanfit",
+setAs("bayesGAMfit", "stanfit",
       function(from, to) {
         new("stanfit", from@results)
       })
@@ -1293,19 +1293,19 @@ setAs("mvgamHMCfit", "stanfit",
 #' @name plot
 #' @return A list of \emph{univariate} and \emph{bivariate} plots generated by plot functions based on \code{ggplot2}
 #' @examples
-#' f <- mvgamHMC(weight ~ np(height), data = women, 
+#' f <- bayesGAM(weight ~ np(height), data = women, 
 #'               family = gaussian, iter=500, chains = 1)
 #' plot(f)
 #' 
 # #' # bivariate nonparametric example
 # #' library(SemiPar)
 # #' data(scallop)
-# #' f2 <- mvgamHMC(log(tot.catch+1) ~ np(longitude, latitude), data=scallop, iter=1000)
+# #' f2 <- bayesGAM(log(tot.catch+1) ~ np(longitude, latitude), data=scallop, iter=1000)
 # #' plot(f2)
 NULL
 
 #' @rdname plot
-setMethod("plot", signature(x="mvgamHMCfit", y="missing"),
+setMethod("plot", signature(x="bayesGAMfit", y="missing"),
           function(x, y, applylink=TRUE, ...) {
             smooth(x, applylink=applylink, ...)
           })
@@ -1348,7 +1348,7 @@ setGeneric("createPlotData", function(object, ...) {
   standardGeneric("createPlotData")
 })
 
-setMethod("createPlotData", signature("mvgamHMCfit"),
+setMethod("createPlotData", signature("bayesGAMfit"),
           function(object, type="standard", applylink=TRUE, nvals=100, ...) {
             
             model <- object@model
@@ -1433,7 +1433,7 @@ setGeneric("fitvact", function(object, ...) {
   standardGeneric("fitvact")
 })
 
-setMethod("fitvact", signature("mvgamHMCfit"),
+setMethod("fitvact", signature("bayesGAMfit"),
           function(object, ...) {
             fitvals <- fitted(object, ...)
             actvals <- object@model@y
@@ -1450,7 +1450,7 @@ setGeneric("smooth", function(object, applylink=TRUE, ...) {
 })
 
 
-setMethod("smooth", signature("mvgamHMCfit"),
+setMethod("smooth", signature("bayesGAMfit"),
           function(object, applylink=TRUE, ...) {
 
             # pdata <- createPlotData(object, type="smooth",...)
@@ -1723,11 +1723,11 @@ setGeneric("mvcorrplot", function(object, ...) {
   standardGeneric("mvcorrplot")
 })
 
-#' Multivariate response correlation plot for \code{mvgamHMCfit} objects
+#' Multivariate response correlation plot for \code{bayesGAMfit} objects
 #'
 #' Creates a correlation plot of the multivariate responses based on \code{corrplot} 
 #'
-#' @param object model object of class \code{mvgamHMCfit}
+#' @param object model object of class \code{bayesGAMfit}
 #' @param ... Additional parameters passed to \code{corrplot.mixed}
 #' @references Taiyun Wei and Viliam Simko (2017). R package \emph{corrplot}: Visualization of a Correlation Matrix (Version 0.84).
 #' @return \code{corrplot} object
@@ -1739,7 +1739,7 @@ setGeneric("mvcorrplot", function(object, ...) {
 #'                   y2 = rexp(50), 
 #'                   x = runif(50))
 #' \dontrun{
-#' f <- mvgamHMC(cbind(y1, y2) ~ np(x), random = ~factor(id), data=dat, 
+#' f <- bayesGAM(cbind(y1, y2) ~ np(x), random = ~factor(id), data=dat, 
 #'               chains=1, iter=500)
 #' mvcorrplot(f)
 #' }
@@ -1747,7 +1747,7 @@ NULL
 
 #' @rdname mvcorrplot
 #' @export
-setMethod("mvcorrplot", "mvgamHMCfit",
+setMethod("mvcorrplot", "bayesGAMfit",
           function(object, ...) {
             if (!object@model@multresponse | !object@model@random_intercept) {
               stop("mvcorrplot is valid for multivariate response models with random intercepts only")
@@ -1781,11 +1781,11 @@ setGeneric("getSamples", function(object, ...) {
   standardGeneric("getSamples")
 })
 
-#' Extract the MCMC samples from an object of type \code{mvgamHMCfit}
+#' Extract the MCMC samples from an object of type \code{bayesGAMfit}
 #'
 #' Returns an array of the posterior simulation from \code{Stan}. Optionally, may return a subsample from the full MCMC simulation.
 #'
-#' @param object model object of class \code{mvgamHMCfit}
+#' @param object model object of class \code{bayesGAMfit}
 #' @param nsamp Optional number of samples to return
 #' @param results Matrix of HMC posterior samples
 #' @param seednum Optional integer for seed number when selecting a random sample
@@ -1797,14 +1797,14 @@ setGeneric("getSamples", function(object, ...) {
 #' @export
 #' @examples
 #' require(stats); require(graphics)
-#' f <- mvgamHMC(weight ~ np(height), data = women, family = gaussian, 
+#' f <- bayesGAM(weight ~ np(height), data = women, family = gaussian, 
 #'               iter = 500, chains = 1)
 #' allres <- getSamples(f)             
 NULL
 
 #' @rdname getSamples
 #' @export
-setMethod("getSamples", signature("mvgamHMCfit"),
+setMethod("getSamples", signature("bayesGAMfit"),
           function(object, nsamp=NULL, seednum=NULL, ...) {
             
             famnum <- object@model@famnum
@@ -1941,10 +1941,10 @@ setMethod("getSamples", signature("glmModel"),
 })
 
 
-# ---------------- show mvgamHMCfit object  ---------------------------- #
+# ---------------- show bayesGAMfit object  ---------------------------- #
 
-#' @rdname mvgamHMCfit
-setMethod("show", "mvgamHMCfit",
+#' @rdname bayesGAMfit
+setMethod("show", "bayesGAMfit",
           function(object) {
             stanobj <- object@results
             multresponse <- object@model@multresponse
@@ -1982,9 +1982,9 @@ setMethod("show", "mvgamHMCfit",
             print(x=stanobj, pars=pars)
           })
 
-#' Summarizing Model Fits from \code{mvgamHMC}
+#' Summarizing Model Fits from \code{bayesGAM}
 #'
-#' summary method for class \code{mvgamHMCfit}
+#' summary method for class \code{bayesGAMfit}
 #'
 #' @param object an object of class \code{hmclearn}, usually a result of a call to \code{mh} or \code{hmc}
 #' @returns Returns a matrix with posterior quantiles and the posterior scale reduction factor statistic for each parameter.
@@ -1992,7 +1992,7 @@ setMethod("show", "mvgamHMCfit",
 #' @name summary
 #' @export
 #' @examples
-#' f <- mvgamHMC(weight ~ np(height), data = women, 
+#' f <- bayesGAM(weight ~ np(height), data = women, 
 #'               family = gaussian, iter=500, chains = 1)
 #'
 #' summary(f)
@@ -2000,7 +2000,7 @@ NULL
 
 #' @rdname summary
 #' @export
-setMethod("summary", "mvgamHMCfit",
+setMethod("summary", "bayesGAMfit",
           function(object) {
             show(object)
           })
@@ -2015,7 +2015,7 @@ setMethod("summary", "mvgamHMCfit",
 #'
 #' @name mcmc_plots
 #'
-#' @param object an object of class \code{mvgamHMCfit}
+#' @param object an object of class \code{bayesGAMfit}
 #' @param regex_pars character vector of regular expressions of variable names to plot
 #' @param ... optional additional arguments to pass to the \code{bayesplot} functions
 #'
@@ -2106,7 +2106,7 @@ NULL
 #' @rdname mcmc_plots
 #' @export
 #' @examples
-#' f <- mvgamHMC(weight ~ np(height), data = women, 
+#' f <- bayesGAM(weight ~ np(height), data = women, 
 #'               family = gaussian, iter=1000, chains = 1)
 #' mcmc_trace(f)
 setGeneric("mcmc_intervals", function(object, ...) {
@@ -2115,7 +2115,7 @@ setGeneric("mcmc_intervals", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_intervals", "mvgamHMCfit",
+setMethod("mcmc_intervals", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2131,7 +2131,7 @@ setGeneric("mcmc_areas", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_areas", "mvgamHMCfit",
+setMethod("mcmc_areas", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2147,7 +2147,7 @@ setGeneric("mcmc_hist", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_hist", "mvgamHMCfit",
+setMethod("mcmc_hist", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2163,7 +2163,7 @@ setGeneric("mcmc_hist_by_chain", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_hist_by_chain", "mvgamHMCfit",
+setMethod("mcmc_hist_by_chain", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2179,7 +2179,7 @@ setGeneric("mcmc_dens", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_dens", "mvgamHMCfit",
+setMethod("mcmc_dens", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2195,7 +2195,7 @@ setGeneric("mcmc_scatter", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_scatter", "mvgamHMCfit",
+setMethod("mcmc_scatter", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2211,7 +2211,7 @@ setGeneric("mcmc_hex", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_hex", "mvgamHMCfit",
+setMethod("mcmc_hex", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2227,7 +2227,7 @@ setGeneric("mcmc_pairs", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_pairs", "mvgamHMCfit",
+setMethod("mcmc_pairs", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2243,7 +2243,7 @@ setGeneric("mcmc_acf", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_acf", "mvgamHMCfit",
+setMethod("mcmc_acf", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2259,7 +2259,7 @@ setGeneric("mcmc_acf_bar", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_acf_bar", "mvgamHMCfit",
+setMethod("mcmc_acf_bar", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2275,7 +2275,7 @@ setGeneric("mcmc_trace", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_trace", "mvgamHMCfit",
+setMethod("mcmc_trace", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2293,7 +2293,7 @@ setGeneric("mcmc_rhat", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_rhat", "mvgamHMCfit",
+setMethod("mcmc_rhat", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2314,7 +2314,7 @@ setGeneric("mcmc_rhat_hist", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_rhat_hist", "mvgamHMCfit",
+setMethod("mcmc_rhat_hist", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2335,7 +2335,7 @@ setGeneric("mcmc_rhat_data", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_rhat_data", "mvgamHMCfit",
+setMethod("mcmc_rhat_data", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2356,7 +2356,7 @@ setGeneric("mcmc_neff", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_neff", "mvgamHMCfit",
+setMethod("mcmc_neff", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2378,7 +2378,7 @@ setGeneric("mcmc_neff_hist", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_neff_hist", "mvgamHMCfit",
+setMethod("mcmc_neff_hist", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2399,7 +2399,7 @@ setGeneric("mcmc_neff_data", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_neff_data", "mvgamHMCfit",
+setMethod("mcmc_neff_data", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2420,7 +2420,7 @@ setGeneric("mcmc_violin", function(object, ...) {
 
 #' @export
 #' @rdname mcmc_plots
-setMethod("mcmc_violin", "mvgamHMCfit",
+setMethod("mcmc_violin", "bayesGAMfit",
           function(object,
                    regex_pars = c("^beta", "^lambda", "^eps", "^a", "^sigma_u_correlation"),
                    ...) {
@@ -2431,11 +2431,11 @@ setMethod("mcmc_violin", "mvgamHMCfit",
           })
 
 
-#' Posterior predictive samples from models fit by \code{mvgamHMC}
+#' Posterior predictive samples from models fit by \code{bayesGAM}
 #' 
 #' Draw from the posterior predictive distribution
 #' 
-#' @param object Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.
+#' @param object Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.
 #' @param draws An integer indicating the number of draws to return. The default and maximum number of draws is the size of the posterior sample.
 #' @param results Matrix of HMC posterior samples
 #' @return a list of \emph{D} by \emph{N} matrices, where \emph{D} is the number of draws from the posterior predictive distribution and \emph{N} is the number of data points being predicted per draw.
@@ -2448,7 +2448,7 @@ NULL
 #' @rdname posterior_predict
 #' @param ... Additional arguments for \code{postrior_predict}
 #' @examples
-#' f <- mvgamHMC(weight ~ np(height), data = women, 
+#' f <- bayesGAM(weight ~ np(height), data = women, 
 #'               family = gaussian, iter=1000, chains = 1)
 #' res <- posterior_predict(f, draws=100)
 #' @export
@@ -2458,7 +2458,7 @@ setGeneric("posterior_predict", function(object, ...) {
 
 #' @rdname posterior_predict
 #' @export
-setMethod("posterior_predict", signature(object="mvgamHMCfit"),
+setMethod("posterior_predict", signature(object="bayesGAMfit"),
           function(object, draws=NULL, ...) {
             
       famnum <- object@model@famnum
@@ -2580,7 +2580,7 @@ setMethod("posterior_predict", signature(object="glmModel"),
 #'
 #' @name ppc_plots
 #'
-#' @param object an object of class \code{mvgamHMCfit}
+#' @param object an object of class \code{bayesGAMfit}
 #' @param draws An integer indicating the number of draws to return. The default and maximum number of draws is the size of the posterior sample.
 #' @param ... optional additional arguments to pass to the \code{bayesplot} functions
 #'
@@ -2615,7 +2615,7 @@ NULL
 
 #' @export
 #' @examples
-#' f <- mvgamHMC(weight ~ np(height), data = women, 
+#' f <- bayesGAM(weight ~ np(height), data = women, 
 #'               family = gaussian, iter=500, chains = 1)
 #' ppc_dens(f, draws=2)
 #' @rdname ppc_plots
@@ -2625,7 +2625,7 @@ setGeneric("ppc_dens", function(object, ...) {
 
 #' @export
 #' @rdname ppc_plots
-setMethod("ppc_dens", "mvgamHMCfit",
+setMethod("ppc_dens", "bayesGAMfit",
           function(object, draws=NULL, ...) {
             pp <- posterior_predict(object, draws=draws)@pp
             
@@ -2680,7 +2680,7 @@ setGeneric("ppc_dens_overlay", function(object, ...) {
 
 #' @export
 #' @rdname ppc_plots
-setMethod("ppc_dens_overlay", "mvgamHMCfit",
+setMethod("ppc_dens_overlay", "bayesGAMfit",
           function(object, draws=NULL, ...) {
             
             if (is.null(draws)) {
@@ -2741,7 +2741,7 @@ setGeneric("ppc_hist", function(object, ...) {
 
 #' @export
 #' @rdname ppc_plots
-setMethod("ppc_hist", "mvgamHMCfit",
+setMethod("ppc_hist", "bayesGAMfit",
           function(object, draws=NULL, ...) {
             pp <- posterior_predict(object, draws=draws)@pp
             
@@ -2796,7 +2796,7 @@ setGeneric("ppc_boxplot", function(object, ...) {
 
 #' @export
 #' @rdname ppc_plots
-setMethod("ppc_boxplot", "mvgamHMCfit",
+setMethod("ppc_boxplot", "bayesGAMfit",
           function(object, draws=NULL, ...) {
             pp <- posterior_predict(object, draws=draws)@pp
             
@@ -2850,7 +2850,7 @@ setGeneric("ppc_freqpoly", function(object, ...) {
 
 #' @export
 #' @rdname ppc_plots
-setMethod("ppc_freqpoly", "mvgamHMCfit",
+setMethod("ppc_freqpoly", "bayesGAMfit",
           function(object, draws=NULL, ...) {
             pp <- posterior_predict(object, draws=draws)@pp
             
@@ -2906,7 +2906,7 @@ setGeneric("ppc_ecdf_overlay", function(object, ...) {
 
 #' @export
 #' @rdname ppc_plots
-setMethod("ppc_ecdf_overlay", "mvgamHMCfit",
+setMethod("ppc_ecdf_overlay", "bayesGAMfit",
           function(object, draws=NULL, ...) {
             pp <- posterior_predict(object, draws=draws)@pp 
             
@@ -2972,12 +2972,12 @@ setMethod("initialize", "posteriorPredictObject",
 # predict method
 #
 
-#' Posterior predictive samples from models fit by \code{mvgamHMC}, but with new data
+#' Posterior predictive samples from models fit by \code{bayesGAM}, but with new data
 #' 
 #' Draw from the posterior predictive distribution applied to new data
 #' 
-#' @param object Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.
-#' @param newdata A data frame with new data applied to the \code{mvgamHMCfit} object
+#' @param object Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.
+#' @param newdata A data frame with new data applied to the \code{bayesGAMfit} object
 #' @param draws An integer indicating the number of draws to return. The default and maximum number of draws is the size of the posterior sample.
 #' @return a list of \emph{D} by \emph{N} matrices, where \emph{D} is the number of draws from the posterior predictive distribution and \emph{N} is the number of data points being predicted per draw.
 #' @export
@@ -2990,14 +2990,14 @@ NULL
 #' @param ... Additional arguments for \code{postrior_predict}
 #' @examples
 #' set.seed(432)
-#' f <- mvgamHMC(weight ~ np(height), data = women,
+#' f <- bayesGAM(weight ~ np(height), data = women,
 #'               family = gaussian, iter=500, chains = 1)
 #' newheights <- with(women, rnorm(10, mean = mean(height)), sd=sd(height))
 #' women2 <- data.frame(height=newheights)
 #' 
 #' pred <- predict(f, women2, draws=100)
 #' @export
-setMethod("predict", signature(object="mvgamHMCfit"),     
+setMethod("predict", signature(object="bayesGAMfit"),     
           function(object, newdata, draws=NULL, ...) {
   
   if (missing(newdata) | !is.data.frame(newdata)) {
@@ -3084,13 +3084,13 @@ setMethod("predict", signature(object="mvgamHMCfit"),
 })
 
 
-#' Extract the log likelihood from models fit by \code{mvgamHMC}
+#' Extract the log likelihood from models fit by \code{bayesGAM}
 #' 
 #' Convenience function for extracting the pointwise log-likelihood matrix
-#' or array from a model fit by \code{mvgamHMC}. Calls the \code{extract_log_lik} method
+#' or array from a model fit by \code{bayesGAM}. Calls the \code{extract_log_lik} method
 #' from the \code{loo} package
 #' 
-#' @param object Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.
+#' @param object Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.
 #' @param ... Additional parameters to pass to \code{loo::extract_log_lik}
 #' @return A matrix with the extracted log likelihood values post-warmup
 #' @export
@@ -3100,7 +3100,7 @@ setMethod("predict", signature(object="mvgamHMCfit"),
 #' @references Vehtari A, Gelman A, Gabry J (2017). “Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC.” _Statistics and Computing_, *27*, 1413-1432. doi:10.1007/s11222-016-9696-4 (URL: https://doi.org/10.1007/s11222-016-9696-4).
 #' @name extract_log_lik
 #' @examples 
-#' f <- mvgamHMC(weight ~ np(height), data = women,
+#' f <- bayesGAM(weight ~ np(height), data = women,
 #'               family = gaussian, iter=500, chains = 1)
 #' ll <- extract_log_lik(f)
 NULL
@@ -3113,19 +3113,19 @@ setGeneric("extract_log_lik", function(object, ...) {
 
 #' @export
 #' @rdname extract_log_lik
-setMethod("extract_log_lik", "mvgamHMCfit", 
+setMethod("extract_log_lik", "bayesGAMfit", 
           function(object, ...) {
             loo::extract_log_lik(object@results, ...)
           })
 
 
-#' Calls the \code{loo} package to perform efficient approximate leave-one-out cross-validation on models fit with \code{mvgamHMC}
+#' Calls the \code{loo} package to perform efficient approximate leave-one-out cross-validation on models fit with \code{bayesGAM}
 #' 
 #' Computes PSIS-LOO CV, efficient approximate leave-one-out (LOO) cross-validation for 
 #' Bayesian models using Pareto smoothed importance sampling (PSIS). This calls the implementation 
 #' from the \code{loo} package of the methods described in Vehtari, Gelman, and Gabry (2017a, 2017b).
 #' 
-#' @param object Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.
+#' @param object Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.
 #' @param ... Additional parameters to pass to pass to \code{loo::loo}
 #' @return a named list of class \code{c("psis_loo", "loo")}
 #' \describe{
@@ -3175,7 +3175,7 @@ setMethod("extract_log_lik", "mvgamHMCfit",
 #' @references Vehtari A, Gabry J, Magnusson M, Yao Y, Gelman A (2019). “loo: Efficient leave-one-out cross-validation and WAIC for Bayesian models.” R package version 2.2.0, <URL: https://mc-stan.org/loo>.
 #' @name loo
 #' @examples
-#' f <- mvgamHMC(weight ~ np(height), data = women,
+#' f <- bayesGAM(weight ~ np(height), data = women,
 #'               family = gaussian, iter=500, chains = 1)
 #' loo(f)
 NULL
@@ -3188,7 +3188,7 @@ setGeneric("loo", function(object, ...) {
 
 #' @export
 #' @rdname loo
-setMethod("loo", "mvgamHMCfit", 
+setMethod("loo", "bayesGAMfit", 
           function(object, ...) {
             ll <- extract_log_lik(object)
             loo::loo(ll, ...)
@@ -3205,7 +3205,7 @@ setMethod("loo", "array",
 #' 
 #' Computes WAIC by calling the appropriate function from the \code{loo} package
 #' 
-#' @param object Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.
+#' @param object Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.
 #' @param ... Additional parameters to pass to pass to \code{loo::waic}
 #' @return a named list of class \code{c("waic", "loo")}
 #' \describe{
@@ -3231,7 +3231,7 @@ setMethod("loo", "array",
 #' @references Vehtari A, Gabry J, Magnusson M, Yao Y, Gelman A (2019). “loo: Efficient leave-one-out cross-validation and WAIC for Bayesian models.” R package version 2.2.0, <URL: https://mc-stan.org/loo>.
 #' @name waic
 #' @examples
-#' f <- mvgamHMC(weight ~ np(height), data = women,
+#' f <- bayesGAM(weight ~ np(height), data = women,
 #'               family = gaussian, iter=500, chains = 1)
 #' waic(f)
 NULL
@@ -3244,7 +3244,7 @@ setGeneric("waic", function(object, ...) {
 
 #' @export
 #' @rdname waic
-setMethod("waic", "mvgamHMCfit", 
+setMethod("waic", "bayesGAMfit", 
           function(object, ...) {
             ll <- extract_log_lik(object)
             loo::waic(ll, ...)
@@ -3257,14 +3257,14 @@ setMethod("waic", "array",
             loo::waic(object, ...)
           })
 
-#' Calls the \code{loo} package to compare models fit by \code{mvgamHMCfit}
+#' Calls the \code{loo} package to compare models fit by \code{bayesGAMfit}
 #' 
 #' Compares fitted models based on ELPD, the expected log pointwise predictive 
 #' density for a new dataset.  
 #' 
 #' 
-#' @param object Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.
-#' @param ... Additional objects of type \code{mvgamHMCfit}
+#' @param object Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.
+#' @param ... Additional objects of type \code{bayesGAMfit}
 #' @return a matrix with class \code{compare.loo} that has its own print method from the \code{loo} package
 #' @export
 #' @references Watanabe, S. (2010). Asymptotic equivalence of Bayes cross validation and widely application information criterion in singular learning theory. Journal of Machine Learning Research 11, 3571-3594.
@@ -3273,9 +3273,9 @@ setMethod("waic", "array",
 #' @references Vehtari A, Gabry J, Magnusson M, Yao Y, Gelman A (2019). “loo: Efficient leave-one-out cross-validation and WAIC for Bayesian models.” R package version 2.2.0, <URL: https://mc-stan.org/loo>.
 #' @references Gabry, J. , Simpson, D. , Vehtari, A. , Betancourt, M. and Gelman, A. (2019), Visualization in Bayesian workflow. J. R. Stat. Soc. A, 182: 389-402. doi:10.1111/rssa.12378
 #' @examples
-#' f1 <- mvgamHMC(weight ~ height, data = women,
+#' f1 <- bayesGAM(weight ~ height, data = women,
 #'               family = gaussian, iter=500, chains = 1)
-#' f2 <- mvgamHMC(weight ~ np(height), data=women, 
+#' f2 <- bayesGAM(weight ~ np(height), data=women, 
 #'               family = gaussian, iter=500, chains = 1)
 #' loo_compare(f1, f2)
 #' @name loo_compare
@@ -3290,7 +3290,7 @@ setGeneric("loo_compare", function(object, ...) {
 
 #' @export
 #' @rdname loo_compare
-setMethod("loo_compare", "mvgamHMCfit", 
+setMethod("loo_compare", "bayesGAMfit", 
           function(object, ...) {
               dots <- list(...)
               mvfit <- c(list(object), dots)

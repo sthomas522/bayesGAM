@@ -2,7 +2,7 @@ test_that("hmc testing", {
   require(stats); require(graphics); require(SemiPar)
   # Linear regression example
   # linear: identity
-  f1 <- mvgamHMC(weight ~ np(height), data = women, iter=500,
+  f1 <- bayesGAM(weight ~ np(height), data = women, iter=500,
                    family = gaussian(link="identity"), 
                  chains=1, seed=521)
   # cf1 <- as.vector(round(coef(f1), 5))
@@ -14,7 +14,7 @@ test_that("hmc testing", {
   expect_true(all(cf1 != 0))
   
   # linear: log
-  f2 <- mvgamHMC(weight ~ np(height), data = women, iter=500,
+  f2 <- bayesGAM(weight ~ np(height), data = women, iter=500,
                  family = gaussian(link="log"), 
                  chains=1, beta=st(c(35, 0, 4)), seed=521)
   # cf2 <- as.vector(round(coef(f2), 5))
@@ -27,7 +27,7 @@ test_that("hmc testing", {
   
   
   # linear: sqrt
-  f3 <- mvgamHMC(weight ~ np(height), data = women, iter=500,
+  f3 <- bayesGAM(weight ~ np(height), data = women, iter=500,
                  family = gaussian(link="sqrt"), 
                  chains=1, seed=521,
                  beta = normal(c(0, 10)))
@@ -47,7 +47,7 @@ test_that("hmc testing", {
   bdat <- data.frame(y, X)
   
   # binomial: logit
-  f4 <- mvgamHMC(y ~ . - 1, data=bdat, chains=1, iter=500,
+  f4 <- bayesGAM(y ~ . - 1, data=bdat, chains=1, iter=500,
                  family=binomial(link="logit"),
                     spcontrol = list(qr = TRUE), 
                  seed=521)
@@ -60,7 +60,7 @@ test_that("hmc testing", {
   expect_true(all(cf4 != 0))
 
   # binomial: logit2 qr=FALSE
-  f5 <- mvgamHMC(y ~ . - 1, data=bdat, chains=1, iter=500,
+  f5 <- bayesGAM(y ~ . - 1, data=bdat, chains=1, iter=500,
                  family=binomial(link="logit"),
                  spcontrol = list(qr = FALSE), 
                  seed=521)
@@ -73,7 +73,7 @@ test_that("hmc testing", {
   expect_true(all(cf5 != 0))
 
   # binomial: probit
-  f6 <- mvgamHMC(y ~ . - 1, data=bdat, chains=1, iter=500,
+  f6 <- bayesGAM(y ~ . - 1, data=bdat, chains=1, iter=500,
                  family=binomial(link="probit"),
                  spcontrol = list(qr = TRUE), 
                  seed=521)
@@ -86,7 +86,7 @@ test_that("hmc testing", {
   expect_true(all(cf6 != 0))
 
   # binomial: cauchit
-  f7 <- mvgamHMC(y ~ . - 1, data=bdat, chains=1, iter=500,
+  f7 <- bayesGAM(y ~ . - 1, data=bdat, chains=1, iter=500,
                  family=binomial(link="cauchit"),
                  spcontrol = list(qr = TRUE), 
                  seed=521)
@@ -102,7 +102,7 @@ test_that("hmc testing", {
   # binomial: logit3 with . in formula
   dat<- data.frame(abs(X),
                    y=y)
-  f8 <- mvgamHMC(y ~ ., data=dat, chains=1, iter=500,
+  f8 <- bayesGAM(y ~ ., data=dat, chains=1, iter=500,
                  family=binomial(link="logit"),
                  spcontrol = list(qr = TRUE), 
                  seed=521)
@@ -119,7 +119,7 @@ test_that("hmc testing", {
   # binomial: cloglog
   data("PimaIndiansDiabetes2", package = "mlbench")
   PimaIndiansDiabetes2$y <- ifelse(PimaIndiansDiabetes2$diabetes=="pos",1,0)
-  f9 <- mvgamHMC(y ~ pregnant+pedigree+age, chains=1, 
+  f9 <- bayesGAM(y ~ pregnant+pedigree+age, chains=1, 
                  data=PimaIndiansDiabetes2, iter=500,
                  family=binomial(link="cloglog"),
                  spcontrol = list(qr = TRUE), seed=521)
@@ -138,7 +138,7 @@ test_that("hmc testing", {
   treatment <- gl(3,3)
   pdata <- data.frame(counts, outcome, treatment)
 
-  f10 <- mvgamHMC(counts ~ outcome + treatment, 
+  f10 <- bayesGAM(counts ~ outcome + treatment, 
                   data=pdata, chains=1, iter=500,
                   family = poisson(link="log"),
                        spcontrol = list(qr = TRUE), 
@@ -155,7 +155,7 @@ test_that("hmc testing", {
   # Poisson: identity
   # counts2 <- sample(0:4, size=9, replace=TRUE)
   # pdata$counts2 <- counts2
-  # f11 <- mvgamHMC(counts2 ~ outcome + treatment, data=pdata,
+  # f11 <- bayesGAM(counts2 ~ outcome + treatment, data=pdata,
   #                 family = poisson(link="identity"),
   #                 spcontrol = list(qr = TRUE),
   #                 cores=1, chains=1, seed=521)
@@ -166,7 +166,7 @@ test_that("hmc testing", {
 
 
   # Poisson: sqrt
-  f12 <- mvgamHMC(counts ~ outcome + treatment, 
+  f12 <- bayesGAM(counts ~ outcome + treatment, 
                   data=pdata, chains=1, iter=500,
                   family = poisson(link="sqrt"),
                   spcontrol = list(qr = TRUE), 
@@ -183,7 +183,7 @@ test_that("hmc testing", {
   # bivariate smoothing
   data(scallop)
   set.seed(982)
-  f13 <- mvgamHMC(log(tot.catch+1) ~ np(longitude, latitude),
+  f13 <- bayesGAM(log(tot.catch+1) ~ np(longitude, latitude),
                  data=scallop, cores=1, chains=1, iter=500,
                  seed=521)
   
@@ -196,7 +196,7 @@ test_that("hmc testing", {
   
   
   # # multivariate response
-  # f14 <- mvgamHMC(cbind(logvar1, logvar2, logvar3) ~ np(x1, x2) +
+  # f14 <- bayesGAM(cbind(logvar1, logvar2, logvar3) ~ np(x1, x2) +
   #                  x3 + x4, data = maskdata,
   #                 random = ~ factor(idnum), cores=1, 
   #                 chains=1, iter=100, 
@@ -209,7 +209,7 @@ test_that("hmc testing", {
   # expect_true(all(cf14 != 0))
   
   # autoregressive
-  f15 <- mvgamHMC(lh ~ L(lh), family=gaussian, cores=1, chains=1, 
+  f15 <- bayesGAM(lh ~ L(lh), family=gaussian, cores=1, chains=1, 
                   seed=521)
   cf15 <- coef(f15)
   expect_equal(length(cf15), 3)
@@ -227,7 +227,7 @@ test_that("hmc testing", {
   
   # predict
   set.seed(432)
-  f <- mvgamHMC(weight ~ np(height), data = women,
+  f <- bayesGAM(weight ~ np(height), data = women,
                 family = gaussian, iter=1000)
   newheights <- with(women, rnorm(10, mean = mean(height)), sd=sd(height))
   women2 <- data.frame(height=newheights)
@@ -247,7 +247,7 @@ test_that("hmc testing", {
                     y2 = rexp(50),
                     x = runif(50))
   
-  f16 <- mvgamHMC(cbind(y1, y2) ~ np(x), random = ~factor(id), data=dat, 
+  f16 <- bayesGAM(cbind(y1, y2) ~ np(x), random = ~factor(id), data=dat, 
                 chains=1, iter=500)
   
   expect_equal(length(coef(f16)), 55)

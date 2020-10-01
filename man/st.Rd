@@ -10,7 +10,7 @@ st(param_values)
 \item{param_values}{Numeric vector of length 3 for the degrees of freedom, location, and scale parameter.}
 }
 \description{
-Used to specify student-t priors for \code{mvgamHMC} models
+Used to specify student-t priors for \code{bayesGAM} models
 }
 \details{
 For the \code{beta} and \code{a} parameters, the distribution is assumed to be unconstrained.

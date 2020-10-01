@@ -2,18 +2,18 @@
 % Please edit documentation in R/AllMethods.R
 \name{waic}
 \alias{waic}
-\alias{waic,mvgamHMCfit-method}
+\alias{waic,bayesGAMfit-method}
 \alias{waic,array-method}
 \title{Calls the \code{loo} package to calculate the widely applicable information criterion (WAIC)}
 \usage{
 waic(object, ...)
 
-\S4method{waic}{mvgamHMCfit}(object, ...)
+\S4method{waic}{bayesGAMfit}(object, ...)
 
 \S4method{waic}{array}(object, ...)
 }
 \arguments{
-\item{object}{Object of type \code{mvgamHMCfit} generated from \code{mvgamHMC}.}
+\item{object}{Object of type \code{bayesGAMfit} generated from \code{bayesGAM}.}
 
 \item{...}{Additional parameters to pass to pass to \code{loo::waic}}
 }
@@ -39,7 +39,7 @@ measures (\code{elpd_waic}, \code{p_waic}, \code{waic}).
 Computes WAIC by calling the appropriate function from the \code{loo} package
 }
 \examples{
-f <- mvgamHMC(weight ~ np(height), data = women,
+f <- bayesGAM(weight ~ np(height), data = women,
               family = gaussian, iter=500, chains = 1)
 waic(f)
 }

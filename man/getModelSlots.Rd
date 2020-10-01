@@ -2,15 +2,15 @@
 % Please edit documentation in R/AllMethods.R
 \name{getModelSlots}
 \alias{getModelSlots}
-\alias{getModelSlots,mvgamHMCfit-method}
-\title{Return one or slots from the \code{Stan} model in \code{mvgamHMC}}
+\alias{getModelSlots,bayesGAMfit-method}
+\title{Return one or slots from the \code{Stan} model in \code{bayesGAM}}
 \usage{
 getModelSlots(object, ...)
 
-\S4method{getModelSlots}{mvgamHMCfit}(object, name = "X")
+\S4method{getModelSlots}{bayesGAMfit}(object, name = "X")
 }
 \arguments{
-\item{object}{Object of type \code{mvgamHMCfit}}
+\item{object}{Object of type \code{bayesGAMfit}}
 
 \item{...}{Additional arguments for \code{getModelSlots}}
 
@@ -45,11 +45,11 @@ getModelSlots(object, ...)
 Contents of slot in \code{glmModel}
 }
 \description{
-Contains the objects and parameters passed to Stan in object of type \code{glmModel}, contained in object type \code{mvgamHMCfit}
+Contains the objects and parameters passed to Stan in object of type \code{glmModel}, contained in object type \code{bayesGAMfit}
 }
 \examples{
 require(stats); require(graphics)
-f <- mvgamHMC(weight ~ np(height), data = women, family = gaussian, 
+f <- bayesGAM(weight ~ np(height), data = women, family = gaussian, 
               iter = 500, chains = 1)
 getModelSlots(f, "X")
 }

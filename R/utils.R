@@ -38,7 +38,7 @@ parse_priors <- function(priors, famnum, X, Z) {
 # #'
 # #' @export
 # #' @param form formula
-# #' @return List for mvgamHMC
+# #' @return List for bayesGAM
 parse_formula <- function(form)
 {
   formtochar <- as.character(form)
@@ -166,7 +166,7 @@ pad_z <- function(Zlst, padval=0) {
 
 #' Lag function for autoregressive models
 #' 
-#' Creates lagged variables for use with \code{mvgamHMC}, including the functionality
+#' Creates lagged variables for use with \code{bayesGAM}, including the functionality
 #' to create lags for each specified subject if desired. The input data must be pre-
 #' sorted according by time, and within each subject id if specified. 
 #' 
@@ -183,7 +183,7 @@ pad_z <- function(Zlst, padval=0) {
 #' 
 #' # autoregressive
 #' ar.ols(lh, demean = FALSE, intercept=TRUE, order=1)
-#' f <- mvgamHMC(lh ~ L(lh), family=gaussian)
+#' f <- bayesGAM(lh ~ L(lh), family=gaussian)
 #' coef(f)
 L <- function(x, k=1, id=NULL) {
   arg <- deparse(substitute(x))
@@ -368,7 +368,7 @@ append_knots_to_formula <- function(nparg, kvals, basis, npdegree) {
   return(newcall)
 }
 
-# set variable names for bayesplot. object is type mvgamHMCfit, returns stan object
+# set variable names for bayesplot. object is type bayesGAMfit, returns stan object
 set_varnms <- function(object) {
   stanobj <- object@results
   multresponse <- object@model@multresponse

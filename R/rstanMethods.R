@@ -1,6 +1,6 @@
 
 # from rstan
-as.matrix.mvgamHMCfit <- function(x, ...) {
+as.matrix.bayesGAMfit <- function(x, ...) {
   # rstan:::as.matrix.stanfit(as(x, "stanfit"), ...)
   x <- as(x, "stanfit")
   if (x@mode != 0) return(numeric(0)) 
@@ -14,7 +14,7 @@ as.matrix.mvgamHMCfit <- function(x, ...) {
 }
 
 # from rstan
-as.array.mvgamHMCfit <- function(x, ...) {
+as.array.bayesGAMfit <- function(x, ...) {
   # rstan:::as.array.stanfit(as(x, "stanfit"), ...)
   x <- as(x, "stanfit")
   if (x@mode != 0) return(numeric(0)) 
@@ -24,14 +24,14 @@ as.array.mvgamHMCfit <- function(x, ...) {
 }
 
 # from rstan
-as.data.frame.mvgamHMCfit <- function(x, ...) {
+as.data.frame.bayesGAMfit <- function(x, ...) {
   # rstan:::as.data.frame.stanfit(as(x, "stanfit"), )
   x <- as(x, "stanfit")
   as.data.frame(as.matrix(x, ...))
 }
 
 # from rstan
-print.mvgamHMCfit <- function(x, pars = x@sim$pars_oi, 
+print.bayesGAMfit <- function(x, pars = x@sim$pars_oi, 
                               probs = c(0.025, 0.25, 0.5, 0.75, 0.975), 
                               digits_summary = 2, include = TRUE, ...) { 
   x <- as(x, "stanfit")
