@@ -1540,7 +1540,7 @@ setMethod("smooth", signature("bayesGAMfit"),
                     # p2 <- p2 + ggplot2::labs(ggplot2::aes(x=grouping, y=grouping))
                     # p2 <- p2 + ggplot2::xlab("") + ggplot2::ylab("")
                     p2 <- p2 + ggplot2::xlab(labels.list[[2]]) + ggplot2::ylab(labels.list[[1]])
-                    p2 <- p2 + ggplot2::scale_fill_distiller(palette="Spectral", na.value="white")
+                    p2 <- p2 + ggplot2::scale_fill_distiller(palette="Spectral", na.value="transparent")
                     p2 <- p2 + ggplot2::facet_wrap( ~ grouping, scales="free_x")
                     p2 <- p2 + ggplot2::theme_bw()
                   })
