@@ -1518,12 +1518,18 @@ setMethod("smooth", signature("bayesGAMfit"),
                     xx$grouping[xx$grouping == gkeep] <- ynm_all[yy]
                     
                     
-                    
+                    # carveout portion of plot not in data
+                    # lapply to apply logit to each facet
                     Xorig <- object@model@X[, rev(xyparam)]
-                    ch <- geometry::convhulln(Xorig)
-                    ptsinhull <- geometry::inhulln(ch, as.matrix(xx[, c("xplotvals", "yplotvals")]))
-                    xx[!ptsinhull, which(colnames(xx) == ynm_all[yy])] <- NA
+                    xx <- lapply(split(xx, xx$grouping), function(zz) {
+                      ch <- geometry::convhulln(Xorig)
+                      ptsinhull <- geometry::inhulln(ch, as.matrix(zz[, c("xplotvals", "yplotvals")]))
+                      zz[!ptsinhull, which(colnames(xx) == ynm_all[yy])] <- NA
+                      zz
+                    })
+                    xx <- as.data.frame(do.call(rbind, xx))
                     
+           
                     
                     p2 <- ggplot2::ggplot(data=xx,
                                           ggplot2::aes_string(x="xplotvals",
