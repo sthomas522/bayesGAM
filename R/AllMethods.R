@@ -1542,6 +1542,7 @@ setMethod("smooth", signature("bayesGAMfit"),
                     p2 <- p2 + ggplot2::xlab(labels.list[[2]]) + ggplot2::ylab(labels.list[[1]])
                     p2 <- p2 + ggplot2::scale_fill_distiller(palette="Spectral", na.value="transparent")
                     p2 <- p2 + ggplot2::facet_wrap( ~ grouping, scales="free_x")
+                    p2 <- p2 + ggplot2::guides(fill=ggplot2::guide_legend(title=NULL))
                     p2 <- p2 + ggplot2::theme_bw()
                   })
 

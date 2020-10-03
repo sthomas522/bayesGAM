@@ -2,11 +2,12 @@
 #' @importFrom cluster clara
 #' @importFrom graphics abline
 #' @importFrom corrplot corrplot.mixed
-#' @importFrom ggplot2 ggplot aes_string xlab ylab geom_ribbon geom_line facet_wrap theme_bw geom_raster geom_contour labs aes scale_fill_distiller theme_bw element_blank
+# #' @importFrom ggplot2 ggplot aes_string xlab ylab geom_ribbon geom_line facet_wrap theme_bw geom_raster geom_contour labs aes scale_fill_distiller theme_bw element_blank guides
 #' @importFrom boot inv.logit
 #' @import geometry
 #' @import stats
 #' @import SemiPar
+#' @import ggplot2
 NULL
 
 # zzz.R
