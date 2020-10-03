@@ -4,6 +4,7 @@
 #' @importFrom corrplot corrplot.mixed
 #' @importFrom ggplot2 ggplot aes_string xlab ylab geom_ribbon geom_line facet_wrap theme_bw geom_raster geom_contour labs aes scale_fill_distiller theme_bw element_blank
 #' @importFrom boot inv.logit
+#' @import geometry
 #' @import stats
 #' @import SemiPar
 NULL

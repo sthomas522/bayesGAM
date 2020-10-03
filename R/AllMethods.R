@@ -1516,7 +1516,14 @@ setMethod("smooth", signature("bayesGAMfit"),
                     
                     # for facets
                     xx$grouping[xx$grouping == gkeep] <- ynm_all[yy]
-                    print(unique(xx$grouping))
+                    
+                    
+                    
+                    Xorig <- object@model@X[, rev(xyparam)]
+                    ch <- geometry::convhulln(Xorig)
+                    ptsinhull <- geometry::inhulln(ch, as.matrix(xx[, c("xplotvals", "yplotvals")]))
+                    xx[!ptsinhull, which(colnames(xx) == ynm_all[yy])] <- NA
+                    
                     
                     p2 <- ggplot2::ggplot(data=xx,
                                           ggplot2::aes_string(x="xplotvals",
@@ -1526,13 +1533,13 @@ setMethod("smooth", signature("bayesGAMfit"),
                                                     ggplot2::aes_string(x="xplotvals",
                                                                         y="yplotvals",
                                                                         fill = ynm_all[yy])) +
-                                                    ggplot2::geom_contour(colour="white")
+                                                    ggplot2::geom_contour(colour="white", na.rm=TRUE)
 
                     # p2 <- p2 + ggplot2::theme(legend.title = ggplot2::element_blank())
                     
                     # p2 <- p2 + ggplot2::labs(ggplot2::aes(x=grouping, y=grouping))
                     # p2 <- p2 + ggplot2::xlab("") + ggplot2::ylab("")
-                    p2 <- p2 + xlab(labels.list[[2]]) + ylab(labels.list[[1]])
+                    p2 <- p2 + ggplot2::xlab(labels.list[[2]]) + ggplot2::ylab(labels.list[[1]])
                     p2 <- p2 + ggplot2::scale_fill_distiller(palette="Spectral", na.value="white")
                     p2 <- p2 + ggplot2::facet_wrap( ~ grouping, scales="free_x")
                     p2 <- p2 + ggplot2::theme_bw()
