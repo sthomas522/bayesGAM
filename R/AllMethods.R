@@ -1127,11 +1127,11 @@ setMethod("getCovmat", signature(object="bayesGAMfit"),
 # ---------------- rstan extract  ---------------------------- #
 
 # setGeneric("extract", function(object, ...)
-#   standardGeneric("extract") )
+#    standardGeneric("extract") )
 
 setMethod("extract", signature("bayesGAMfit"),
           function(object, ...) {
-            extract(as(object, "stanfit"), ...)
+            rstan::extract(as(object, "stanfit"), ...)
           })
 
 
@@ -3112,22 +3112,22 @@ setMethod("predict", signature(object="bayesGAMfit"),
 #' @references Stan Development Team (2017). RStan: the R interface to Stan, Version 2.16.1. https://mc-stan.org/
 #' @references Vehtari A, Gabry J, Magnusson M, Yao Y, Gelman A (2019). “loo: Efficient leave-one-out cross-validation and WAIC for Bayesian models.” R package version 2.2.0, <URL: https://mc-stan.org/loo>.
 #' @references Vehtari A, Gelman A, Gabry J (2017). “Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC.” _Statistics and Computing_, *27*, 1413-1432. doi:10.1007/s11222-016-9696-4 (URL: https://doi.org/10.1007/s11222-016-9696-4).
-#' @name extract_log_lik
+#' @name extract_log_lik_bgam
 #' @examples 
 #' f <- bayesGAM(weight ~ np(height), data = women,
 #'               family = gaussian, iter=500, chains = 1)
-#' ll <- extract_log_lik(f)
+#' ll <- extract_log_lik_bgam(f)
 NULL
 
 #' @export
-#' @rdname extract_log_lik
-setGeneric("extract_log_lik", function(object, ...) {
-  standardGeneric("extract_log_lik")
+#' @rdname extract_log_lik_bgam
+setGeneric("extract_log_lik_bgam", function(object, ...) {
+  standardGeneric("extract_log_lik_bgam")
 })
 
 #' @export
-#' @rdname extract_log_lik
-setMethod("extract_log_lik", "bayesGAMfit", 
+#' @rdname extract_log_lik_bgam
+setMethod("extract_log_lik_bgam", "bayesGAMfit", 
           function(object, ...) {
             loo::extract_log_lik(object@results, ...)
           })
@@ -3187,30 +3187,30 @@ setMethod("extract_log_lik", "bayesGAMfit",
 #' @references Vehtari, A., Gelman, A., and Gabry, J. (2017a). Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC. Statistics and Computing. 27(5), 1413–1432. doi:10.1007/s11222-016-9696-4 (journal version, preprint arXiv:1507.04544).
 #' @references Vehtari, A., Gelman, A., and Gabry, J. (2017b). Pareto smoothed importance sampling. preprint arXiv:1507.02646
 #' @references Vehtari A, Gabry J, Magnusson M, Yao Y, Gelman A (2019). “loo: Efficient leave-one-out cross-validation and WAIC for Bayesian models.” R package version 2.2.0, <URL: https://mc-stan.org/loo>.
-#' @name loo
+#' @name loo_bgam
 #' @examples
 #' f <- bayesGAM(weight ~ np(height), data = women,
 #'               family = gaussian, iter=500, chains = 1)
-#' loo(f)
+#' loo_bgam(f)
 NULL
 
 #' @export
-#' @rdname loo
-setGeneric("loo", function(object, ...) {
-  standardGeneric("loo")
+#' @rdname loo_bgam
+setGeneric("loo_bgam", function(object, ...) {
+  standardGeneric("loo_bgam")
 })
 
 #' @export
-#' @rdname loo
-setMethod("loo", "bayesGAMfit", 
+#' @rdname loo_bgam
+setMethod("loo_bgam", "bayesGAMfit", 
           function(object, ...) {
-            ll <- extract_log_lik(object)
+            ll <- extract_log_lik_bgam(object)
             loo::loo(ll, ...)
           })
 
 #' @export
-#' @rdname loo
-setMethod("loo", "array", 
+#' @rdname loo_bgam
+setMethod("loo_bgam", "array", 
           function(object, ...) {
             loo::loo(object, ...)
           })
@@ -3243,30 +3243,30 @@ setMethod("loo", "array",
 #' @references Vehtari, A., Gelman, A., and Gabry, J. (2017a). Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC. Statistics and Computing. 27(5), 1413–1432. doi:10.1007/s11222-016-9696-4 (journal version, preprint arXiv:1507.04544).
 #' @references Vehtari, A., Gelman, A., and Gabry, J. (2017b). Pareto smoothed importance sampling. preprint arXiv:1507.02646
 #' @references Vehtari A, Gabry J, Magnusson M, Yao Y, Gelman A (2019). “loo: Efficient leave-one-out cross-validation and WAIC for Bayesian models.” R package version 2.2.0, <URL: https://mc-stan.org/loo>.
-#' @name waic
+#' @name waic_bgam
 #' @examples
 #' f <- bayesGAM(weight ~ np(height), data = women,
 #'               family = gaussian, iter=500, chains = 1)
-#' waic(f)
+#' waic_bgam(f)
 NULL
 
 #' @export
-#' @rdname waic
-setGeneric("waic", function(object, ...) {
-  standardGeneric("waic")
+#' @rdname waic_bgam
+setGeneric("waic_bgam", function(object, ...) {
+  standardGeneric("waic_bgam")
 })
 
 #' @export
-#' @rdname waic
-setMethod("waic", "bayesGAMfit", 
+#' @rdname waic_bgam
+setMethod("waic_bgam", "bayesGAMfit", 
           function(object, ...) {
-            ll <- extract_log_lik(object)
+            ll <- extract_log_lik_bgam(object)
             loo::waic(ll, ...)
           })
 
 #' @export
-#' @rdname waic
-setMethod("waic", "array", 
+#' @rdname waic_bgam
+setMethod("waic_bgam", "array", 
           function(object, ...) {
             loo::waic(object, ...)
           })
@@ -3291,25 +3291,25 @@ setMethod("waic", "array",
 #'               family = gaussian, iter=500, chains = 1)
 #' f2 <- bayesGAM(weight ~ np(height), data=women, 
 #'               family = gaussian, iter=500, chains = 1)
-#' loo_compare(f1, f2)
-#' @name loo_compare
+#' loo_compare_bgam(f1, f2)
+#' @name loo_compare_bgam
 NULL
 
 
 #' @export
-#' @rdname loo_compare
-setGeneric("loo_compare", function(object, ...) {
-  standardGeneric("loo_compare")
+#' @rdname loo_compare_bgam
+setGeneric("loo_compare_bgam", function(object, ...) {
+  standardGeneric("loo_compare_bgam")
 })
 
 #' @export
-#' @rdname loo_compare
-setMethod("loo_compare", "bayesGAMfit", 
+#' @rdname loo_compare_bgam
+setMethod("loo_compare_bgam", "bayesGAMfit", 
           function(object, ...) {
               dots <- list(...)
               mvfit <- c(list(object), dots)
               
-              all_loo <- lapply(mvfit, loo)
+              all_loo <- lapply(mvfit, loo_bgam)
               loo::loo_compare(all_loo)
             }
           ) 
