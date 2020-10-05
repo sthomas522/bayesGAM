@@ -1,7 +1,6 @@
 
 # from rstan
 as.matrix.bayesGAMfit <- function(x, ...) {
-  # rstan:::as.matrix.stanfit(as(x, "stanfit"), ...)
   x <- as(x, "stanfit")
   if (x@mode != 0) return(numeric(0)) 
   e <- rstan::extract(x, permuted = FALSE, inc_warmup = FALSE, ...) 
@@ -15,17 +14,14 @@ as.matrix.bayesGAMfit <- function(x, ...) {
 
 # from rstan
 as.array.bayesGAMfit <- function(x, ...) {
-  # rstan:::as.array.stanfit(as(x, "stanfit"), ...)
   x <- as(x, "stanfit")
   if (x@mode != 0) return(numeric(0)) 
   out <- rstan::extract(x, permuted = FALSE, inc_warmup = FALSE, ...)
-  # dimnames(out) <- dimnames(x)
   return(out)
 }
 
 # from rstan
 as.data.frame.bayesGAMfit <- function(x, ...) {
-  # rstan:::as.data.frame.stanfit(as(x, "stanfit"), )
   x <- as(x, "stanfit")
   as.data.frame(as.matrix(x, ...))
 }

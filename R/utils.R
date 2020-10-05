@@ -1,8 +1,4 @@
-# #' Parse priors
-# #' @param y Numeric vector for dependent variable
-# #' @param qr Boolean TRUE/FALSE for using QR decomposition
-# #' @param ... Arguments passed to `rstan::sampling` (e.g. iter, chains).
-# #' @return Priors list
+
 parse_priors <- function(priors, famnum, X, Z) {
   # default priors
   # families:  1 = gaussian, 2 = binomial, 3 = poisson
@@ -34,11 +30,6 @@ parse_priors <- function(priors, famnum, X, Z) {
   return(priors)
 }
 
-# #' parse formula: from SemiPar break.string()
-# #'
-# #' @export
-# #' @param form formula
-# #' @return List for bayesGAM
 parse_formula <- function(form)
 {
   formtochar <- as.character(form)
@@ -157,11 +148,6 @@ pad_z <- function(Zlst, padval=0) {
   }
 
 }
-
-# # omit NA's for use with lagged variables
-# model.frame1 <- function(formula,...) {
-#   model.frame(formula, na.action=na.pass, ...)
-# }
 
 
 #' Lag function for autoregressive models
@@ -392,9 +378,6 @@ set_varnms <- function(object) {
     beta_param_nms <- gsub(pattern="\\,*.\\]", "]", beta_param_nms)
     
     names(stanobj)[grepl("^beta", names(stanobj))] <- beta_param_nms
-    
-    # offdiagonal
-    # a_param_nms <- names(stanobj)[grepl("^a", names(stanobj))]
     
   } else {
     names(stanobj)[grepl("^beta", names(stanobj))] <-

@@ -21,7 +21,7 @@ setMethod("initialize", "normalDistribution",
                    num_params = 2L,
                    param_names=c("mu", "sigma"),
                    param_values=c(0, 1e6), ...) {
-            # .Object <- callNextMethod(.Object, name, param_names, param_values, ...)
+            
             if (missing(name))
               name <- "Normal"
             if (missing(distnum))
@@ -57,7 +57,7 @@ setMethod("initialize", "tDistribution",
                    num_params=3L,
                    param_names=c("nu", "mu", "sigma"),
                    param_values=c(1, 0, 25), ...) {
-            # .Object <- callNextMethod(.Object, name, param_names, param_values, ...)
+            
             if (missing(name))
               name <- "tdist"
             if (missing(distnum))
@@ -95,11 +95,10 @@ setMethod("initialize", "glmFamily",
                    linknum,
                    linkname,
                    mixed, ...) {
-            # .Object <- callNextMethod(.Object, name, param_names, param_values, ...)
+            
             if (missing(famnum))
               # default to Gaussian
               famnum <- 1L
-            # assign famname
             if (missing(famname)) {
               if (famnum == 1L) {
                 famname <- "gaussian"
@@ -148,7 +147,6 @@ setMethod("initialize", "glmFamily",
 
 
 # -----------------GLM model class---------------------------- #
-# Zlst, Zarray, 
 
 setMethod("initialize", "glmModel",
           function(.Object, X, Z, Zint, Znp, y, p, r, q, n, has_intercept, zvars, names_beta, names_u, names_y,
@@ -183,10 +181,6 @@ setMethod("initialize", "glmModel",
               #Zlst <- list(Z)
               max_col <- 0L
             } 
-            # pad Z for use in stan array
-            #Zarraylst <- pad_z(Zlst)
-            #Zarray <- Zarraylst$Zarray
-            #max_col <- Zarraylst$max_col
 
             nk <- max_col <- ncol(Z)
             if (missing(zvars)) {
@@ -291,8 +285,6 @@ setMethod("initialize", "glmModel",
             .Object@Z <- Z
             .Object@Zint <- Zint
             .Object@Znp <- Znp
-            #.Object@Zlst <- Zlst
-            #.Object@Zarray <- Zarray
             .Object@max_col <- max_col
             .Object@y <- y
             .Object@p <- p
@@ -485,7 +477,6 @@ setMethod("parsePrior", signature(object="list"),
             if (num_dist_from_list == 1) {
               if (is(object[[1]], "distribution")) {
                 res <- replicate(num_dist, object[[1]], simplify=FALSE)
-                # res <- list(object[[1]])
               } else {
                 stop("must provide a list of distribution objects")
               }
@@ -791,18 +782,6 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
             } else {
               qr <- spcontrol$qr*1
             }
-            
-            # qrsplit <- spcontrol$qrsplit
-            # 
-            # if (is.null(qrsplit)) {
-            #   qrsplit <- FALSE
-            # }
-
-            # condition glm families
-
-            #if (missing(stanargs)) {
-            #  stanargs <- list()
-            #}
 
             # convert to numeric if single response
             if (!object@multresponse) {
@@ -831,9 +810,6 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
             a_param <- t(sapply(a_param, '[', 1:max(sapply(a_param, length))))
             a_param[is.na(a_param)] <- 0
             
-            # q = number of lambda param
-            # r = number of lambda param
-            # Pad length of lambdanum, epsnum, betanum to ensure int array of at least length 2 in stan
             dat <- list(N = nrow(object@X),
                         p = ncol(object@X),
                         y = y,
@@ -848,10 +824,8 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                         Znp = object@Znp, 
                         nnp = ncol(object@Znp), 
                         nrandint = ncol(object@Zint), 
-                        # Zarray = object@Zarray,
                         max_col = object@max_col,
                         qr = qr + 0,
-                        # qrsplit = qrsplit + 0,
                         qrsplit = 0,
                         mvindep = mvindep + 0,
                         famnum = object@famnum,
@@ -1126,9 +1100,6 @@ setMethod("getCovmat", signature(object="bayesGAMfit"),
 
 # ---------------- rstan extract  ---------------------------- #
 
-# setGeneric("extract", function(object, ...)
-#    standardGeneric("extract") )
-
 setMethod("extract", signature("bayesGAMfit"),
           function(object, ...) {
             rstan::extract(as(object, "stanfit"), ...)
@@ -1297,11 +1268,6 @@ setAs("bayesGAMfit", "stanfit",
 #'               family = gaussian, iter=500, chains = 1)
 #' plot(f)
 #' 
-# #' # bivariate nonparametric example
-# #' library(SemiPar)
-# #' data(scallop)
-# #' f2 <- bayesGAM(log(tot.catch+1) ~ np(longitude, latitude), data=scallop, iter=1000)
-# #' plot(f2)
 NULL
 
 #' @rdname plot
@@ -1309,25 +1275,6 @@ setMethod("plot", signature(x="bayesGAMfit", y="missing"),
           function(x, y, applylink=TRUE, ...) {
             smooth(x, applylink=applylink, ...)
           })
-
-            # if (plotfun == "semipar") {
-            # } else if (plotfun == "fitvact") {
-            #   fitvact(x, ...)
-            # }
-            # stan_plot default for rstan
-            # else {
-            #   # plot(as(x, "stanfit"), plotfun=plotfun, ...)
-            #   stanobj <- x@results
-            #   names(stanobj)[grepl("^beta", names(stanobj))] <- x@model@names_beta
-            #   
-            #   if (missing(pars)) {
-            #     default_pars <- stanobj@sim$pars_oi
-            #     pars <- default_pars[default_pars %in% c("beta", "eps", "lambda", x@model@names_beta)]
-            #   }
-            #   
-            #   plot(stanobj, plotfun=plotfun, pars=pars, ...)
-            # }
-            # 
 
 
 #' @rdname plot
@@ -1581,7 +1528,6 @@ setMethod("initialize", "smoothPlotObject",
             check_bivariate <- sapply(npargs, length) == 2
             npargs_v <- npargs[!check_bivariate]
             npargs_v <- unlist(npargs_v)
-            # npargs_v <- unlist(npargs)
             xvars_bivariate <- npargs[check_bivariate]
 
             which_truncpoly <- which(npbasis == "trunc.poly")
@@ -1590,8 +1536,6 @@ setMethod("initialize", "smoothPlotObject",
             npargs_v_exclude <- character()
             if (length(npargs_v) > 0 & length(which_truncpoly) > 0) {
 
-              # npargs_v_truncpoly <- paste0(npargs_v,
-              #                              1:(npdegree[which_truncpoly]))
               npargs_v_truncpoly <- paste0(npargs_v, 1)
               deg <- npdegree[which_truncpoly]
 
@@ -1613,9 +1557,6 @@ setMethod("initialize", "smoothPlotObject",
             ind_trunc_poly_univ <- ind_trunc_poly[!check_bivariate]
             xvars_np[ind_trunc_poly_univ] <- 
               paste0(xvars_np[ind_trunc_poly_univ], 1)
-            
-            # xvars_np[npbasis == "trunc.poly"] <-
-            #   paste0(xvars_np[npbasis == "trunc.poly"], 1)
             
             # overwrite NA
             if (length(npargs_v) == 0) {
@@ -1779,12 +1720,11 @@ setMethod("mvcorrplot", "bayesGAMfit",
             nmdf <- nmdf[order(nmdf$var2, nmdf$var1), ]
             
             # create matrix
-            # sigu_correlation <- matrix(sigucoef, ncol=sqrt(length(sigucoef)))
             sigu_correlation <- matrix(nmdf$corr, ncol=sqrt(nrow(nmdf)))
 
             # plot matrix
             corrplot::corrplot.mixed(sigu_correlation, ...)
-            # tl.col="black"
+            
           })
 
 
@@ -1982,9 +1922,6 @@ setMethod("show", "bayesGAMfit",
               beta_param_nms <- gsub(pattern="\\,*.\\]", "]", beta_param_nms)
 
               names(stanobj)[grepl("^beta", names(stanobj))] <- beta_param_nms
-
-              # offdiagonal
-              # a_param_nms <- names(stanobj)[grepl("^a", names(stanobj))]
 
             } else {
               names(stanobj)[grepl("^beta", names(stanobj))] <-
@@ -2441,7 +2378,6 @@ setMethod("mcmc_violin", "bayesGAMfit",
             
             stanobj <- set_varnms(object)
             bayesplot::mcmc_violin(stanobj, regex_pars=regex_pars, ...)
-            # bayesplot::mcmc_violin(object@results, regex_pars=regex_pars, ...)
           })
 
 
@@ -3314,11 +3250,3 @@ setMethod("loo_compare_bgam", "bayesGAMfit",
             }
           ) 
 
-# #' @export
-# #' @rdname loo_compare
-# setMethod("loo_compare", "list",
-#          function(object, ...) {
-#            dots <- list(...)
-#            res <- c(list(object), dots)
-#            loo::loo_compare(res)
-#          })

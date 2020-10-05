@@ -1,12 +1,4 @@
 
-# #' Bayesian semiparametric regression with Stan
-# #'
-# #' @param r r
-# #' @param m m
-# #' @param d d
-# #' @return thin plate spline covariance matrix
-# #' @references Ruppert, David, Matt P. Wand, and Raymond J. Carroll. \emph{Semiparametric Regression}. No. 12. Cambridge university press, 2003.
-# #' @references Matt Wand (2018). SemiPar: Semiparametric Regression. R package version 1.0-4.2.
 tpscov <- function (r, m = 2, d = 1)
 {
   r <- as.matrix(r)
@@ -53,7 +45,6 @@ create_bivariate_design <- function(X1, X2, num_knots = NULL, knots = NULL) {
     num_knots <- nrow(knots)
   }
 
-  # from function:  spmDesignInfo
   dist_mat <- matrix(0, num_knots, num_knots)
 
   # euclidean distance between knots
@@ -83,13 +74,6 @@ create_bivariate_design_dat <- function(X, num_knots = NULL, knots = NULL) {
   create_bivariate_design(X1=X[, 1], X2=X[, 2], num_knots=num_knots, knots=knots)
 }
 
-# #' Bayesian semiparametric regression with Stan
-# #'
-# #' @export
-# #' @param x vector from which to select knots
-# #' @param num_knots number of knots
-# #' @return select knots based on quantile
-# # default per Wand Semiparametric Regression p.126
 select_knots <- function(x, num_knots=NULL, ...) {
   if (is.null(num_knots)) {
     num_knots <- pmin(0.25* length(unique(x)), 25)

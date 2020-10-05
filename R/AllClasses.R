@@ -1,14 +1,6 @@
 
 ## ------------- bayesGAM Classes ----------------------------------------
 
-# # distribution class
-# #' Class distribution.
-# #'
-# #' Class \code{distribution} defines a prior distribution
-# #'
-# #' @name distribution-class
-# #' @rdname distribution-class
-# #' @exportClass distribution
 setClass("distribution",
          slots=c(name = "character",
                  distnum = "integer",
@@ -91,13 +83,6 @@ setClass("prior",
                    lambda = "list",
                    a = "list",
                    random_intercept = "logical"))
-
-# setValidity("prior", valid_prior)
-#
-# valid_prior <- function(object) {
-#   chk1 <- sapply(object, is, distribution)
-#   all.true(ch1)
-# }
 
 # -----------------GLM family class---------------------------- #
 

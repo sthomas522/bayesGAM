@@ -63,7 +63,6 @@ bayesGAM <- function (formula, random=NULL,
   
   if (missing(data)) {
     data <- environment(formula)
-    # data <- environment(getnp$sub_form)
   }
   
   tt <- terms(getnp$sub_form, 
@@ -139,9 +138,6 @@ bayesGAM <- function (formula, random=NULL,
   }
 
 
-  # if (missing(data)) {
-  #   data <- environment(formula)
-  # }
   mf <- match.call(expand.dots = FALSE)
   m <- match(c("formula", "data", "offset"), names(mf), 0L)
   mf <- mf[c(1L, m)]
@@ -150,14 +146,11 @@ bayesGAM <- function (formula, random=NULL,
   # remove np() terms
   mf$formula <- getnp$sub_form
   
-  # mf[[1L]] <- quote(stats::model.frame)
   mf2 <- mf
   mf2[[1L]] <- quote(function(...) { 
     stats::model.frame(na.action=na.pass, ...)
   })
-  # mf2[[1L]] <- quote(model.frame1)
 
-  #mf <- eval(mf, parent.frame())
   mf2 <- eval(mf2, Senv)
   
   # get NA values from design matrix
@@ -166,12 +159,6 @@ bayesGAM <- function (formula, random=NULL,
   mf[[1L]] <- quote(stats::model.frame)
   mf <- eval(mf, Senv)
   
-  # if (identical(method, "model.frame"))
-  #   return(mf)
-  # if (!is.character(method) && !is.function(method))
-  #   stop("invalid 'method' argument")
-  # if (identical(method, "bayesGAM.fit"))
-  #   control <- do.call("bayesGAM.control", control)
   mt <- attr(mf, "terms")
 
   Y <- model.response(mf, "any")
@@ -196,7 +183,6 @@ bayesGAM <- function (formula, random=NULL,
   }
   
   X <- if (!is.empty.model(mt)) {
-    # model.matrix(mt, mf, contrasts)
     model.matrix(mt, mf)
   } else {
     matrix(, NROW(Y), 0L)
@@ -207,13 +193,6 @@ bayesGAM <- function (formula, random=NULL,
   e1 <- environment(mf$formula)
   assign("L", L, envir = e1)
   
-  
-  # weights
-  # weights <- as.vector(model.weights(mf))
-  # if (!is.null(weights) && !is.numeric(weights)) 
-  #   stop("'weights' must be a numeric vector")
-  # if (!is.null(weights) && any(weights < 0)) 
-  #   stop("negative weights not allowed")
 
   # create list for Z
   Z1 <- NULL
@@ -261,7 +240,6 @@ bayesGAM <- function (formula, random=NULL,
     allZ <- lapply(allnp, function(xx) xx$Z)
 
     Xnp <- do.call(cbind, allX)
-    # Znp <- do.call(cbind, allZ)
 
     allknots <- lapply(allnp, function(xx) xx$knots)
     allbasis <- sapply(allnp, function(xx) xx$basis)
@@ -270,15 +248,7 @@ bayesGAM <- function (formula, random=NULL,
   }
   
 
-  # combine non-linear X and Z with current X
-  # if all terms on rhs are nonlinear, then ignore intercept from parse_formula
-  # if (getnp$ignoreX) {
-  #   X <- Xnp
-  # } else {
   X <- cbind(X, Xnp)
-  # }
-  # Z <- cbind(Z1, Znp)
-
   Zlst <- c(Zlst, allZ)
 
   if (length(Zlst) == 0) {
@@ -310,9 +280,7 @@ bayesGAM <- function (formula, random=NULL,
     }
     X <- X[whichcomplete, ]
     Z <- Z[whichcomplete, ]
-    # Zlst <- lapply(Zlst, function(zz) {
-    #   zz[whichcomplete, ]
-    # })
+    
   } else {
     whichcomplete <- complete.cases(X, Y)
     if (r > 1) {
@@ -357,7 +325,6 @@ bayesGAM <- function (formula, random=NULL,
                      Z = Z,
                      Zint = Zint, 
                      Znp = Znp, 
-                     # Zlst = Zlst,
                      y = Y,
                      names_y = ynm,
                      zvars = zvars,
@@ -389,7 +356,6 @@ bayesGAM <- function (formula, random=NULL,
     offset <- rep.int(0, nobs)
 
   # call bayesGAM fit
-
   if (method == "bayesGAMfit") {
 
     stanResults <- bayesGAMfit(spMCMCmodel,
@@ -401,7 +367,6 @@ bayesGAM <- function (formula, random=NULL,
   } else {
     stop("invalid method selected")
   }
-  # return(stanResults)
 
   spResults <- new("bayesGAMfit",
                     results = stanResults,

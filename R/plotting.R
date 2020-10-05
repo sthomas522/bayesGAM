@@ -7,7 +7,6 @@ create_xmeans <- function(xvars_static, Xorig, nvals, xvars_np, xvars_npargs,
 
   X1b <- NULL
   if (length(xvars_bivariate) > 0) {
-    # nvals <- max(nvals, 10000)
     X1b <- as.matrix(Xorig[, unlist(xvars_bivariate)])
     X1b <- matrix(colMeans(X1b), ncol=ncol(X1b), nrow=nvals, byrow=T)
     colnames(X1b) <- unlist(xvars_bivariate)
@@ -27,7 +26,6 @@ create_xmeans <- function(xvars_static, Xorig, nvals, xvars_np, xvars_npargs,
   
   if (length(xvars_np) > 0) {
     # tps
-    # xvars_np_tps <- xvars_np[xvars_basis == "tps"]
     xvars_np_tps <- unlist(xvars_npargs[xvars_basis == "tps"])
     
     X2 <- as.matrix(Xorig[, xvars_np_tps])
@@ -50,7 +48,6 @@ create_xmeans <- function(xvars_static, Xorig, nvals, xvars_np, xvars_npargs,
     # remove trailing
     np_nms <- unlist(xvars_npargs)[xvars_basis == "trunc.poly"]
 
-    # colnames(X3) <- paste0(xvars_np_truncpoly, 1:xvars_np_truncpoly_degrees)
     if (!is.null(X3)) {
       cnms <- mapply(function(nms, maxdegree) {
         paste0(nms, 1:maxdegree)
@@ -117,7 +114,6 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
     npow <- 1:degree
     Xtpoly <- matrix(xplotvals^(rep(npow, each=length(xplotvals))),ncol=degree,byrow=FALSE)
     colnames(Xtpoly) <- paste0(truexnm, 1:degree)
-    # Xplot[, colnames(Xtpoly)] <- Xtpoly
     Xplot[, which(colnames(Xplot) %in%  colnames(Xtpoly))] <- Xtpoly
   }
   
@@ -150,7 +146,6 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
     # check bivariate vars
     knots_bivariate <- knots[which_bivariate]
 
-    # Xbivdat <- Xplot[, xvars_bivariate[[1]]]
     Xbivdatlst <- lapply(xvars_bivariate, function(xx) {
       Xorig[, xx]
     })
@@ -176,15 +171,11 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
     if (type == 'bivariate') {
       Xplot <- matrix(rep(colMeans(Xplot), nrow(Xplotbiv)), byrow=TRUE,
                       nrow=nrow(Xplotbiv))
-      # Xplot[, bivcols] <- colMeans(cbind(xplotvals, yplotvals))
       Xplot[, bivcols] <- cbind(xplotvals, yplotvals)
-
-      # Xplot <- Xplotbiv
     } else {
       
       Xplot[, bivcols] <- matrix(colMeans(cbind(xplotvals, yplotvals)), 
                        nrow=nrow(Xplot), ncol=length(bivcols), byrow=TRUE)
-      #Xplot[, bivcols] <- colMeans(cbind(xplotvals, yplotvals))
       Zplot2 <- matrix(rep(colMeans(Zplot2), nvals), byrow = TRUE, nrow=nvals)
     }
 
@@ -194,7 +185,6 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
   Z1 <- NULL
   if (random_intercept & type != 'bivariate') {
     Z1 <- matrix(0, nrow=nvals, ncol=zvars[1])
-    # Z1 <- matrix(0, nrow=max(nrow(Zplot), nrow(Zplot2), na.rm=T), ncol=zvars[1])
   } else if (random_intercept & type == 'bivariate') {
     Z1 <- matrix(0, nrow=nrow(Zplot2), ncol=zvars[1])
   } 
@@ -211,7 +201,6 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
   # Z1: random intercept Z
   # Zplot: univariate smoothing Z
   # Zplot2: bivariate Z
-  
   Zplot <- cbind(Z1, Zplot, Zplot2)
 
   # fitted and lower/upper for y
@@ -250,9 +239,6 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
       nms_simvals <- colnames(simvals)
 
       var_nums <- sapply(nms_simvals, get_multresponse_ynums)
-
-      # try: remove u_random
-      #var_nums <- var_nums[!grepl("^u_random", names(var_nums))]
 
       var_nums_uniq <- sort(unique(var_nums))
       
@@ -299,7 +285,6 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
     stop("invalid interval parameter.  Must be covmat or simulation")
   }
 
-  # retdf <- as.data.frame(cbind(Xplot, Zplot))
   colnames(Cgrid) <- c(betanms, unms)
 
   if (type == "bivariate")
