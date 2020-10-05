@@ -13,15 +13,15 @@ Authors@R:
       person(given = "Trustees of Columbia University (R/rstanMethods.R)",
              role = "cph"))
 Description: The bayesGAM package is designed to provide a user friendly option to fit univariate and multivariate response Generalized Additive Models (GAM) using Hamiltonian Monte Carlo (HMC) with few technical burdens.  The R functions in this package use rstan (Stan Development Team 2020)  to call Stan routines that run the HMC simulations. The Stan code for these models is already translated to C++ and pre-compiled for the user. The programming formulation for models in bayesGAM is designed to be familiar to statisticians and analysts who fit statistical models in R.
-Bob Carpenter, Andrew Gelman, Matthew D. Hoffman, Daniel Lee, Ben Goodrich, Michael Betancourt, Marcus Brubaker, Jiqiang Guo, Peter Li, and Allen Riddell (2017). Stan: A probabilistic programming language. Journal of Statistical Software 76(1). DOI 10.18637/jss.v076.i01
-Stan Development Team. 2018. RStan: the R interface to Stan. R package version 2.17.3.   http://mc-stan.org
-Neal, Radford (2011) "Handbook of Markov Chain Monte Carlo" ISBN: 978-1420079418.
-Betancourt, Michael, and Mark Girolami. "Hamiltonian Monte Carlo for hierarchical models." Current trends in Bayesian methodology with applications 79.30 (2015): 2-4.
-Thomas, S., Tu, W. (2020) "Learning Hamiltonian Monte Carlo in R" <arXiv:2006.16194>,
-Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2013) "Bayesian Data Analysis" ISBN: 978-1439840955, 
-Agresti, Alan (2015) "Foundations of Linear and Generalized Linear Models ISBN: 978-1118730034, 
-Pinheiro, J., Bates, D. (2006) "Mixed-effects Models in S and S-Plus" ISBN: 978-1441903174.
-Ruppert, D., Wand, M. P., & Carroll, R. J. (2003). Semiparametric regression (No. 12). Cambridge university press. ISBN: 978-0521785167.
+    Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B., Betancourt, M., ... & Riddell, A. (2017). Stan: A probabilistic programming language. Journal of statistical software, 76(1). 
+    Stan Development Team. 2018. RStan: the R interface to Stan. R package version 2.17.3.   http://mc-stan.org
+    Neal, Radford (2011) "Handbook of Markov Chain Monte Carlo" ISBN: 978-1420079418.
+    Betancourt, Michael, and Mark Girolami. "Hamiltonian Monte Carlo for hierarchical models." Current trends in Bayesian methodology with applications 79.30 (2015): 2-4.
+    Thomas, S., Tu, W. (2020) "Learning Hamiltonian Monte Carlo in R" <arXiv:2006.16194>,
+    Gelman, A., Carlin, J. B., Stern, H. S., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2013) "Bayesian Data Analysis" ISBN: 978-1439840955, 
+    Agresti, Alan (2015) "Foundations of Linear and Generalized Linear Models ISBN: 978-1118730034, 
+    Pinheiro, J., Bates, D. (2006) "Mixed-effects Models in S and S-Plus" ISBN: 978-1441903174.
+    Ruppert, D., Wand, M. P., & Carroll, R. J. (2003). Semiparametric regression (No. 12). Cambridge university press. ISBN: 978-0521785167.
 Maintainer: Samuel Thomas <samthoma@iu.edu>
 Depends: R (>= 3.6)
 License: GPL-3
