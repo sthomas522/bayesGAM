@@ -12,7 +12,7 @@ Authors@R:
              email = "wtu1@iu.edu"),
       person(given = "Trustees of Columbia University (R/rstanMethods.R)",
              role = "cph"))
-Description: The bayesGAM package is designed to provide a user friendly option to fit univariate and multivariate response Generalized Additive Models (GAM) using Hamiltonian Monte Carlo (HMC) with few technical burdens.  The R functions in this package use rstan (Stan Development Team 2020)  to call Stan routines that run the HMC simulations. The Stan code for these models is already translated to C++ and pre-compiled for the user. The programming formulation for models in bayesGAM is designed to be familiar to statisticians and analysts who fit statistical models in R.
+Description: The 'bayesGAM' package is designed to provide a user friendly option to fit univariate and multivariate response Generalized Additive Models (GAM) using Hamiltonian Monte Carlo (HMC) with few technical burdens.  The 'R' functions in this package use 'rstan' (Stan Development Team 2020)  to call 'Stan' routines that run the HMC simulations. The 'Stan' code for these models is already pre-compiled for the user. The programming formulation for models in 'bayesGAM' is designed to be familiar to analysts who fit statistical models in 'R'.
     Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B., Betancourt, M., ... & Riddell, A. (2017). Stan: A probabilistic programming language. Journal of statistical software, 76(1). 
     Stan Development Team. 2018. RStan: the R interface to Stan. R package version 2.17.3.   <https://mc-stan.org/>
     Neal, Radford (2011) "Handbook of Markov Chain Monte Carlo" ISBN: 978-1420079418.
