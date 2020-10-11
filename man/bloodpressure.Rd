@@ -23,12 +23,15 @@ A data frame with 2438 rows and 13 variables:
 }
 }
 \source{
-Data originally provided by Wanzhu Tu, Indiana University School of Medicine
+Data provided by Wanzhu Tu, Indiana University School of Medicine
 }
 \usage{
 bloodpressure
 }
 \description{
 Data from 200 subjects
+}
+\references{
+Tu, W., Eckert, G. J., DiMeglio, L. A., Yu, Z., Jung, J., & Pratt, J. H. (2011). \emph{Intensified effect of adiposity on blood pressure in overweight and obese children}. Hypertension, 58(5), 818-824.
 }
 \keyword{datasets}

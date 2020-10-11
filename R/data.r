@@ -19,5 +19,6 @@
 #'   \item{PHIGHBP}{indicator that either parent had high blood pressure}
 #'   \item{PDIABET}{indicator that either parent had diabetes}
 #' }
-#' @source Data originally provided by Wanzhu Tu, Indiana University School of Medicine
+#' @source Data provided by Wanzhu Tu, Indiana University School of Medicine
+#' @references Tu, W., Eckert, G. J., DiMeglio, L. A., Yu, Z., Jung, J., & Pratt, J. H. (2011). \emph{Intensified effect of adiposity on blood pressure in overweight and obese children}. Hypertension, 58(5), 818-824.
 "bloodpressure"
