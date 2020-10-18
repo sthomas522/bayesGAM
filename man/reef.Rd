@@ -7,7 +7,7 @@
 \format{
 A data frame with 269 rows and 14 variables:
 \describe{
-\item{ZONE}{Subject identification number}
+\item{ZONE}{Management zone}
 \item{site}{Name of the habitat site}
 \item{complexity}{habitat benthic complexity}
 \item{rugosity}{a measurement related to terrain complexity}
