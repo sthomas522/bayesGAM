@@ -128,32 +128,38 @@ transformed parameters {
   // random intercept
   // create diagonal covariance matrix for now
   matrix[ny, ny] sigma_u_random;
-  matrix[ny, ny] L;
-  matrix[ny, ny] Dhalf;
 
+  // local block
+  for (ll2 in 1:1)
+  {
+    matrix[ny, ny] L;
+    matrix[ny, ny] Dhalf;
 
-  // assign LDLT decomposition
-  Dhalf = diag_matrix(lambda_random);
-  L = diag_matrix(rep_vector(1.0, ny));
-  for (ll in 1:1) {
-    int iter = 1;
-     for (ii in 1:ny) {
-      for (jj in 1:ny) {
-        if (jj > ii) {
-          if (mvindep == 1) {
-            L[jj, ii] = 0;
-          } else {
-            L[jj, ii] = a[iter];  
+    // assign LDLT decomposition
+    Dhalf = diag_matrix(lambda_random);
+    L = diag_matrix(rep_vector(1.0, ny));
+    for (ll in 1:1) {
+      int iter = 1;
+       for (ii in 1:ny) {
+        for (jj in 1:ny) {
+          if (jj > ii) {
+            if (mvindep == 1) {
+              L[jj, ii] = 0;
+            } else {
+              L[jj, ii] = a[iter];  
+            }
+            iter = iter + 1;
           }
-          iter = iter + 1;
         }
       }
     }
-  }
-
+    
 
   // sigma_u_random = L * Dhalf * Dhalf * (L');
   sigma_u_random = tcrossprod(L * Dhalf);
+  
+  }
+  
 
   /////////////////////////////////////////////////////////////
   // alternate approach
