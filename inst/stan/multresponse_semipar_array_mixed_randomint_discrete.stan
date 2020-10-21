@@ -117,7 +117,6 @@ parameters {
 
 transformed parameters {
  vector[nnp] theta_u[ny];
-  vector[N] yhat[ny];
 
   /////////////////////////////////////////////////////////////
   // random intercept
@@ -160,18 +159,6 @@ transformed parameters {
           i = i + 1;
         }
       }
-    }    
-  }
-
-  // multivariate response
-  for (jj in 1:ny) {
-   yhat[jj] = Q_x*theta_b[jj] + Zint*col(trans_u_random, jj);
-  }
-  
-   // add if nonparametric terms present
-  if (q >= 2) {
-    for (jj in 1:ny) {
-      yhat[jj] = yhat[jj] + Q_z[jj]*theta_u[jj]; 
     }    
   }
 
@@ -231,6 +218,21 @@ model {
   // nested loop for multvariate response
   // binomial
   if (famnum == 2) {
+      
+          vector[N] yhat[ny];
+        
+          // multivariate response
+          for (jj in 1:ny) {
+           yhat[jj] = Q_x*theta_b[jj] + Zint*col(trans_u_random, jj);
+          }
+          
+           // add if nonparametric terms present
+          if (q >= 2) {
+            for (jj in 1:ny) {
+              yhat[jj] = yhat[jj] + Q_z[jj]*theta_u[jj]; 
+            }    
+          }
+          
       for (jj in 1:ny) {
          // logit link
          if (linknum == 4) {
@@ -254,6 +256,21 @@ model {
          }
       }
     } else if (famnum == 3) {
+      
+      vector[N] yhat[ny];
+    
+      // multivariate response
+      for (jj in 1:ny) {
+       yhat[jj] = Q_x*theta_b[jj] + Zint*col(trans_u_random, jj);
+      }
+      
+       // add if nonparametric terms present
+      if (q >= 2) {
+        for (jj in 1:ny) {
+          yhat[jj] = yhat[jj] + Q_z[jj]*theta_u[jj]; 
+        }    
+      }
+  
       for (jj in 1:ny) {
          // log link
          if (linknum == 2) {

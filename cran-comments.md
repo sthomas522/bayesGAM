@@ -8,3 +8,11 @@
 0 errors | 0 warnings | 1 note
 
 * This is a new release.
+
+## Revised submission
+
+* Added single quotes to the names of software in DESCRIPTION
+
+* Added a new dataset on coral reefs from an ecology study
+
+* Adjusted the multivariate response stan programs to designate the modified cholesky parameters as local

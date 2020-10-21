@@ -122,7 +122,6 @@ parameters {
 
 transformed parameters {
   vector[nnp] theta_u[ny];
-  vector[N] yhat[ny];
 
   /////////////////////////////////////////////////////////////
   // random intercept
@@ -175,17 +174,6 @@ transformed parameters {
     }    
   }
 
-  // multivariate response
-  for (jj in 1:ny) {
-   yhat[jj] = Q_x*theta_b[jj] + Zint*col(trans_u_random, jj);
-  }
-  
-   // add if nonparametric terms present
-  if (q >= 2) {
-    for (jj in 1:ny) {
-      yhat[jj] = yhat[jj] + Q_z[jj]*theta_u[jj]; 
-    }    
-  }
 
 }
 
@@ -245,6 +233,19 @@ model {
   // nested loop for multvariate response
   if (famnum == 1) {
 
+      vector[N] yhat[ny];
+      // multivariate response
+      for (jj in 1:ny) {
+       yhat[jj] = Q_x*theta_b[jj] + Zint*col(trans_u_random, jj);
+      }
+      
+       // add if nonparametric terms present
+      if (q >= 2) {
+        for (jj in 1:ny) {
+          yhat[jj] = yhat[jj] + Q_z[jj]*theta_u[jj]; 
+        }    
+      }
+  
      for (k2 in 1:r) {
         if (epsnum[k2] == 1) {
          eps[k2] ~ normal(eps_param[k2, 1], eps_param[k2, 2]);
@@ -313,7 +314,6 @@ generated quantities {
         u[jj][nrandint+ll] = nonpar[jj][ll]; 
       }      
     }
-
   }
   
   // extract log lik
