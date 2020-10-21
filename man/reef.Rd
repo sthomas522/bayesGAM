@@ -22,7 +22,7 @@ A data frame with 269 rows and 14 variables:
 }
 }
 \source{
-Data from supplementary material provided for Fisher, R., Wilson, S. K., Sin, T. M., Lee, A. C., & Langlois, T. J. (2018). \emph{A simple function for full‐subsets multiple regression in ecology with R}. Ecology and evolution, 8(12), 6104-6113.
+Data from supplementary material provided for Fisher, R., Wilson, S. K., Sin, T. M., Lee, A. C., and Langlois, T. J. (2018). \emph{A simple function for full-subsets multiple regression in ecology with R}. Ecology and evolution, 8(12), 6104-6113.
 }
 \usage{
 reef
@@ -31,6 +31,6 @@ reef
 Data from 68 subjects
 }
 \references{
-Wilson, S. K., Graham, N. A. J., & Polunin, N. V. (2007). \emph{Appraisal of visual assessments of habitat complexity and benthic composition on coral reefs}. Marine Biology, 151(3), 1069-1076.
+Wilson, S. K., Graham, N. A. J., and Polunin, N. V. (2007). \emph{Appraisal of visual assessments of habitat complexity and benthic composition on coral reefs}. Marine Biology, 151(3), 1069-1076.
 }
 \keyword{datasets}

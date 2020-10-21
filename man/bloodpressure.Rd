@@ -32,6 +32,6 @@ bloodpressure
 Data from 200 subjects
 }
 \references{
-Tu, W., Eckert, G. J., DiMeglio, L. A., Yu, Z., Jung, J., & Pratt, J. H. (2011). \emph{Intensified effect of adiposity on blood pressure in overweight and obese children}. Hypertension, 58(5), 818-824.
+Tu, W., Eckert, G. J., DiMeglio, L. A., Yu, Z., Jung, J., and Pratt, J. H. (2011). \emph{Intensified effect of adiposity on blood pressure in overweight and obese children}. Hypertension, 58(5), 818-824.
 }
 \keyword{datasets}

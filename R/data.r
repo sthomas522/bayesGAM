@@ -20,7 +20,7 @@
 #'   \item{PDIABET}{indicator that either parent had diabetes}
 #' }
 #' @source Data provided by Wanzhu Tu, Indiana University School of Medicine
-#' @references Tu, W., Eckert, G. J., DiMeglio, L. A., Yu, Z., Jung, J., & Pratt, J. H. (2011). \emph{Intensified effect of adiposity on blood pressure in overweight and obese children}. Hypertension, 58(5), 818-824.
+#' @references Tu, W., Eckert, G. J., DiMeglio, L. A., Yu, Z., Jung, J., and Pratt, J. H. (2011). \emph{Intensified effect of adiposity on blood pressure in overweight and obese children}. Hypertension, 58(5), 818-824.
 "bloodpressure"
 
 #' Coral reef data from survey data on 6 sites
@@ -42,6 +42,6 @@
 #'   \item{abundance}{fish abundance}
 #'   \item{biomass}{fish biomass}
 #' }
-#' @source Data from supplementary material provided for Fisher, R., Wilson, S. K., Sin, T. M., Lee, A. C., & Langlois, T. J. (2018). \emph{A simple function for full‐subsets multiple regression in ecology with R}. Ecology and evolution, 8(12), 6104-6113.
-#' @references Wilson, S. K., Graham, N. A. J., & Polunin, N. V. (2007). \emph{Appraisal of visual assessments of habitat complexity and benthic composition on coral reefs}. Marine Biology, 151(3), 1069-1076.
+#' @source Data from supplementary material provided for Fisher, R., Wilson, S. K., Sin, T. M., Lee, A. C., and Langlois, T. J. (2018). \emph{A simple function for full-subsets multiple regression in ecology with R}. Ecology and evolution, 8(12), 6104-6113.
+#' @references Wilson, S. K., Graham, N. A. J., and Polunin, N. V. (2007). \emph{Appraisal of visual assessments of habitat complexity and benthic composition on coral reefs}. Marine Biology, 151(3), 1069-1076.
 "reef"
