@@ -96,6 +96,8 @@ parameters {
 
 transformed parameters {
   vector[nk] theta_u;
+  vector[p] beta;
+  vector[nk] u;
 
 // TODO: fix this loop
   for (l4 in 1:1) {
@@ -107,6 +109,16 @@ transformed parameters {
       }
     }
   }
+  
+  
+  if (qr == 1) {
+    beta = R_x_inverse * theta_b; // coefficients on x
+    u = R_z_inverse * theta_u;
+  } else {
+    beta = theta_b;
+    u = theta_u;
+  }
+  
 
 }
 
@@ -168,21 +180,13 @@ model {
     }
 
  }
+ 
+ 
 }
 
 generated quantities {
-  vector[p] beta;
-  vector[nk] u;
   vector[N] log_lik;
 
-  if (qr == 1) {
-    beta = R_x_inverse * theta_b; // coefficients on x
-    u = R_z_inverse * theta_u;
-  } else {
-    beta = theta_b;
-    u = theta_u;
-  }
-  
     // extract log lik
     for (n in 1:N) {
        if (linknum == 1) {

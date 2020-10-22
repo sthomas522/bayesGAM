@@ -280,94 +280,121 @@ public:
                 theta_b = in__.vector_constrain(p, lp__);
             else
                 theta_b = in__.vector_constrain(p);
+            // transformed parameters
+            current_statement_begin__ = 50;
+            validate_non_negative_index("beta", "p", p);
+            Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> beta(p);
+            stan::math::initialize(beta, DUMMY_VAR__);
+            stan::math::fill(beta, DUMMY_VAR__);
+            // transformed parameters block statements
+            current_statement_begin__ = 52;
+            if (as_bool(logical_eq(qr, 1))) {
+                current_statement_begin__ = 53;
+                stan::math::assign(beta, multiply(R_x_inverse, theta_b));
+            } else {
+                current_statement_begin__ = 55;
+                stan::math::assign(beta, theta_b);
+            }
+            // validate transformed parameters
+            const char* function__ = "validate transformed params";
+            (void) function__;  // dummy to suppress unused var warning
+            current_statement_begin__ = 50;
+            size_t beta_j_1_max__ = p;
+            for (size_t j_1__ = 0; j_1__ < beta_j_1_max__; ++j_1__) {
+                if (stan::math::is_uninitialized(beta(j_1__))) {
+                    std::stringstream msg__;
+                    msg__ << "Undefined transformed parameter: beta" << "(" << j_1__ << ")";
+                    stan::lang::rethrow_located(std::runtime_error(std::string("Error initializing variable beta: ") + msg__.str()), current_statement_begin__, prog_reader__());
+                }
+            }
             // model body
-            current_statement_begin__ = 53;
+            current_statement_begin__ = 60;
             for (int k1 = 1; k1 <= p; ++k1) {
-                current_statement_begin__ = 54;
+                current_statement_begin__ = 61;
                 if (as_bool(logical_eq(get_base1(betanum, k1, "betanum", 1), 1))) {
-                    current_statement_begin__ = 55;
+                    current_statement_begin__ = 62;
                     lp_accum__.add(normal_log<propto__>(get_base1(theta_b, k1, "theta_b", 1), get_base1(beta_param, k1, 1, "beta_param", 1), get_base1(beta_param, k1, 2, "beta_param", 1)));
                 } else if (as_bool(logical_eq(get_base1(betanum, k1, "betanum", 1), 2))) {
-                    current_statement_begin__ = 57;
+                    current_statement_begin__ = 64;
                     lp_accum__.add(student_t_log<propto__>(get_base1(theta_b, k1, "theta_b", 1), get_base1(beta_param, k1, 1, "beta_param", 1), get_base1(beta_param, k1, 2, "beta_param", 1), get_base1(beta_param, k1, 3, "beta_param", 1)));
                 }
             }
-            current_statement_begin__ = 62;
+            current_statement_begin__ = 69;
             if (as_bool(logical_eq(famnum, 2))) {
-                current_statement_begin__ = 64;
+                current_statement_begin__ = 71;
                 if (as_bool(logical_eq(linknum, 4))) {
-                    current_statement_begin__ = 65;
-                    if (as_bool(logical_eq(qr, 1))) {
-                        current_statement_begin__ = 66;
-                        lp_accum__.add(bernoulli_logit_log<propto__>(y, add(multiply(Q_x, theta_b), offset)));
-                    } else {
-                        current_statement_begin__ = 68;
-                        lp_accum__.add(bernoulli_logit_log<propto__>(y, add(multiply(X, theta_b), offset)));
-                    }
-                } else if (as_bool(logical_eq(linknum, 5))) {
                     current_statement_begin__ = 72;
                     if (as_bool(logical_eq(qr, 1))) {
                         current_statement_begin__ = 73;
-                        lp_accum__.add(bernoulli_log<propto__>(y, Phi(add(multiply(Q_x, theta_b), offset))));
+                        lp_accum__.add(bernoulli_logit_log<propto__>(y, add(multiply(Q_x, theta_b), offset)));
                     } else {
                         current_statement_begin__ = 75;
-                        lp_accum__.add(bernoulli_log<propto__>(y, Phi(add(multiply(X, theta_b), offset))));
+                        lp_accum__.add(bernoulli_logit_log<propto__>(y, add(multiply(X, theta_b), offset)));
                     }
-                } else if (as_bool(logical_eq(linknum, 6))) {
+                } else if (as_bool(logical_eq(linknum, 5))) {
                     current_statement_begin__ = 79;
                     if (as_bool(logical_eq(qr, 1))) {
                         current_statement_begin__ = 80;
-                        lp_accum__.add(bernoulli_log<propto__>(y, add(divide(stan::math::atan(add(multiply(Q_x, theta_b), offset)), stan::math::pi()), 0.5)));
+                        lp_accum__.add(bernoulli_log<propto__>(y, Phi(add(multiply(Q_x, theta_b), offset))));
                     } else {
                         current_statement_begin__ = 82;
-                        lp_accum__.add(bernoulli_log<propto__>(y, add(divide(stan::math::atan(add(multiply(X, theta_b), offset)), stan::math::pi()), 0.5)));
+                        lp_accum__.add(bernoulli_log<propto__>(y, Phi(add(multiply(X, theta_b), offset))));
                     }
-                } else if (as_bool(logical_eq(linknum, 2))) {
+                } else if (as_bool(logical_eq(linknum, 6))) {
                     current_statement_begin__ = 86;
                     if (as_bool(logical_eq(qr, 1))) {
                         current_statement_begin__ = 87;
-                        lp_accum__.add(bernoulli_log<propto__>(y, stan::math::exp(add(multiply(Q_x, theta_b), offset))));
+                        lp_accum__.add(bernoulli_log<propto__>(y, add(divide(stan::math::atan(add(multiply(Q_x, theta_b), offset)), stan::math::pi()), 0.5)));
                     } else {
                         current_statement_begin__ = 89;
-                        lp_accum__.add(bernoulli_log<propto__>(y, stan::math::exp(add(multiply(X, theta_b), offset))));
+                        lp_accum__.add(bernoulli_log<propto__>(y, add(divide(stan::math::atan(add(multiply(X, theta_b), offset)), stan::math::pi()), 0.5)));
                     }
-                } else if (as_bool(logical_eq(linknum, 7))) {
+                } else if (as_bool(logical_eq(linknum, 2))) {
                     current_statement_begin__ = 93;
                     if (as_bool(logical_eq(qr, 1))) {
                         current_statement_begin__ = 94;
-                        lp_accum__.add(bernoulli_log<propto__>(y, inv_cloglog(add(multiply(Q_x, theta_b), offset))));
+                        lp_accum__.add(bernoulli_log<propto__>(y, stan::math::exp(add(multiply(Q_x, theta_b), offset))));
                     } else {
                         current_statement_begin__ = 96;
+                        lp_accum__.add(bernoulli_log<propto__>(y, stan::math::exp(add(multiply(X, theta_b), offset))));
+                    }
+                } else if (as_bool(logical_eq(linknum, 7))) {
+                    current_statement_begin__ = 100;
+                    if (as_bool(logical_eq(qr, 1))) {
+                        current_statement_begin__ = 101;
+                        lp_accum__.add(bernoulli_log<propto__>(y, inv_cloglog(add(multiply(Q_x, theta_b), offset))));
+                    } else {
+                        current_statement_begin__ = 103;
                         lp_accum__.add(bernoulli_log<propto__>(y, inv_cloglog(add(multiply(X, theta_b), offset))));
                     }
                 }
             } else if (as_bool(logical_eq(famnum, 3))) {
-                current_statement_begin__ = 104;
+                current_statement_begin__ = 111;
                 if (as_bool(logical_eq(linknum, 2))) {
-                    current_statement_begin__ = 105;
-                    if (as_bool(logical_eq(qr, 1))) {
-                        current_statement_begin__ = 106;
-                        lp_accum__.add(poisson_log_log<propto__>(y, add(multiply(Q_x, theta_b), offset)));
-                    } else {
-                        current_statement_begin__ = 108;
-                        lp_accum__.add(poisson_log_log<propto__>(y, add(multiply(X, theta_b), offset)));
-                    }
-                } else if (as_bool(logical_eq(linknum, 1))) {
                     current_statement_begin__ = 112;
                     if (as_bool(logical_eq(qr, 1))) {
                         current_statement_begin__ = 113;
-                        lp_accum__.add(poisson_log<propto__>(y, add(multiply(Q_x, theta_b), offset)));
+                        lp_accum__.add(poisson_log_log<propto__>(y, add(multiply(Q_x, theta_b), offset)));
                     } else {
                         current_statement_begin__ = 115;
-                        lp_accum__.add(poisson_log<propto__>(y, add(multiply(X, theta_b), offset)));
+                        lp_accum__.add(poisson_log_log<propto__>(y, add(multiply(X, theta_b), offset)));
                     }
-                } else if (as_bool(logical_eq(linknum, 8))) {
+                } else if (as_bool(logical_eq(linknum, 1))) {
                     current_statement_begin__ = 119;
                     if (as_bool(logical_eq(qr, 1))) {
                         current_statement_begin__ = 120;
-                        lp_accum__.add(poisson_log<propto__>(y, square(add(multiply(Q_x, theta_b), offset))));
+                        lp_accum__.add(poisson_log<propto__>(y, add(multiply(Q_x, theta_b), offset)));
                     } else {
                         current_statement_begin__ = 122;
+                        lp_accum__.add(poisson_log<propto__>(y, add(multiply(X, theta_b), offset)));
+                    }
+                } else if (as_bool(logical_eq(linknum, 8))) {
+                    current_statement_begin__ = 126;
+                    if (as_bool(logical_eq(qr, 1))) {
+                        current_statement_begin__ = 127;
+                        lp_accum__.add(poisson_log<propto__>(y, square(add(multiply(Q_x, theta_b), offset))));
+                    } else {
+                        current_statement_begin__ = 129;
                         lp_accum__.add(poisson_log<propto__>(y, square(add(multiply(X, theta_b), offset))));
                     }
                 }
@@ -435,28 +462,40 @@ public:
         (void) DUMMY_VAR__;  // suppress unused var warning
         if (!include_tparams__ && !include_gqs__) return;
         try {
-            if (!include_gqs__ && !include_tparams__) return;
-            if (!include_gqs__) return;
-            // declare and define generated quantities
-            current_statement_begin__ = 129;
+            // declare and define transformed parameters
+            current_statement_begin__ = 50;
             validate_non_negative_index("beta", "p", p);
             Eigen::Matrix<double, Eigen::Dynamic, 1> beta(p);
             stan::math::initialize(beta, DUMMY_VAR__);
             stan::math::fill(beta, DUMMY_VAR__);
-            current_statement_begin__ = 130;
+            // do transformed parameters statements
+            current_statement_begin__ = 52;
+            if (as_bool(logical_eq(qr, 1))) {
+                current_statement_begin__ = 53;
+                stan::math::assign(beta, multiply(R_x_inverse, theta_b));
+            } else {
+                current_statement_begin__ = 55;
+                stan::math::assign(beta, theta_b);
+            }
+            if (!include_gqs__ && !include_tparams__) return;
+            // validate transformed parameters
+            const char* function__ = "validate transformed params";
+            (void) function__;  // dummy to suppress unused var warning
+            // write transformed parameters
+            if (include_tparams__) {
+                size_t beta_j_1_max__ = p;
+                for (size_t j_1__ = 0; j_1__ < beta_j_1_max__; ++j_1__) {
+                    vars__.push_back(beta(j_1__));
+                }
+            }
+            if (!include_gqs__) return;
+            // declare and define generated quantities
+            current_statement_begin__ = 136;
             validate_non_negative_index("log_lik", "N", N);
             Eigen::Matrix<double, Eigen::Dynamic, 1> log_lik(N);
             stan::math::initialize(log_lik, DUMMY_VAR__);
             stan::math::fill(log_lik, DUMMY_VAR__);
             // generated quantities statements
-            current_statement_begin__ = 132;
-            if (as_bool(logical_eq(qr, 1))) {
-                current_statement_begin__ = 133;
-                stan::math::assign(beta, multiply(R_x_inverse, theta_b));
-            } else {
-                current_statement_begin__ = 135;
-                stan::math::assign(beta, theta_b);
-            }
             current_statement_begin__ = 139;
             for (int n = 1; n <= N; ++n) {
                 current_statement_begin__ = 141;
@@ -517,12 +556,7 @@ public:
                 }
             }
             // validate, write generated quantities
-            current_statement_begin__ = 129;
-            size_t beta_j_1_max__ = p;
-            for (size_t j_1__ = 0; j_1__ < beta_j_1_max__; ++j_1__) {
-                vars__.push_back(beta(j_1__));
-            }
-            current_statement_begin__ = 130;
+            current_statement_begin__ = 136;
             size_t log_lik_j_1_max__ = N;
             for (size_t j_1__ = 0; j_1__ < log_lik_j_1_max__; ++j_1__) {
                 vars__.push_back(log_lik(j_1__));
@@ -565,14 +599,14 @@ public:
         }
         if (!include_gqs__ && !include_tparams__) return;
         if (include_tparams__) {
+            size_t beta_j_1_max__ = p;
+            for (size_t j_1__ = 0; j_1__ < beta_j_1_max__; ++j_1__) {
+                param_name_stream__.str(std::string());
+                param_name_stream__ << "beta" << '.' << j_1__ + 1;
+                param_names__.push_back(param_name_stream__.str());
+            }
         }
         if (!include_gqs__) return;
-        size_t beta_j_1_max__ = p;
-        for (size_t j_1__ = 0; j_1__ < beta_j_1_max__; ++j_1__) {
-            param_name_stream__.str(std::string());
-            param_name_stream__ << "beta" << '.' << j_1__ + 1;
-            param_names__.push_back(param_name_stream__.str());
-        }
         size_t log_lik_j_1_max__ = N;
         for (size_t j_1__ = 0; j_1__ < log_lik_j_1_max__; ++j_1__) {
             param_name_stream__.str(std::string());
@@ -592,14 +626,14 @@ public:
         }
         if (!include_gqs__ && !include_tparams__) return;
         if (include_tparams__) {
+            size_t beta_j_1_max__ = p;
+            for (size_t j_1__ = 0; j_1__ < beta_j_1_max__; ++j_1__) {
+                param_name_stream__.str(std::string());
+                param_name_stream__ << "beta" << '.' << j_1__ + 1;
+                param_names__.push_back(param_name_stream__.str());
+            }
         }
         if (!include_gqs__) return;
-        size_t beta_j_1_max__ = p;
-        for (size_t j_1__ = 0; j_1__ < beta_j_1_max__; ++j_1__) {
-            param_name_stream__.str(std::string());
-            param_name_stream__ << "beta" << '.' << j_1__ + 1;
-            param_names__.push_back(param_name_stream__.str());
-        }
         size_t log_lik_j_1_max__ = N;
         for (size_t j_1__ = 0; j_1__ < log_lik_j_1_max__; ++j_1__) {
             param_name_stream__.str(std::string());

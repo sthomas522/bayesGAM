@@ -46,10 +46,17 @@ parameters {
  vector[p] theta_b;
 }
 
+transformed parameters {
+  vector[p] beta;
+
+  if (qr == 1) {
+    beta = R_x_inverse * theta_b; // coefficients on x
+  } else {
+    beta = theta_b;
+  }
+}
+
 model {
- // Prior part of Bayesian inference
-
-
    for (k1 in 1:p) {
      if (betanum[k1] == 1) {
        theta_b[k1] ~ normal(beta_param[k1, 1], beta_param[k1, 2]);
@@ -126,15 +133,8 @@ model {
 }
 
 generated quantities {
-  vector[p] beta;
   vector[N] log_lik;
 
-  if (qr == 1) {
-    beta = R_x_inverse * theta_b; // coefficients on x
-  } else {
-    beta = theta_b;
-  }
-  
   // extract log_lik
    for (n in 1:N) {
      // Binomial

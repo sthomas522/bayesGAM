@@ -16,3 +16,5 @@
 * Added a new dataset on coral reefs from an ecology study
 
 * Adjusted the multivariate response stan programs to designate the modified cholesky parameters as local
+
+* Moved beta and u parameters from generated quantities to transformed parameters in all stan files

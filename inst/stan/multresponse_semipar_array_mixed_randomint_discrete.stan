@@ -77,11 +77,6 @@ transformed data {
   matrix[nnp, nnp] R_z;
   matrix[nnp, nnp] R_z_inverse;
 
-  // qr for Z with array of matrices
-  // matrix[N, max_col] qz[q];
-  // matrix[max_col, max_col] rz[q];
-  // matrix[max_col, max_col] rzinv[q];
-
   // thin and scale the QR decomposition X
   Q_x = qr_Q(X)[, 1:p] * sqrt(N - 1);
   R_x = qr_R(X)[1:p, ] / sqrt(N - 1);
@@ -116,7 +111,10 @@ parameters {
 }
 
 transformed parameters {
- vector[nnp] theta_u[ny];
+  vector[nnp] theta_u[ny];
+  vector[p] beta[ny];
+  vector[nrandint+nnp] u[ny];
+  vector[nnp] nonpar[ny];
 
   /////////////////////////////////////////////////////////////
   // random intercept
@@ -148,8 +146,6 @@ transformed parameters {
   sigma_u_random = tcrossprod(L * Dhalf);
   }
 
-  /////////////////////////////////////////////////////////////
-  // alternate approach
   if (q >= 2) {
     for (l4 in 1:ny) {
       int i = 1;
@@ -161,6 +157,35 @@ transformed parameters {
       }
     }    
   }
+  
+  if (qr == 1) {
+      for (jj in 1:ny) {
+        beta[jj] = R_x_inverse * theta_b[jj];
+        if (q >= 2) {
+           nonpar[jj] = R_z_inverse * theta_u[jj];
+        }
+
+      }
+    } else {
+      for (jj in 1:ny) {
+        beta[jj] = theta_b[jj];
+       if (q >= 2) {
+         nonpar[jj] = theta_u[jj];
+       }
+      }
+  }
+  
+  for (jj in 1:ny) {
+    for (kk in 1:nrandint) {
+     u[jj][kk] = trans_u_random[kk][jj];
+    }
+    if (q >= 2) {
+      for (ll in 1:nnp) {
+        u[jj][nrandint+ll] = nonpar[jj][ll]; 
+      }      
+    }
+  }
+  
 
 }
 
@@ -287,31 +312,9 @@ model {
 }
 
 generated quantities {
-  vector[p] beta[ny];
   vector[ny] dhalf_inv;
   matrix[ny, ny] sigma_u_correlation;
-  vector[nnp] nonpar[ny];
-  vector[nrandint+nnp] u[ny];
   vector[N] log_lik[ny];
-
-
-  if (qr == 1) {
-      for (jj in 1:ny) {
-        beta[jj] = R_x_inverse * theta_b[jj];
-        if (q >= 2) {
-           nonpar[jj] = R_z_inverse * theta_u[jj];
-        }
-
-      }
-    } else {
-      for (jj in 1:ny) {
-        beta[jj] = theta_b[jj];
-       if (q >= 2) {
-         nonpar[jj] = theta_u[jj];
-       }
-      }
-  }
-
 
   // correlation matrix
   dhalf_inv = diagonal(sigma_u_random); 
@@ -321,17 +324,6 @@ generated quantities {
 
   sigma_u_correlation = quad_form_diag(sigma_u_random, dhalf_inv);
 
-  for (jj in 1:ny) {
-    for (kk in 1:nrandint) {
-     u[jj][kk] = trans_u_random[kk][jj];
-    }
-    if (q >= 2) {
-      for (ll in 1:nnp) {
-        u[jj][nrandint+ll] = nonpar[jj][ll]; 
-      }      
-    }
-  }
-  
  // extract log_lik
   for (jj in 1:ny) {
    for (n in 1:N) {

@@ -122,11 +122,15 @@ parameters {
 
 transformed parameters {
   vector[nnp] theta_u[ny];
-
+  vector[p] beta[ny];
+  vector[nrandint+nnp] u[ny];
+  vector[nnp] nonpar[ny];
+  
   /////////////////////////////////////////////////////////////
   // random intercept
   // create diagonal covariance matrix for now
   matrix[ny, ny] sigma_u_random;
+  
 
   // local block
   for (ll2 in 1:1)
@@ -156,7 +160,6 @@ transformed parameters {
 
   // sigma_u_random = L * Dhalf * Dhalf * (L');
   sigma_u_random = tcrossprod(L * Dhalf);
-  
   }
   
 
@@ -174,6 +177,36 @@ transformed parameters {
     }    
   }
 
+
+  if (qr == 1) {
+      for (jj in 1:ny) {
+        beta[jj] = R_x_inverse * theta_b[jj];
+        if (q >= 2) {
+           nonpar[jj] = R_z_inverse * theta_u[jj];
+        }
+
+      }
+    } else {
+      for (jj in 1:ny) {
+        beta[jj] = theta_b[jj];
+       if (q >= 2) {
+         nonpar[jj] = theta_u[jj];
+       }
+      }
+  }
+
+
+  for (jj in 1:ny) {
+    for (kk in 1:nrandint) {
+     u[jj][kk] = trans_u_random[kk][jj];
+    }
+    if (q >= 2) {
+      for (ll in 1:nnp) {
+        u[jj][nrandint+ll] = nonpar[jj][ll]; 
+      }      
+    }
+  }
+  
 
 }
 
@@ -272,29 +305,9 @@ model {
 }
 
 generated quantities {
-  vector[p] beta[ny];
   vector[ny] dhalf_inv;
   matrix[ny, ny] sigma_u_correlation;
-  vector[nnp] nonpar[ny];
-  vector[nrandint+nnp] u[ny];
   vector[N] log_lik[ny];
-
-  if (qr == 1) {
-      for (jj in 1:ny) {
-        beta[jj] = R_x_inverse * theta_b[jj];
-        if (q >= 2) {
-           nonpar[jj] = R_z_inverse * theta_u[jj];
-        }
-
-      }
-    } else {
-      for (jj in 1:ny) {
-        beta[jj] = theta_b[jj];
-       if (q >= 2) {
-         nonpar[jj] = theta_u[jj];
-       }
-      }
-  }
 
 
   // correlation matrix
@@ -305,17 +318,6 @@ generated quantities {
 
   sigma_u_correlation = quad_form_diag(sigma_u_random, dhalf_inv);
 
-  for (jj in 1:ny) {
-    for (kk in 1:nrandint) {
-     u[jj][kk] = trans_u_random[kk][jj];
-    }
-    if (q >= 2) {
-      for (ll in 1:nnp) {
-        u[jj][nrandint+ll] = nonpar[jj][ll]; 
-      }      
-    }
-  }
-  
   // extract log lik
   for (jj in 1:ny) {
     for (n in 1:N) {

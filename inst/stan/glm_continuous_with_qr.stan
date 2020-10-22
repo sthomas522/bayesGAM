@@ -1,4 +1,3 @@
-
 data {
  // Define variables in data
  // Number of observations (an integer)
@@ -54,9 +53,19 @@ parameters {
  vector<lower=0>[r] eps;
 }
 
-model {
- // Prior part of Bayesian inference
+transformed parameters {
+  vector[p] beta;
 
+  if (qr == 1) {
+    beta = R_x_inverse * theta_b; // coefficients on x
+  } else {
+    beta = theta_b;
+  }
+  
+}
+
+
+model {
    for (k1 in 1:p) {
      if (betanum[k1] == 1) {
        theta_b[k1] ~ normal(beta_param[k1, 1], beta_param[k1, 2]);
@@ -74,7 +83,6 @@ model {
        eps[k2] ~ student_t(eps_param[k2, 1], eps_param[k2, 2], eps_param[k2, 3]);
      }
    }
-
 
     // Identity
     if (linknum == 1) {
@@ -103,14 +111,7 @@ model {
 }
 
 generated quantities {
-  vector[p] beta;
   vector[N] log_lik;
-  if (qr == 1) {
-    beta = R_x_inverse * theta_b; // coefficients on x
-  } else {
-    beta = theta_b;
-  }
-  
     
     // extract log lik
     for (n in 1:N) {
@@ -127,5 +128,3 @@ generated quantities {
        }
     }
 }
-
-

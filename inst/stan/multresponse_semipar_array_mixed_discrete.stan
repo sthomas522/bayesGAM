@@ -38,10 +38,6 @@ data {
  // offset - TODO currently unused
  // vector[N] offset;
 
-
-  // TODO:  feedback
-  // matrix ny x q:  1's or 0's to include/exclude individual Z
-
    ////////////////////////////////////////////////////////
  // hyperpriors
  ////////////////////////////////////////////////////////
@@ -102,7 +98,24 @@ parameters {
 
 transformed parameters {
   vector[nk] theta_u[ny];
-  vector[N] yhat[ny];
+  vector[nk] u[ny];
+  vector[p] beta[ny];
+  
+  if (qr == 1) {
+    for (jj in 1:ny) {
+      beta[jj] = R_x_inverse * theta_b[jj];
+    }
+    for (jj in 1:ny) {
+      u[jj] = R_z_inverse * theta_u[jj];
+    }
+  } else
+    {
+      for (jj in 1:ny)
+      {
+        beta[jj] = theta_b[jj];
+        u[jj] = theta_u[jj];
+      }
+    }
 
   // TODO: fix this loop
   for (jj in 1:ny) {
@@ -117,25 +130,9 @@ transformed parameters {
     }
   }
 
-  // adding restriction design matrix for feedback loop
-  for (jj in 1:ny) {
-    yhat[jj] = Q_x*theta_b[jj] + Q_z*theta_u[jj];
-    // yhat[jj] = Q_x*theta_b[jj] + Q_z * diag_matrix(feedback[jj]) *theta_u[jj] ;
-    // yhat[jj] = Q_x*theta_b[jj] + diag_post_multiply(Q_z, feedback[jj]) *theta_u[jj] ;
-  }
-
 }
 
 model {
- // Prior part of Bayesian inference
-
- // fixed effects prior
- // for (k1 in 1:p) {
- //   for (jj in 1:ny) {
- //     theta_b[jj] ~ normal(0, 1e6);
- //   }
-//  }
-
   // nested loop for multvariate response
   for (j1 in 1:r) {
    for (k1 in 1:p) {
@@ -160,6 +157,14 @@ model {
     tau[jj] ~ normal(0, 1);
 
   if (famnum == 2) {
+
+    vector[N] yhat[ny];
+    
+    // adding restriction design matrix for feedback loop
+    for (jj in 1:ny) {
+      yhat[jj] = Q_x*theta_b[jj] + Q_z*theta_u[jj];
+    }
+    
    for (jj in 1:ny) {
       // logit link
        if (linknum == 4) {
@@ -183,6 +188,13 @@ model {
        }
     }
    } else if (famnum == 3) {
+    vector[N] yhat[ny];
+    
+    // adding restriction design matrix for feedback loop
+    for (jj in 1:ny) {
+      yhat[jj] = Q_x*theta_b[jj] + Q_z*theta_u[jj];
+    }
+    
      for (jj in 1:ny) {
          // log link
          if (linknum == 2) {
@@ -199,26 +211,7 @@ model {
 
 }
 generated quantities {
-
-  vector[nk] u[ny];
-  vector[p] beta[ny];
   vector[N] log_lik[ny];
-
-  if (qr == 1) {
-    for (jj in 1:ny) {
-      beta[jj] = R_x_inverse * theta_b[jj];
-    }
-    for (jj in 1:ny) {
-      u[jj] = R_z_inverse * theta_u[jj];
-    }
-  } else
-    {
-      for (jj in 1:ny)
-      {
-        beta[jj] = theta_b[jj];
-        u[jj] = theta_u[jj];
-      }
-    }
     
   // extract log_lik
   for (jj in 1:ny) {

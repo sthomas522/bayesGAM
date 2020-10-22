@@ -106,8 +106,9 @@ parameters {
 }
 
 transformed parameters {
-  vector[nk] theta_u[ny];
-  vector[N] yhat[ny];
+  vector[nk] theta_u[ny];  
+  vector[nk] u[ny];
+  vector[p] beta[ny];
 
   // TODO: fix this loop
   for (jj in 1:ny) {
@@ -122,25 +123,27 @@ transformed parameters {
     }
   }
 
-  // adding restriction design matrix for feedback loop
-  for (jj in 1:ny) {
-    yhat[jj] = Q_x*theta_b[jj] + Q_z*theta_u[jj];
-    // yhat[jj] = Q_x*theta_b[jj] + Q_z * diag_matrix(feedback[jj]) *theta_u[jj] ;
-    // yhat[jj] = Q_x*theta_b[jj] + diag_post_multiply(Q_z, feedback[jj]) *theta_u[jj] ;
-  }
+  if (qr == 1) {
+    for (jj in 1:ny) {
+      beta[jj] = R_x_inverse * theta_b[jj];
+    }
+
+    for (jj in 1:ny) {
+      u[jj] = R_z_inverse * theta_u[jj];
+    }
+
+  } else
+    {
+      for (jj in 1:ny)
+      {
+        beta[jj] = theta_b[jj];
+        u[jj] = theta_u[jj];
+      }
+    }
 
 }
 
 model {
- // Prior part of Bayesian inference
-
- // fixed effects prior
- // for (k1 in 1:p) {
- //   for (jj in 1:ny) {
- //     theta_b[jj] ~ normal(0, 1e6);
- //   }
-//  }
-
   // nested loop for multvariate response
   for (j1 in 1:r) {
    for (k1 in 1:p) {
@@ -153,6 +156,14 @@ model {
   }
 
   if (famnum == 1) {
+    vector[N] yhat[ny];
+
+    // adding restriction design matrix for feedback loop
+    for (jj in 1:ny) {
+      yhat[jj] = Q_x*theta_b[jj] + Q_z*theta_u[jj];
+    }
+
+  
    for (k2 in 1:r) {
      if (epsnum[k2] == 1) {
          eps[k2] ~ normal(eps_param[k2, 1], eps_param[k2, 2]);
@@ -197,28 +208,7 @@ model {
 
 }
 generated quantities {
-
-  vector[nk] u[ny];
-  vector[p] beta[ny];
   vector[N] log_lik[ny];
-
-  if (qr == 1) {
-    for (jj in 1:ny) {
-      beta[jj] = R_x_inverse * theta_b[jj];
-    }
-
-    for (jj in 1:ny) {
-      u[jj] = R_z_inverse * theta_u[jj];
-    }
-
-  } else
-    {
-      for (jj in 1:ny)
-      {
-        beta[jj] = theta_b[jj];
-        u[jj] = theta_u[jj];
-      }
-    }
     
   // extract log lik
   for (jj in 1:ny) {

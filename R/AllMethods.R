@@ -361,7 +361,7 @@ setMethod("initialize", "prior",
 
             # assign default distributions
             if (famnum == 1L & missing(eps)) {
-              eps <- replicate(r, new("tDistribution", param_values = c(35, 0, 1)), simplify=FALSE)
+              eps <- replicate(r, new("tDistribution", param_values = c(3, 0, 1)), simplify=FALSE)
             }
             if (famnum %in% c(2L, 3L)) {
               eps <- replicate(r, new("distribution"), simplify=FALSE)
@@ -391,10 +391,10 @@ setMethod("initialize", "prior",
             if (missing(lambda) | q == 0) {
               if (mixed) {
                 if (r <= 1L) {
-                  lambda <- replicate(q, new("tDistribution", param_values = c(35, 0, 1)), simplify=FALSE)
+                  lambda <- replicate(q, new("tDistribution", param_values = c(3, 0, 1)), simplify=FALSE)
                   names(lambda) <- paste0("lambda", 1:pmax(1L, q))
                 } else {
-                  lambda <- replicate(q*r, new("tDistribution", param_values = c(35, 0, 1)), simplify=FALSE)
+                  lambda <- replicate(q*r, new("tDistribution", param_values = c(3, 0, 1)), simplify=FALSE)
                   names(lambda) <- paste0("lambda", rep(1:r, each=q), "_", rep(1:q))
                 }
               } else {

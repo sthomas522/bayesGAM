@@ -57,21 +57,30 @@ parameters {
 
  // u = lambda * tau
  // random intercept
- vector[nk] tau[ny];
+ // vector[nk] tau[ny];
 
  // residual sd
- vector<lower=0>[q] lambda[ny];
+ // vector<lower=0>[q] lambda[ny];
  // vector<lower=0>[r] eps;
 }
 
 transformed parameters {
-  vector[nk] theta_u[ny];
-  vector[N] yhat[ny];
-
-  for (jj in 1:ny) {
-    yhat[jj] = Q_x*theta_b[jj];
-  }
-
+  // vector[nk] theta_u[ny];
+  // vector[nk] u[ny];
+  vector[p] beta[ny];
+  
+  if (qr == 1) {
+    for (jj in 1:ny) {
+      beta[jj] = R_x_inverse * theta_b[jj];
+    }
+  } else
+    {
+      for (jj in 1:ny)
+      {
+        beta[jj] = theta_b[jj];
+      }
+    }
+    
 }
 
 model {
@@ -89,12 +98,17 @@ model {
   }
 
   if (famnum == 2) {
+    vector[N] yhat[ny];
+  
+    for (jj in 1:ny) {
+      yhat[jj] = Q_x*theta_b[jj];
+    }
 
    // prior on random effects variance
    // random intercepts
    for (jj in 1:ny) {
-     lambda[jj] ~ student_t(35, 0, 1e0);
-     tau[jj] ~ normal(0, 1);
+     // lambda[jj] ~ student_t(35, 0, 1e0);
+     // tau[jj] ~ normal(0, 1);
 
       // logit link
        if (linknum == 4) {
@@ -118,6 +132,12 @@ model {
        }
    }
   } else if (famnum == 3) {
+    vector[N] yhat[ny];
+  
+    for (jj in 1:ny) {
+      yhat[jj] = Q_x*theta_b[jj];
+    }
+
      for (jj in 1:ny) {
          // log link
          if (linknum == 2) {
@@ -136,23 +156,8 @@ model {
 
 }
 generated quantities {
-
-  vector[nk] u[ny];
-  vector[p] beta[ny];
   vector[N] log_lik[ny];
   
-  if (qr == 1) {
-    for (jj in 1:ny) {
-      beta[jj] = R_x_inverse * theta_b[jj];
-    }
-  } else
-    {
-      for (jj in 1:ny)
-      {
-        beta[jj] = theta_b[jj];
-      }
-    }
-    
   // extract log_lik
   for (jj in 1:ny) {
    for (n in 1:N) {
