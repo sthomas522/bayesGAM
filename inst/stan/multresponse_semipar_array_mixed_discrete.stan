@@ -100,7 +100,19 @@ transformed parameters {
   vector[nk] theta_u[ny];
   vector[nk] u[ny];
   vector[p] beta[ny];
-  
+
+  for (jj in 1:ny) {
+    for (l4 in 1:1) {
+      int i = 1;
+      for (j4 in 1:q) {
+        for (k4 in 1:zvars[j4]) {
+          theta_u[jj][i] = tau[jj][i] * lambda[jj][j4];
+          i = i + 1;
+        }
+      }
+    }
+  }
+
   if (qr == 1) {
     for (jj in 1:ny) {
       beta[jj] = R_x_inverse * theta_b[jj];
@@ -116,19 +128,6 @@ transformed parameters {
         u[jj] = theta_u[jj];
       }
     }
-
-  // TODO: fix this loop
-  for (jj in 1:ny) {
-    for (l4 in 1:1) {
-      int i = 1;
-      for (j4 in 1:q) {
-        for (k4 in 1:zvars[j4]) {
-          theta_u[jj][i] = tau[jj][i] * lambda[jj][j4];
-          i = i + 1;
-        }
-      }
-    }
-  }
 
 }
 

@@ -33,7 +33,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_multresponse_semipar_array");
-    reader.add_event(167, 165, "end", "model_multresponse_semipar_array");
+    reader.add_event(165, 163, "end", "model_multresponse_semipar_array");
     return reader;
 }
 #include <stan_meta_header.hpp>
@@ -558,19 +558,15 @@ public:
                 }
                 current_statement_begin__ = 123;
                 for (int jj = 1; jj <= ny; ++jj) {
-                    current_statement_begin__ = 124;
-                    lp_accum__.add(student_t_log<propto__>(get_base1(lambda, jj, "lambda", 1), 35, 0, 1e0));
-                    current_statement_begin__ = 125;
-                    lp_accum__.add(normal_log<propto__>(get_base1(tau, jj, "tau", 1), 0, 1));
-                    current_statement_begin__ = 130;
+                    current_statement_begin__ = 128;
                     if (as_bool(logical_eq(linknum, 1))) {
-                        current_statement_begin__ = 131;
+                        current_statement_begin__ = 129;
                         lp_accum__.add(normal_log<propto__>(stan::model::rvalue(y, stan::model::cons_list(stan::model::index_omni(), stan::model::cons_list(stan::model::index_uni(jj), stan::model::nil_index_list())), "y"), get_base1(yhat, jj, "yhat", 1), get_base1(eps, jj, "eps", 1)));
                     } else if (as_bool(logical_eq(linknum, 2))) {
-                        current_statement_begin__ = 135;
+                        current_statement_begin__ = 133;
                         lp_accum__.add(normal_log<propto__>(stan::model::rvalue(y, stan::model::cons_list(stan::model::index_omni(), stan::model::cons_list(stan::model::index_uni(jj), stan::model::nil_index_list())), "y"), stan::math::exp(get_base1(yhat, jj, "yhat", 1)), get_base1(eps, jj, "eps", 1)));
                     } else if (as_bool(logical_eq(linknum, 3))) {
-                        current_statement_begin__ = 139;
+                        current_statement_begin__ = 137;
                         lp_accum__.add(normal_log<propto__>(stan::model::rvalue(y, stan::model::cons_list(stan::model::index_omni(), stan::model::cons_list(stan::model::index_uni(jj), stan::model::nil_index_list())), "y"), inv(get_base1(yhat, jj, "yhat", 1)), get_base1(eps, jj, "eps", 1)));
                     }
                 }
@@ -757,32 +753,32 @@ public:
             }
             if (!include_gqs__) return;
             // declare and define generated quantities
-            current_statement_begin__ = 146;
+            current_statement_begin__ = 144;
             validate_non_negative_index("log_lik", "N", N);
             validate_non_negative_index("log_lik", "ny", ny);
             std::vector<Eigen::Matrix<double, Eigen::Dynamic, 1> > log_lik(ny, Eigen::Matrix<double, Eigen::Dynamic, 1>(N));
             stan::math::initialize(log_lik, DUMMY_VAR__);
             stan::math::fill(log_lik, DUMMY_VAR__);
             // generated quantities statements
-            current_statement_begin__ = 149;
+            current_statement_begin__ = 147;
             for (int jj = 1; jj <= ny; ++jj) {
-                current_statement_begin__ = 150;
+                current_statement_begin__ = 148;
                 for (int n = 1; n <= N; ++n) {
-                    current_statement_begin__ = 151;
+                    current_statement_begin__ = 149;
                     if (as_bool(logical_eq(linknum, 1))) {
-                        current_statement_begin__ = 152;
+                        current_statement_begin__ = 150;
                         stan::model::assign(log_lik, 
                                     stan::model::cons_list(stan::model::index_uni(jj), stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list())), 
                                     normal_log(get_base1(y, n, "y", 1), multiply(stan::model::rvalue(X, stan::model::cons_list(stan::model::index_uni(n), stan::model::cons_list(stan::model::index_omni(), stan::model::nil_index_list())), "X"), get_base1(beta, jj, "beta", 1)), get_base1(eps, jj, "eps", 1)), 
                                     "assigning variable log_lik");
                     } else if (as_bool(logical_eq(linknum, 2))) {
-                        current_statement_begin__ = 156;
+                        current_statement_begin__ = 154;
                         stan::model::assign(log_lik, 
                                     stan::model::cons_list(stan::model::index_uni(jj), stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list())), 
                                     normal_log(stan::math::exp(get_base1(y, n, "y", 1)), multiply(stan::model::rvalue(X, stan::model::cons_list(stan::model::index_uni(n), stan::model::cons_list(stan::model::index_omni(), stan::model::nil_index_list())), "X"), get_base1(beta, jj, "beta", 1)), get_base1(eps, jj, "eps", 1)), 
                                     "assigning variable log_lik");
                     } else if (as_bool(logical_eq(linknum, 3))) {
-                        current_statement_begin__ = 160;
+                        current_statement_begin__ = 158;
                         stan::model::assign(log_lik, 
                                     stan::model::cons_list(stan::model::index_uni(jj), stan::model::cons_list(stan::model::index_uni(n), stan::model::nil_index_list())), 
                                     normal_log(inv(get_base1(y, n, "y", 1)), multiply(stan::model::rvalue(X, stan::model::cons_list(stan::model::index_uni(n), stan::model::cons_list(stan::model::index_omni(), stan::model::nil_index_list())), "X"), get_base1(beta, jj, "beta", 1)), get_base1(eps, jj, "eps", 1)), 
@@ -791,7 +787,7 @@ public:
                 }
             }
             // validate, write generated quantities
-            current_statement_begin__ = 146;
+            current_statement_begin__ = 144;
             size_t log_lik_j_1_max__ = N;
             size_t log_lik_k_0_max__ = ny;
             for (size_t j_1__ = 0; j_1__ < log_lik_j_1_max__; ++j_1__) {

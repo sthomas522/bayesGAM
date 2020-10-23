@@ -121,10 +121,8 @@ model {
    // prior on random effects variance
    // random intercepts
    for (jj in 1:ny) {
-     lambda[jj] ~ student_t(35, 0, 1e0);
-     tau[jj] ~ normal(0, 1);
-     // eps[jj][r] ~ student_t(1, 0, 25);
-    //  y[, jj] ~ normal(yhat[jj], eps[jj]);
+     // lambda[jj] ~ student_t(35, 0, 1e0);
+     // tau[jj] ~ normal(0, 1);
 
       // identity link
      if (linknum == 1) {

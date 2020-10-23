@@ -37,10 +37,6 @@ data {
  // offset - TODO currently unused
  // vector[N] offset;
 
-
-  // TODO:  feedback
-  // matrix ny x q:  1's or 0's to include/exclude individual Z
-
    ////////////////////////////////////////////////////////
  // hyperpriors
  ////////////////////////////////////////////////////////
@@ -94,9 +90,6 @@ transformed data {
 parameters {
  // Define parameters to estimate
  vector[p] theta_b[ny];
-
- // u = lambda * tau
- // random intercept
  vector[nk] tau[ny];
 
  // residual sd
@@ -109,8 +102,8 @@ transformed parameters {
   vector[nk] theta_u[ny];  
   vector[nk] u[ny];
   vector[p] beta[ny];
+  
 
-  // TODO: fix this loop
   for (jj in 1:ny) {
     for (l4 in 1:1) {
       int i = 1;
@@ -140,6 +133,7 @@ transformed parameters {
         u[jj] = theta_u[jj];
       }
     }
+
 
 }
 
@@ -186,9 +180,7 @@ model {
    // prior on random effects variance
    // random intercepts
    for (jj in 1:ny) {
-     // lambda[jj] ~ student_t(35, 0, 1e0);
      tau[jj] ~ normal(0, 1);
-    // eps[jj][r] ~ student_t(1, 0, 25);
       // identity link
      if (linknum == 1) {
        y[, jj] ~ normal(yhat[jj], eps[jj]);
