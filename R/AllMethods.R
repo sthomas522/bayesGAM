@@ -177,7 +177,7 @@ setMethod("initialize", "glmModel",
             }
 
             if (missing(Z)) {
-              Z <- Zint <- Znp <- matrix(, nrow=0, ncol=0)
+              Z <- Zint <- Znp <- matrix(0, nrow=0, ncol=0)
               #Zlst <- list(Z)
               max_col <- 0L
             } 
@@ -828,6 +828,8 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                         qr = qr + 0,
                         qrsplit = 0,
                         mvindep = mvindep + 0,
+                        random_intercept = object@random_intercept + 0, 
+                        random_effects = (ncol(object@Znp) > 0) + 0, 
                         famnum = object@famnum,
                         offset = offset,
                         linknum = object@linknum,
@@ -845,6 +847,15 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                         a_max_params = ncol(a_param),
                         a_param = a_param)
             
+            
+            print(object@q)
+            print(object@zvars)
+            print(dim(object@Zint))
+            print(dim(object@Znp))
+            print(dim(object@Z))
+            print(ncol(lambda_param))
+            print(lambda_distnum)
+            
             if (!object@multresponse & object@famnum == 1 & length(object@Z) == 0) {
               res <- rstan::sampling(stanmodels$glm_continuous_with_qr, data = dat, ...)
             } else if (!object@multresponse & object@famnum %in% c(2, 3) & length(object@Z) == 0) {
@@ -858,7 +869,8 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                 res <- rstan::sampling(stanmodels$multresponse_semipar_array, data = dat, ...)
               }
               else if (object@random_intercept == FALSE) {
-                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed, data = dat, ...)
+                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)
+                # res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed, data = dat, ...)
               }
               else if (object@random_intercept == TRUE) {
                 res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)

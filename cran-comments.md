@@ -18,3 +18,5 @@
 * Adjusted the multivariate response stan programs to designate the modified cholesky parameters as local
 
 * Moved beta and u parameters from generated quantities to transformed parameters in all stan files
+
+* Added additional set of tests to cover all Stan files

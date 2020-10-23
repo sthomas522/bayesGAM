@@ -13,7 +13,7 @@ test_that("test_each_stan_prog", {
                     y1cont = rnorm(100), 
                     y2cont = rnorm(100), 
                     idnum=factor(idnum))
-
+  
   # glm_discrete_mixed_with_qr
   # logistic regression
   f1 <- bayesGAM(y1 ~ X.1 + X.2 + X.3 + X.4 + X.5, 
@@ -69,5 +69,12 @@ test_that("test_each_stan_prog", {
   cf6 <- coef(f6)
   expect_equal(length(cf6), 113)
   expect_true(all(cf6 != 0))
+  
+  # random intercept only
+  f7 <- bayesGAM(y1cont ~ X.1 + X.2 + X.3, 
+                 random = ~idnum, 
+                 family=gaussian, data=dat, 
+                 chains=1, iter=500)
+  
   
 })
