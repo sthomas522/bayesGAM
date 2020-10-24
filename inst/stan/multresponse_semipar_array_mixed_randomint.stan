@@ -37,6 +37,10 @@ data {
  int<lower=0,upper=1> qrsplit;
  // indicator of multivariate independence
  int<lower=0,upper=1> mvindep;
+ // indicator for random intercept;
+ int<lower=0,upper=1> randint;
+ // indicator for random effects;
+ int<lower=0,upper=1> randeff;
  // family number:  1=gaussian, 2=binomial, 3=poisson
  int<lower=1, upper=3> famnum;
  // link number
@@ -75,29 +79,33 @@ transformed data {
   matrix[N, p] Q_x;
   matrix[p, p] R_x;
   matrix[p, p] R_x_inverse;
+  int q_rint;
+  int q_reff;
 
   // qr for Z knots matrices
   matrix[N, nnp] Q_z;
   matrix[nnp, nnp] R_z;
   matrix[nnp, nnp] R_z_inverse;
-
-  // qr for Z with array of matrices
-  // matrix[N, max_col] qz[q];
-  // matrix[max_col, max_col] rz[q];
-  // matrix[max_col, max_col] rzinv[q];
-
+  
   // thin and scale the QR decomposition X
   Q_x = qr_Q(X)[, 1:p] * sqrt(N - 1);
   R_x = qr_R(X)[1:p, ] / sqrt(N - 1);
   R_x_inverse = inverse(R_x);
 
   // thin and scale the QR decomposition
-  if (nnp > 0) {
+  if (randeff == 1) {
     Q_z = qr_Q(Znp)[, 1:nnp] * sqrt(N - 1);
     R_z = qr_R(Znp)[1:nnp, ] / sqrt(N - 1);
     R_z_inverse = inverse(R_z);    
   } 
 
+  if (randint == 1) {
+    q_rint = 1;
+    q_reff = q-1;
+  } else {
+    q_rint = 0;
+    q_reff = q;
+  }
 
 }
 
@@ -113,7 +121,7 @@ parameters {
  vector[nnp] tau[ny];
 
  // residual sd
- vector<lower=0>[q-1] lambda[ny];
+ vector<lower=0>[q_reff] lambda[ny];
  vector<lower=0>[r] eps;
 
  // a parameters
@@ -165,7 +173,7 @@ transformed parameters {
 
   /////////////////////////////////////////////////////////////
   // alternate approach
-  if (q >= 2) {
+  if (randeff == 1) {
     for (l4 in 1:ny) {
       int i = 1;
       for (j4 in 2:q) {
@@ -181,7 +189,7 @@ transformed parameters {
   if (qr == 1) {
       for (jj in 1:ny) {
         beta[jj] = R_x_inverse * theta_b[jj];
-        if (q >= 2) {
+        if (randeff == 1) {
            nonpar[jj] = R_z_inverse * theta_u[jj];
         }
 
@@ -200,7 +208,7 @@ transformed parameters {
     for (kk in 1:nrandint) {
      u[jj][kk] = trans_u_random[kk][jj];
     }
-    if (q >= 2) {
+    if (randeff == 1) {
       for (ll in 1:nnp) {
         u[jj][nrandint+ll] = nonpar[jj][ll]; 
       }      
@@ -248,8 +256,8 @@ model {
     }
     // TODO restore nonparametric
 
-    if (q >= 2) {
-      for (k1 in 1:(q-1)) {
+    if (randeff == 1) {
+      for (k1 in 1:q_reff) {
        if (lambdanum[k1*j1] == 1) {
          lambda[j1, k1] ~ normal(lambda_param[k1*j1, 1], lambda_param[k1*j1, 2]);
        } else if (lambdanum[k1*j1] == 2) {
@@ -273,7 +281,7 @@ model {
       }
       
        // add if nonparametric terms present
-      if (q >= 2) {
+      if (randeff == 1) {
         for (jj in 1:ny) {
           yhat[jj] = yhat[jj] + Q_z[jj]*theta_u[jj]; 
         }    

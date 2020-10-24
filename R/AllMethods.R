@@ -828,8 +828,8 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                         qr = qr + 0,
                         qrsplit = 0,
                         mvindep = mvindep + 0,
-                        random_intercept = object@random_intercept + 0, 
-                        random_effects = (ncol(object@Znp) > 0) + 0, 
+                        randint = object@random_intercept + 0, 
+                        randeff = (ncol(object@Znp) > 0) + 0, 
                         famnum = object@famnum,
                         offset = offset,
                         linknum = object@linknum,
@@ -846,6 +846,9 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                         anum = c(a_distnum, 99999),
                         a_max_params = ncol(a_param),
                         a_param = a_param)
+            
+            print(object@random_intercept)
+            print(ncol(object@Znp) > 0 )
             
             
             if (!object@multresponse & object@famnum == 1 & length(object@Z) == 0) {
