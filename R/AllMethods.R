@@ -863,6 +863,7 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
             print(object@random_intercept + 0)
             print( (ncol(object@Znp) > 0) + 0)
             print(object@zvars)
+            print(ncol(object@Zint))
             
             if (!object@multresponse & object@famnum == 1 & length(object@Z) == 0) {
               res <- rstan::sampling(stanmodels$glm_continuous_with_qr, data = dat, ...)

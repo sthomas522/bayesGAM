@@ -123,7 +123,7 @@ parameters {
  vector[nnp] tau[ny];
 
  // residual sd
- vector<lower=0>[q-1] lambda[ny];
+ vector<lower=0>[q_reff] lambda[ny];
  vector<lower=0>[r] eps;
 
  // a parameters
@@ -183,9 +183,9 @@ transformed parameters {
     }
     for (l4 in 1:ny) {
       int i = 1;
-      for (j4 in (1+zindex):(q_reff+zindex)) {
-        for (k4 in 1:zvars[j4]) {
-          theta_u[l4][i] = tau[l4][i] * lambda[l4][(j4-1)];
+      for (j4 in 1:q_reff) {
+        for (k4 in 1:zvars[j4+zindex]) {
+          theta_u[l4][i] = tau[l4][i] * lambda[l4][j4];
           i = i + 1;
         }
       }
@@ -196,7 +196,7 @@ transformed parameters {
   if (qr == 1) {
       for (jj in 1:ny) {
         beta[jj] = R_x_inverse * theta_b[jj];
-        if (q >= 2) {
+        if (randeff == 1) {
            nonpar[jj] = R_z_inverse * theta_u[jj];
         }
 
@@ -204,7 +204,7 @@ transformed parameters {
     } else {
       for (jj in 1:ny) {
         beta[jj] = theta_b[jj];
-       if (q >= 2) {
+       if (randeff == 1) {
          nonpar[jj] = theta_u[jj];
        }
       }
@@ -212,8 +212,10 @@ transformed parameters {
 
 
   for (jj in 1:ny) {
-    for (kk in 1:nrandint) {
-     u[jj][kk] = trans_u_random[kk][jj];
+    if (randint == 1) {
+      for (kk in 1:nrandint) {
+       u[jj][kk] = trans_u_random[kk][jj];
+      }      
     }
     if (randeff == 1) {
       for (ll in 1:nnp) {
@@ -317,18 +319,20 @@ model {
 }
 
 generated quantities {
-  vector[ny] dhalf_inv;
-  matrix[ny, ny] sigma_u_correlation;
+  vector[randint ? ny:0] dhalf_inv;
+  matrix[randint ? ny:0, randint ? ny:0] sigma_u_correlation;
   vector[N] log_lik[ny];
 
 
   // correlation matrix
-  dhalf_inv = diagonal(sigma_u_random); 
-  for (jj in 1:ny) {
-    dhalf_inv[jj] = 1 / sqrt(dhalf_inv[jj]);
+  if (randint == 1) {
+    dhalf_inv = diagonal(sigma_u_random); 
+    for (jj in 1:ny) {
+      dhalf_inv[jj] = 1 / sqrt(dhalf_inv[jj]);
+    }
+  
+    sigma_u_correlation = quad_form_diag(sigma_u_random, dhalf_inv);
   }
-
-  sigma_u_correlation = quad_form_diag(sigma_u_random, dhalf_inv);
 
   // extract log lik
   for (jj in 1:ny) {
