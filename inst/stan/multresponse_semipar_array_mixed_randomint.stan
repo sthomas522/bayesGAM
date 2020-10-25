@@ -94,7 +94,7 @@ transformed data {
   R_x_inverse = inverse(R_x);
 
   // thin and scale the QR decomposition
-  if (nnp > 0) {
+  if (randeff == 1) {
     Q_z = qr_Q(Znp)[, 1:nnp] * sqrt(N - 1);
     R_z = qr_R(Znp)[1:nnp, ] / sqrt(N - 1);
     R_z_inverse = inverse(R_z);    
@@ -115,15 +115,14 @@ parameters {
  // Define parameters to estimate
  vector[p] theta_b[ny];
 
- // TODO: reverse indices
- matrix[nrandint, ny] trans_u_random;
- vector<lower=0>[ny] lambda_random;
+ matrix[randint ? nrandint:0, randint ? ny:0] u_rint_transpose;
+ vector<lower=0>[ny] lambda_rint;
 
  // nonparametric, if any
- vector[nnp] tau[ny];
+ vector[randeff ? nnp:0] tau[ny];
 
  // residual sd
- vector<lower=0>[q_reff] lambda[ny];
+ vector<lower=0>[q_reff] lambda_reff[ny];
  vector<lower=0>[r] eps;
 
  // a parameters
@@ -131,10 +130,11 @@ parameters {
 }
 
 transformed parameters {
-  vector[nnp] theta_u[ny];
+  vector[randeff ? nnp:0] theta_u[ny];
   vector[p] beta[ny];
   vector[nrandint+nnp] u[ny];
-  vector[nnp] nonpar[ny];
+  vector[randeff ? nnp:0] u_reff[ny];
+  vector[randint ? nrandint:0] u_rint[ny];
   
   /////////////////////////////////////////////////////////////
   // random intercept
@@ -149,7 +149,7 @@ transformed parameters {
         matrix[ny, ny] Dhalf;
     
         // assign LDLT decomposition
-        Dhalf = diag_matrix(lambda_random);
+        Dhalf = diag_matrix(lambda_rint);
         L = diag_matrix(rep_vector(1.0, ny));
         for (ll in 1:1) {
           int iter = 1;
@@ -185,19 +185,18 @@ transformed parameters {
       int i = 1;
       for (j4 in 1:q_reff) {
         for (k4 in 1:zvars[j4+zindex]) {
-          theta_u[l4][i] = tau[l4][i] * lambda[l4][j4];
+          theta_u[l4][i] = tau[l4][i] * lambda_reff[l4][j4];
           i = i + 1;
         }
       }
     }    
   }
 
-
   if (qr == 1) {
       for (jj in 1:ny) {
         beta[jj] = R_x_inverse * theta_b[jj];
         if (randeff == 1) {
-           nonpar[jj] = R_z_inverse * theta_u[jj];
+           u_reff[jj] = R_z_inverse * theta_u[jj];
         }
 
       }
@@ -205,7 +204,7 @@ transformed parameters {
       for (jj in 1:ny) {
         beta[jj] = theta_b[jj];
        if (randeff == 1) {
-         nonpar[jj] = theta_u[jj];
+         u_reff[jj] = theta_u[jj];
        }
       }
   }
@@ -214,12 +213,13 @@ transformed parameters {
   for (jj in 1:ny) {
     if (randint == 1) {
       for (kk in 1:nrandint) {
-       u[jj][kk] = trans_u_random[kk][jj];
+       u[jj][kk] = u_rint_transpose[kk][jj];
+       u_rint[jj][kk] = u_rint_transpose[kk][jj];
       }      
     }
     if (randeff == 1) {
       for (ll in 1:nnp) {
-        u[jj][nrandint+ll] = nonpar[jj][ll]; 
+        u[jj][nrandint+ll] = u_reff[jj][ll]; 
       }      
     }
   }
@@ -228,12 +228,9 @@ transformed parameters {
 }
 
 model {
- // Prior part of Bayesian inference
-
  // off diagonal w prior input
  if (mvindep == 0) {
    for (jj in 1:a_num_offdiagonal) {
-     // a[jj] ~ normal(0, 1e6);
     if (anum[jj] == 1) {
        a[jj] ~ normal(a_param[jj, 1], a_param[jj, 2]);
      } else if (anum[jj] == 2) {
@@ -243,7 +240,7 @@ model {
  }
 
  for (jj in 1:nrandint) {
-    trans_u_random[jj] ~ multi_normal(rep_vector(0.0, ny), sigma_u_random);
+    u_rint_transpose[jj] ~ multi_normal(rep_vector(0.0, ny), sigma_u_random);
  }
 
  for (j1 in 1:r) {
@@ -259,18 +256,17 @@ model {
   // nested loop for multvariate response
   for (j1 in 1:r) {
     if (lambdanum[1] == 1) {
-      lambda_random[j1] ~ normal(lambda_param[j1, 1], lambda_param[j1, 2]);
+      lambda_rint[j1] ~ normal(lambda_param[j1, 1], lambda_param[j1, 2]);
     } else if (lambdanum[1] == 2) {
-      lambda_random[j1] ~ student_t(lambda_param[j1, 1], lambda_param[j1, 2], lambda_param[j1, 3]);
+      lambda_rint[j1] ~ student_t(lambda_param[j1, 1], lambda_param[j1, 2], lambda_param[j1, 3]);
     }
-    // TODO restore nonparametric
 
     if (randeff == 1) {
       for (k1 in 1:q_reff) {
        if (lambdanum[k1*j1] == 1) {
-         lambda[j1, k1] ~ normal(lambda_param[k1*j1, 1], lambda_param[k1*j1, 2]);
+         lambda_reff[j1, k1] ~ normal(lambda_param[k1*j1, 1], lambda_param[k1*j1, 2]);
        } else if (lambdanum[k1*j1] == 2) {
-         lambda[j1, k1] ~ student_t(lambda_param[k1*j1, 1], lambda_param[k1*j1, 2], lambda_param[k1*j1, 3]);
+         lambda_reff[j1, k1] ~ student_t(lambda_param[k1*j1, 1], lambda_param[k1*j1, 2], lambda_param[k1*j1, 3]);
        }
      }
 
@@ -287,7 +283,7 @@ model {
       // multivariate response
       for (jj in 1:ny) {
         if (randint == 1 && randeff == 1) {
-         yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj] + Zint*col(trans_u_random, jj);
+         yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj] + Zint*col(u_rint_transpose, jj);
         } else if (randint == 0 && randeff == 1) {
          yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj];
         } 
@@ -322,7 +318,6 @@ generated quantities {
   vector[randint ? ny:0] dhalf_inv;
   matrix[randint ? ny:0, randint ? ny:0] sigma_u_correlation;
   vector[N] log_lik[ny];
-
 
   // correlation matrix
   if (randint == 1) {
