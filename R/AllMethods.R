@@ -189,6 +189,7 @@ setMethod("initialize", "glmModel",
             if (missing(random_intercept)) {
               if (length(Z) == 0) {
                 random_intercept <- FALSE
+                Zint <- matrix(0, nrow=0, ncol=0)
               } else {
                 stop("must specify if random intercept is present")
               }
@@ -810,6 +811,18 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
             a_param <- t(sapply(a_param, '[', 1:max(sapply(a_param, length))))
             a_param[is.na(a_param)] <- 0
             
+            # Zint dimensions
+            if (object@random_intercept) {
+              Zint <- object@Zint
+              a_num_offdiagonal <- object@r*(object@r-1)/2
+              anum <- c(a_distnum, 99999)
+            } else {
+              Zint <- matrix(0, nrow=0, ncol=0)
+              a_num_offdiagonal <- 0L
+              anum <- integer(0L)
+              a_param <- matrix(0, nrow=0, ncol=0)
+            }
+            
             dat <- list(N = nrow(object@X),
                         p = ncol(object@X),
                         y = y,
@@ -820,7 +833,7 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                         ny = ncol(y),
                         zvars = c(object@zvars, -1e6),
                         Z = object@Z,
-                        Zint = object@Zint, 
+                        Zint = Zint, 
                         Znp = object@Znp, 
                         nnp = ncol(object@Znp), 
                         nrandint = ncol(object@Zint), 
@@ -842,14 +855,13 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                         betanum = c(beta_distnum, 99999),
                         beta_max_params = ncol(beta_param),
                         beta_param = beta_param,
-                        a_num_offdiagonal = object@r*(object@r-1)/2, # number of off-diagonal for multresponse
-                        anum = c(a_distnum, 99999),
+                        a_num_offdiagonal = a_num_offdiagonal, # number of off-diagonal for multresponse
+                        anum = anum,
                         a_max_params = ncol(a_param),
                         a_param = a_param)
             
-            print(object@random_intercept)
-            print(ncol(object@Znp) > 0 )
-            
+            print(object@random_intercept + 0)
+            print( (ncol(object@Znp) > 0) + 0)
             
             if (!object@multresponse & object@famnum == 1 & length(object@Z) == 0) {
               res <- rstan::sampling(stanmodels$glm_continuous_with_qr, data = dat, ...)
@@ -864,8 +876,8 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                 res <- rstan::sampling(stanmodels$multresponse_semipar_array, data = dat, ...)
               }
               else if (object@random_intercept == FALSE) {
-                # res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)
-                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed, data = dat, ...)
+                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)
+                # res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed, data = dat, ...)
               }
               else if (object@random_intercept == TRUE) {
                 res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)

@@ -20,27 +20,26 @@ data {
  int max_col;
  // number of columns for each Z matrix
  int zvars[q+1];
+ // indicator for random intercept;
+ int<lower=0,upper=1> randint;
+ // indicator for random effects;
+ int<lower=0,upper=1> randeff;
  // number of columns for Z intercept
  int<lower=0> nrandint;
  // number of columns for Z nonparametric
  int<lower=0> nnp;
  // random effects design matrix
- matrix[N, nnp] Znp;
+ matrix[randeff ? N:0, randeff ? nnp:0] Znp;
  // random effects random intercept matrix
- matrix[N, nrandint] Zint;
+ matrix[randint ? N:0, randint ? nrandint:0] Zint;
  // matrix[N, max_col] Zarray[q];
  matrix[N, nk] Z;
-
  // indicator whether to use QR decomposition
  int<lower=0,upper=1> qr; // 0 = no, 1 = yes
  // indicator whether to split QR decomposition across multiple matrices
  int<lower=0,upper=1> qrsplit;
  // indicator of multivariate independence
  int<lower=0,upper=1> mvindep;
- // indicator for random intercept;
- int<lower=0,upper=1> randint;
- // indicator for random effects;
- int<lower=0,upper=1> randeff;
  // family number:  1=gaussian, 2=binomial, 3=poisson
  int<lower=1, upper=3> famnum;
  // link number
@@ -69,9 +68,9 @@ data {
 
  // number of off-diagonal
  int a_num_offdiagonal;
- int anum[a_num_offdiagonal+1];
+ int anum[randint ? (a_num_offdiagonal+1):0];
  int a_max_params;
- matrix[a_num_offdiagonal, a_max_params] a_param;
+ matrix[a_num_offdiagonal, randint ? a_max_params:0] a_param;
 }
 
 transformed data {
@@ -114,7 +113,7 @@ parameters {
  vector[p] theta_b[ny];
 
  // TODO: reverse indices
- matrix[nrandint, ny] trans_u_random;
+ matrix[randint ? nrandint:0, randint ? ny:0] trans_u_random;
  vector<lower=0>[ny] lambda_random;
 
  // nonparametric, if any
@@ -133,52 +132,51 @@ transformed parameters {
   vector[p] beta[ny];
   vector[nrandint+nnp] u[ny];
   vector[nnp] nonpar[ny];
+  matrix[mvindep ? 0:ny, mvindep ? 0:ny] sigma_u_random;
   
   /////////////////////////////////////////////////////////////
   // random intercept
   // create diagonal covariance matrix for now
-  matrix[ny, ny] sigma_u_random;
+  if (randint == 1) {
+    // local block
+    for (ll2 in 1:1)
+    {
+      matrix[ny, ny] L;
+      matrix[ny, ny] Dhalf;
   
-
-  // local block
-  for (ll2 in 1:1)
-  {
-    matrix[ny, ny] L;
-    matrix[ny, ny] Dhalf;
-
-    // assign LDLT decomposition
-    Dhalf = diag_matrix(lambda_random);
-    L = diag_matrix(rep_vector(1.0, ny));
-    for (ll in 1:1) {
-      int iter = 1;
-       for (ii in 1:ny) {
-        for (jj in 1:ny) {
-          if (jj > ii) {
-            if (mvindep == 1) {
-              L[jj, ii] = 0;
-            } else {
-              L[jj, ii] = a[iter];  
+      // assign LDLT decomposition
+      Dhalf = diag_matrix(lambda_random);
+      L = diag_matrix(rep_vector(1.0, ny));
+      for (ll in 1:1) {
+        int iter = 1;
+         for (ii in 1:ny) {
+          for (jj in 1:ny) {
+            if (jj > ii) {
+              if (mvindep == 1) {
+                L[jj, ii] = 0;
+              } else {
+                L[jj, ii] = a[iter];  
+              }
+              iter = iter + 1;
             }
-            iter = iter + 1;
           }
         }
       }
+      
+  
+    // sigma_u_random = L * Dhalf * Dhalf * (L');
+    sigma_u_random = tcrossprod(L * Dhalf);
     }
-    
-
-  // sigma_u_random = L * Dhalf * Dhalf * (L');
-  sigma_u_random = tcrossprod(L * Dhalf);
   }
   
-
   /////////////////////////////////////////////////////////////
   // alternate approach
   if (randeff == 1) {
     for (l4 in 1:ny) {
       int i = 1;
-      for (j4 in 2:q) {
+      for (j4 in 1:q_reff) {
         for (k4 in 1:zvars[j4]) {
-          theta_u[l4][i] = tau[l4][i] * lambda[l4][(j4-1)];
+          theta_u[l4][i] = tau[l4][i] * lambda[l4][j4];
           i = i + 1;
         }
       }
@@ -197,7 +195,7 @@ transformed parameters {
     } else {
       for (jj in 1:ny) {
         beta[jj] = theta_b[jj];
-       if (q >= 2) {
+       if (randeff == 1) {
          nonpar[jj] = theta_u[jj];
        }
       }
@@ -233,8 +231,10 @@ model {
    }
  }
 
- for (jj in 1:nrandint) {
-    trans_u_random[jj] ~ multi_normal(rep_vector(0.0, ny), sigma_u_random);
+ if (randint == 1) {
+   for (jj in 1:nrandint) {
+      trans_u_random[jj] ~ multi_normal(rep_vector(0.0, ny), sigma_u_random);
+   }
  }
 
  for (j1 in 1:r) {
@@ -277,15 +277,18 @@ model {
       vector[N] yhat[ny];
       // multivariate response
       for (jj in 1:ny) {
-       yhat[jj] = Q_x*theta_b[jj] + Zint*col(trans_u_random, jj);
+        if (randint == 0 && randeff == 0) {
+          yhat[jj] = Q_x*theta_b[jj];  
+        } else if (randint == 1 && randeff == 0) {
+          yhat[jj] = Q_x*theta_b[jj] + Zint*col(trans_u_random, jj);
+        } else if (randint == 0 && randeff == 1) {
+          yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj]; 
+        } else if (randint == 1 && randeff == 1) {
+          yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj] + Zint*col(trans_u_random, jj); 
+        }
+        
       }
       
-       // add if nonparametric terms present
-      if (randeff == 1) {
-        for (jj in 1:ny) {
-          yhat[jj] = yhat[jj] + Q_z[jj]*theta_u[jj]; 
-        }    
-      }
   
      for (k2 in 1:r) {
         if (epsnum[k2] == 1) {

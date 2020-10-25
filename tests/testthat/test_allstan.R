@@ -60,7 +60,7 @@ test_that("test_each_stan_prog", {
   expect_equal(length(cf5), 60)
   expect_true(all(cf5 != 0))
   
-  # multresponse_semipar_array_mixed_randomint_disccrete
+  # multresponse_semipar_array_mixed_randomint_discrete
   f6 <- bayesGAM(cbind(y1, y2) ~ X.3 + 
                    np(X.1, X.2), 
                  random = ~idnum, 
@@ -76,5 +76,14 @@ test_that("test_each_stan_prog", {
                  family=gaussian, data=dat, 
                  chains=1, iter=500)
   
+  
+  # multresponse_semipar_array_mixed
+  f8 <- bayesGAM(cbind(y1, y2) ~ X.3 + 
+                   np(X.1, X.2), 
+                 data=dat, family=gaussian, 
+                 chains=1, iter=500)
+  cf8 <- coef(f8)
+  expect_equal(length(cf8), 62)
+  expect_true(all(cf8 != 0))
   
 })
