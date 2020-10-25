@@ -73,31 +73,33 @@ data {
  matrix[a_num_offdiagonal, randint ? a_max_params:0] a_param;
 }
 
+
 transformed data {
   // qr for X
   matrix[N, p] Q_x;
   matrix[p, p] R_x;
   matrix[p, p] R_x_inverse;
-  int q_rint;
-  int q_reff;
 
   // qr for Z knots matrices
   matrix[N, nnp] Q_z;
   matrix[nnp, nnp] R_z;
   matrix[nnp, nnp] R_z_inverse;
-  
+
+  int q_reff;
+  int q_rint;
+
   // thin and scale the QR decomposition X
   Q_x = qr_Q(X)[, 1:p] * sqrt(N - 1);
   R_x = qr_R(X)[1:p, ] / sqrt(N - 1);
   R_x_inverse = inverse(R_x);
 
   // thin and scale the QR decomposition
-  if (randeff == 1) {
+  if (nnp > 0) {
     Q_z = qr_Q(Znp)[, 1:nnp] * sqrt(N - 1);
     R_z = qr_R(Znp)[1:nnp, ] / sqrt(N - 1);
     R_z_inverse = inverse(R_z);    
   } 
-
+  
   if (randint == 1) {
     q_rint = 1;
     q_reff = q-1;
@@ -106,6 +108,7 @@ transformed data {
     q_reff = q;
   }
 
+
 }
 
 parameters {
@@ -113,14 +116,14 @@ parameters {
  vector[p] theta_b[ny];
 
  // TODO: reverse indices
- matrix[randint ? nrandint:0, randint ? ny:0] trans_u_random;
+ matrix[nrandint, ny] trans_u_random;
  vector<lower=0>[ny] lambda_random;
 
  // nonparametric, if any
  vector[nnp] tau[ny];
 
  // residual sd
- vector<lower=0>[q_reff] lambda[ny];
+ vector<lower=0>[q-1] lambda[ny];
  vector<lower=0>[r] eps;
 
  // a parameters
@@ -132,51 +135,57 @@ transformed parameters {
   vector[p] beta[ny];
   vector[nrandint+nnp] u[ny];
   vector[nnp] nonpar[ny];
-  matrix[mvindep ? 0:ny, mvindep ? 0:ny] sigma_u_random;
   
   /////////////////////////////////////////////////////////////
   // random intercept
   // create diagonal covariance matrix for now
+  matrix[randint ? ny:0, randint ? ny:0] sigma_u_random;
+
+  // local block
   if (randint == 1) {
-    // local block
-    for (ll2 in 1:1)
-    {
-      matrix[ny, ny] L;
-      matrix[ny, ny] Dhalf;
-  
-      // assign LDLT decomposition
-      Dhalf = diag_matrix(lambda_random);
-      L = diag_matrix(rep_vector(1.0, ny));
-      for (ll in 1:1) {
-        int iter = 1;
-         for (ii in 1:ny) {
-          for (jj in 1:ny) {
-            if (jj > ii) {
-              if (mvindep == 1) {
-                L[jj, ii] = 0;
-              } else {
-                L[jj, ii] = a[iter];  
+     for (ll2 in 1:1)
+      {
+        matrix[ny, ny] L;
+        matrix[ny, ny] Dhalf;
+    
+        // assign LDLT decomposition
+        Dhalf = diag_matrix(lambda_random);
+        L = diag_matrix(rep_vector(1.0, ny));
+        for (ll in 1:1) {
+          int iter = 1;
+           for (ii in 1:ny) {
+            for (jj in 1:ny) {
+              if (jj > ii) {
+                if (mvindep == 1) {
+                  L[jj, ii] = 0;
+                } else {
+                  L[jj, ii] = a[iter];  
+                }
+                iter = iter + 1;
               }
-              iter = iter + 1;
             }
           }
         }
+        
+      // sigma_u_random = L * Dhalf * Dhalf * (L');
+      sigma_u_random = tcrossprod(L * Dhalf);
       }
-      
-  
-    // sigma_u_random = L * Dhalf * Dhalf * (L');
-    sigma_u_random = tcrossprod(L * Dhalf);
-    }
+ 
   }
   
+
   /////////////////////////////////////////////////////////////
   // alternate approach
   if (randeff == 1) {
+    int zindex = 0;
+    if (randint == 1) {
+      zindex = 1;
+    }
     for (l4 in 1:ny) {
       int i = 1;
-      for (j4 in 1:q_reff) {
+      for (j4 in (1+zindex):(q_reff+zindex)) {
         for (k4 in 1:zvars[j4]) {
-          theta_u[l4][i] = tau[l4][i] * lambda[l4][j4];
+          theta_u[l4][i] = tau[l4][i] * lambda[l4][(j4-1)];
           i = i + 1;
         }
       }
@@ -187,7 +196,7 @@ transformed parameters {
   if (qr == 1) {
       for (jj in 1:ny) {
         beta[jj] = R_x_inverse * theta_b[jj];
-        if (randeff == 1) {
+        if (q >= 2) {
            nonpar[jj] = R_z_inverse * theta_u[jj];
         }
 
@@ -195,7 +204,7 @@ transformed parameters {
     } else {
       for (jj in 1:ny) {
         beta[jj] = theta_b[jj];
-       if (randeff == 1) {
+       if (q >= 2) {
          nonpar[jj] = theta_u[jj];
        }
       }
@@ -231,10 +240,8 @@ model {
    }
  }
 
- if (randint == 1) {
-   for (jj in 1:nrandint) {
-      trans_u_random[jj] ~ multi_normal(rep_vector(0.0, ny), sigma_u_random);
-   }
+ for (jj in 1:nrandint) {
+    trans_u_random[jj] ~ multi_normal(rep_vector(0.0, ny), sigma_u_random);
  }
 
  for (j1 in 1:r) {
@@ -277,18 +284,12 @@ model {
       vector[N] yhat[ny];
       // multivariate response
       for (jj in 1:ny) {
-        if (randint == 0 && randeff == 0) {
-          yhat[jj] = Q_x*theta_b[jj];  
-        } else if (randint == 1 && randeff == 0) {
-          yhat[jj] = Q_x*theta_b[jj] + Zint*col(trans_u_random, jj);
+        if (randint == 1 && randeff == 1) {
+         yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj] + Zint*col(trans_u_random, jj);
         } else if (randint == 0 && randeff == 1) {
-          yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj]; 
-        } else if (randint == 1 && randeff == 1) {
-          yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj] + Zint*col(trans_u_random, jj); 
-        }
-        
+         yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj];
+        } 
       }
-      
   
      for (k2 in 1:r) {
         if (epsnum[k2] == 1) {
@@ -345,7 +346,5 @@ generated quantities {
          }
     }
   }
-  
-  
 }
 
