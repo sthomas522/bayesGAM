@@ -48,7 +48,7 @@ test_that("test_each_stan_prog", {
                  data=dat, family=gaussian, 
                  chains=1, iter=500)
   cf4 <- coef(f4)
-  expect_equal(length(cf4), 62)
+  expect_equal(length(cf4), 60)
   expect_true(sum(abs(cf4)) > 0)
   
   # multresponse_semipar_array_mixed_discrete
@@ -85,7 +85,7 @@ test_that("test_each_stan_prog", {
                  data=dat, family=gaussian, 
                  chains=1, iter=500)
   cf8 <- coef(f8)
-  expect_equal(length(cf8), 64)
+  expect_equal(length(cf8), 62)
   expect_true(sum(abs(cf8)) > 0)
   
 })

@@ -513,16 +513,16 @@ public:
             validate_non_negative_index("rint_u_transpose", "(randint ? ny : 0 )", (randint ? ny : 0 ));
             num_params_r__ += ((randint ? nrandint : 0 ) * (randint ? ny : 0 ));
             current_statement_begin__ = 119;
-            validate_non_negative_index("lambda_rint", "ny", ny);
-            num_params_r__ += ny;
+            validate_non_negative_index("lambda_rint", "(logical_eq(randint, 1) ? ny : 0 )", (logical_eq(randint, 1) ? ny : 0 ));
+            num_params_r__ += (logical_eq(randint, 1) ? ny : 0 );
             current_statement_begin__ = 122;
             validate_non_negative_index("tau", "(randeff ? nnp : 0 )", (randeff ? nnp : 0 ));
             validate_non_negative_index("tau", "ny", ny);
             num_params_r__ += ((randeff ? nnp : 0 ) * ny);
             current_statement_begin__ = 125;
-            validate_non_negative_index("lambda_reff", "q_reff", q_reff);
+            validate_non_negative_index("lambda_reff", "(logical_eq(randeff, 1) ? q_reff : 0 )", (logical_eq(randeff, 1) ? q_reff : 0 ));
             validate_non_negative_index("lambda_reff", "ny", ny);
-            num_params_r__ += (q_reff * ny);
+            num_params_r__ += ((logical_eq(randeff, 1) ? q_reff : 0 ) * ny);
             current_statement_begin__ = 126;
             validate_non_negative_index("eps", "r", r);
             num_params_r__ += r;
@@ -596,10 +596,10 @@ public:
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable lambda_rint missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("lambda_rint");
         pos__ = 0U;
-        validate_non_negative_index("lambda_rint", "ny", ny);
-        context__.validate_dims("parameter initialization", "lambda_rint", "vector_d", context__.to_vec(ny));
-        Eigen::Matrix<double, Eigen::Dynamic, 1> lambda_rint(ny);
-        size_t lambda_rint_j_1_max__ = ny;
+        validate_non_negative_index("lambda_rint", "(logical_eq(randint, 1) ? ny : 0 )", (logical_eq(randint, 1) ? ny : 0 ));
+        context__.validate_dims("parameter initialization", "lambda_rint", "vector_d", context__.to_vec((logical_eq(randint, 1) ? ny : 0 )));
+        Eigen::Matrix<double, Eigen::Dynamic, 1> lambda_rint((logical_eq(randint, 1) ? ny : 0 ));
+        size_t lambda_rint_j_1_max__ = (logical_eq(randint, 1) ? ny : 0 );
         for (size_t j_1__ = 0; j_1__ < lambda_rint_j_1_max__; ++j_1__) {
             lambda_rint(j_1__) = vals_r__[pos__++];
         }
@@ -637,11 +637,11 @@ public:
             stan::lang::rethrow_located(std::runtime_error(std::string("Variable lambda_reff missing")), current_statement_begin__, prog_reader__());
         vals_r__ = context__.vals_r("lambda_reff");
         pos__ = 0U;
-        validate_non_negative_index("lambda_reff", "q_reff", q_reff);
+        validate_non_negative_index("lambda_reff", "(logical_eq(randeff, 1) ? q_reff : 0 )", (logical_eq(randeff, 1) ? q_reff : 0 ));
         validate_non_negative_index("lambda_reff", "ny", ny);
-        context__.validate_dims("parameter initialization", "lambda_reff", "vector_d", context__.to_vec(ny,q_reff));
-        std::vector<Eigen::Matrix<double, Eigen::Dynamic, 1> > lambda_reff(ny, Eigen::Matrix<double, Eigen::Dynamic, 1>(q_reff));
-        size_t lambda_reff_j_1_max__ = q_reff;
+        context__.validate_dims("parameter initialization", "lambda_reff", "vector_d", context__.to_vec(ny,(logical_eq(randeff, 1) ? q_reff : 0 )));
+        std::vector<Eigen::Matrix<double, Eigen::Dynamic, 1> > lambda_reff(ny, Eigen::Matrix<double, Eigen::Dynamic, 1>((logical_eq(randeff, 1) ? q_reff : 0 )));
+        size_t lambda_reff_j_1_max__ = (logical_eq(randeff, 1) ? q_reff : 0 );
         size_t lambda_reff_k_0_max__ = ny;
         for (size_t j_1__ = 0; j_1__ < lambda_reff_j_1_max__; ++j_1__) {
             for (size_t k_0__ = 0; k_0__ < lambda_reff_k_0_max__; ++k_0__) {
@@ -736,9 +736,9 @@ public:
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> lambda_rint;
             (void) lambda_rint;  // dummy to suppress unused var warning
             if (jacobian__)
-                lambda_rint = in__.vector_lb_constrain(0, ny, lp__);
+                lambda_rint = in__.vector_lb_constrain(0, (logical_eq(randint, 1) ? ny : 0 ), lp__);
             else
-                lambda_rint = in__.vector_lb_constrain(0, ny);
+                lambda_rint = in__.vector_lb_constrain(0, (logical_eq(randint, 1) ? ny : 0 ));
             current_statement_begin__ = 122;
             std::vector<Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> > tau;
             size_t tau_d_0_max__ = ny;
@@ -755,9 +755,9 @@ public:
             lambda_reff.reserve(lambda_reff_d_0_max__);
             for (size_t d_0__ = 0; d_0__ < lambda_reff_d_0_max__; ++d_0__) {
                 if (jacobian__)
-                    lambda_reff.push_back(in__.vector_lb_constrain(0, q_reff, lp__));
+                    lambda_reff.push_back(in__.vector_lb_constrain(0, (logical_eq(randeff, 1) ? q_reff : 0 ), lp__));
                 else
-                    lambda_reff.push_back(in__.vector_lb_constrain(0, q_reff));
+                    lambda_reff.push_back(in__.vector_lb_constrain(0, (logical_eq(randeff, 1) ? q_reff : 0 )));
             }
             current_statement_begin__ = 126;
             Eigen::Matrix<local_scalar_t__, Eigen::Dynamic, 1> eps;
@@ -1088,7 +1088,7 @@ public:
             current_statement_begin__ = 257;
             for (int j1 = 1; j1 <= r; ++j1) {
                 current_statement_begin__ = 258;
-                if (as_bool((primitive_value(logical_eq(randeff, 1)) || primitive_value(logical_eq(randint, 1))))) {
+                if (as_bool(logical_eq(randint, 1))) {
                     current_statement_begin__ = 259;
                     if (as_bool(logical_eq(get_base1(lambdanum, 1, "lambdanum", 1), 1))) {
                         current_statement_begin__ = 260;
@@ -1232,7 +1232,7 @@ public:
         dims__.push_back((randint ? ny : 0 ));
         dimss__.push_back(dims__);
         dims__.resize(0);
-        dims__.push_back(ny);
+        dims__.push_back((logical_eq(randint, 1) ? ny : 0 ));
         dimss__.push_back(dims__);
         dims__.resize(0);
         dims__.push_back(ny);
@@ -1240,7 +1240,7 @@ public:
         dimss__.push_back(dims__);
         dims__.resize(0);
         dims__.push_back(ny);
-        dims__.push_back(q_reff);
+        dims__.push_back((logical_eq(randeff, 1) ? q_reff : 0 ));
         dimss__.push_back(dims__);
         dims__.resize(0);
         dims__.push_back(r);
@@ -1319,8 +1319,8 @@ public:
                 vars__.push_back(rint_u_transpose(j_1__, j_2__));
             }
         }
-        Eigen::Matrix<double, Eigen::Dynamic, 1> lambda_rint = in__.vector_lb_constrain(0, ny);
-        size_t lambda_rint_j_1_max__ = ny;
+        Eigen::Matrix<double, Eigen::Dynamic, 1> lambda_rint = in__.vector_lb_constrain(0, (logical_eq(randint, 1) ? ny : 0 ));
+        size_t lambda_rint_j_1_max__ = (logical_eq(randint, 1) ? ny : 0 );
         for (size_t j_1__ = 0; j_1__ < lambda_rint_j_1_max__; ++j_1__) {
             vars__.push_back(lambda_rint(j_1__));
         }
@@ -1341,9 +1341,9 @@ public:
         size_t lambda_reff_d_0_max__ = ny;
         lambda_reff.reserve(lambda_reff_d_0_max__);
         for (size_t d_0__ = 0; d_0__ < lambda_reff_d_0_max__; ++d_0__) {
-            lambda_reff.push_back(in__.vector_lb_constrain(0, q_reff));
+            lambda_reff.push_back(in__.vector_lb_constrain(0, (logical_eq(randeff, 1) ? q_reff : 0 )));
         }
-        size_t lambda_reff_j_1_max__ = q_reff;
+        size_t lambda_reff_j_1_max__ = (logical_eq(randeff, 1) ? q_reff : 0 );
         size_t lambda_reff_k_0_max__ = ny;
         for (size_t j_1__ = 0; j_1__ < lambda_reff_j_1_max__; ++j_1__) {
             for (size_t k_0__ = 0; k_0__ < lambda_reff_k_0_max__; ++k_0__) {
@@ -1780,7 +1780,7 @@ public:
                 param_names__.push_back(param_name_stream__.str());
             }
         }
-        size_t lambda_rint_j_1_max__ = ny;
+        size_t lambda_rint_j_1_max__ = (logical_eq(randint, 1) ? ny : 0 );
         for (size_t j_1__ = 0; j_1__ < lambda_rint_j_1_max__; ++j_1__) {
             param_name_stream__.str(std::string());
             param_name_stream__ << "lambda_rint" << '.' << j_1__ + 1;
@@ -1795,7 +1795,7 @@ public:
                 param_names__.push_back(param_name_stream__.str());
             }
         }
-        size_t lambda_reff_j_1_max__ = q_reff;
+        size_t lambda_reff_j_1_max__ = (logical_eq(randeff, 1) ? q_reff : 0 );
         size_t lambda_reff_k_0_max__ = ny;
         for (size_t j_1__ = 0; j_1__ < lambda_reff_j_1_max__; ++j_1__) {
             for (size_t k_0__ = 0; k_0__ < lambda_reff_k_0_max__; ++k_0__) {
@@ -1921,7 +1921,7 @@ public:
                 param_names__.push_back(param_name_stream__.str());
             }
         }
-        size_t lambda_rint_j_1_max__ = ny;
+        size_t lambda_rint_j_1_max__ = (logical_eq(randint, 1) ? ny : 0 );
         for (size_t j_1__ = 0; j_1__ < lambda_rint_j_1_max__; ++j_1__) {
             param_name_stream__.str(std::string());
             param_name_stream__ << "lambda_rint" << '.' << j_1__ + 1;
@@ -1936,7 +1936,7 @@ public:
                 param_names__.push_back(param_name_stream__.str());
             }
         }
-        size_t lambda_reff_j_1_max__ = q_reff;
+        size_t lambda_reff_j_1_max__ = (logical_eq(randeff, 1) ? q_reff : 0 );
         size_t lambda_reff_k_0_max__ = ny;
         for (size_t j_1__ = 0; j_1__ < lambda_reff_j_1_max__; ++j_1__) {
             for (size_t k_0__ = 0; k_0__ < lambda_reff_k_0_max__; ++k_0__) {

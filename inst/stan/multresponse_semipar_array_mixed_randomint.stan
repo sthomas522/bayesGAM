@@ -116,13 +116,13 @@ parameters {
  vector[p] theta_b[ny];
 
  matrix[randint ? nrandint:0, randint ? ny:0] rint_u_transpose;
- vector<lower=0>[ny] lambda_rint;
+ vector<lower=0>[randint == 1 ? ny:0] lambda_rint;
 
  // nonparametric, if any
  vector[randeff ? nnp:0] tau[ny];
 
  // residual sd
- vector<lower=0>[q_reff] lambda_reff[ny];
+ vector<lower=0>[randeff == 1 ? q_reff:0] lambda_reff[ny];
  vector<lower=0>[r] eps;
 
  // a parameters
@@ -255,7 +255,7 @@ model {
 
   // nested loop for multvariate response
   for (j1 in 1:r) {
-    if (randeff == 1 || randint == 1) {
+    if (randint == 1) {
       if (lambdanum[1] == 1) {
         lambda_rint[j1] ~ normal(lambda_param[j1, 1], lambda_param[j1, 2]);
       } else if (lambdanum[1] == 2) {
