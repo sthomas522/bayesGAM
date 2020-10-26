@@ -28,7 +28,7 @@ test_that("test_each_stan_prog", {
   f2 <- bayesGAM(cbind(y1cont, y2cont) ~ 
                    X.1 + X.2 + X.3 + X.4 + X.5, 
                  data=dat, family=gaussian, 
-                 chains=1, iter=500)
+                 chains=1, iter=2000)
   cf2 <- coef(f2)
   expect_equal(length(cf2), 14)
   expect_true(sum(abs(cf2)) > 0)

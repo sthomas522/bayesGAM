@@ -823,6 +823,27 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
               a_param <- matrix(0, nrow=0, ncol=0)
             }
             
+            # Znp dim
+            if (ncol(object@Znp) > 0) {
+              Znp <- object@Znp
+            } else {
+              Znp <- matrix(0, nrow=0, ncol=0)
+            }
+            
+            # Z dim
+            if (ncol(object@Z) > 0) {
+              lambdanum <- c(lambda_distnum, 99999)
+              lambda_max_params <- ncol(lambda_param)
+              zvars <- c(object@zvars, -1e6)
+              Z <- object@Z
+            } else {
+              lambdanum <- integer(0L)
+              lambda_max_params <- 0L
+              lambda_param <- matrix(0, nrow=0, ncol=0)
+              zvars <- integer(0L)
+              Z <- matrix(0, nrow=0, ncol=0)
+            }
+            
             dat <- list(N = nrow(object@X),
                         p = ncol(object@X),
                         y = y,
@@ -831,10 +852,10 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                         q = object@q,
                         nk = ncol(object@Z),
                         ny = ncol(y),
-                        zvars = c(object@zvars, -1e6),
-                        Z = object@Z,
+                        zvars = zvars,
+                        Z = Z,
                         Zint = Zint, 
-                        Znp = object@Znp, 
+                        Znp = Znp, 
                         nnp = ncol(object@Znp), 
                         nrandint = ncol(object@Zint), 
                         max_col = object@max_col,
@@ -846,8 +867,8 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                         famnum = object@famnum,
                         offset = offset,
                         linknum = object@linknum,
-                        lambdanum = c(lambda_distnum, 99999),
-                        lambda_max_params = ncol(lambda_param),
+                        lambdanum = lambdanum,
+                        lambda_max_params = lambda_max_params,
                         lambda_param = lambda_param,
                         epsnum = c(eps_distnum, 99999),
                         eps_max_params = ncol(eps_param),
@@ -862,8 +883,6 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
             
             print(object@random_intercept + 0)
             print( (ncol(object@Znp) > 0) + 0)
-            print(object@zvars)
-            print(ncol(object@Zint))
             
             if (!object@multresponse & object@famnum == 1 & length(object@Z) == 0) {
               res <- rstan::sampling(stanmodels$glm_continuous_with_qr, data = dat, ...)
@@ -875,7 +894,8 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
               res <- rstan::sampling(stanmodels$glm_discrete_mixed_with_qr, data = dat, ...)
             } else if (object@multresponse & object@famnum == 1) {
               if (ncol(object@Z) == 0) {
-                res <- rstan::sampling(stanmodels$multresponse_semipar_array, data = dat, ...)
+                # res <- rstan::sampling(stanmodels$multresponse_semipar_array, data = dat, ...)
+                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)
               }
               else if (object@random_intercept == FALSE) {
                 res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)

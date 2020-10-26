@@ -19,7 +19,7 @@ data {
  // max col of Z
  int max_col;
  // number of columns for each Z matrix
- int zvars[q+1];
+ int zvars[nk>0 ? q+1:0];
  // indicator for random intercept;
  int<lower=0,upper=1> randint;
  // indicator for random effects;
@@ -33,7 +33,7 @@ data {
  // random effects random intercept matrix
  matrix[randint ? N:0, randint ? nrandint:0] Zint;
  // matrix[N, max_col] Zarray[q];
- matrix[N, nk] Z;
+ matrix[nk>0 ? N:0, nk>0 ? nk:0] Z;
  // indicator whether to use QR decomposition
  int<lower=0,upper=1> qr; // 0 = no, 1 = yes
  // indicator whether to split QR decomposition across multiple matrices
@@ -62,9 +62,9 @@ data {
  matrix[p*r, beta_max_params] beta_param;
 
   // lambda for nonparametric
- int lambdanum[q*r+1];
+ int lambdanum[nk>0 ? q*r+1:0];
  int lambda_max_params;
- matrix[q*r, lambda_max_params] lambda_param;
+ matrix[nk>0 ? q*r:0, nk>0 ? lambda_max_params:0] lambda_param;
 
  // number of off-diagonal
  int a_num_offdiagonal;
@@ -132,7 +132,7 @@ parameters {
 transformed parameters {
   vector[randeff ? nnp:0] theta_u[ny];
   vector[p] beta[ny];
-  vector[nrandint+nnp] u[ny];
+  vector[nk>0 ? nrandint+nnp:0] u[ny];
   vector[randeff ? nnp:0] reff_u[ny];
   vector[randint ? nrandint:0] rint_u[ny];
   
@@ -255,10 +255,12 @@ model {
 
   // nested loop for multvariate response
   for (j1 in 1:r) {
-    if (lambdanum[1] == 1) {
-      lambda_rint[j1] ~ normal(lambda_param[j1, 1], lambda_param[j1, 2]);
-    } else if (lambdanum[1] == 2) {
-      lambda_rint[j1] ~ student_t(lambda_param[j1, 1], lambda_param[j1, 2], lambda_param[j1, 3]);
+    if (randeff == 1 || randint == 1) {
+      if (lambdanum[1] == 1) {
+        lambda_rint[j1] ~ normal(lambda_param[j1, 1], lambda_param[j1, 2]);
+      } else if (lambdanum[1] == 2) {
+        lambda_rint[j1] ~ student_t(lambda_param[j1, 1], lambda_param[j1, 2], lambda_param[j1, 3]);
+      }      
     }
 
     if (randeff == 1) {
@@ -286,7 +288,11 @@ model {
          yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj] + Zint*col(rint_u_transpose, jj);
         } else if (randint == 0 && randeff == 1) {
          yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj];
-        } 
+        } else if (randint == 1 && randeff == 0) {
+          yhat[jj] = Q_x*theta_b[jj] +  Zint*col(rint_u_transpose, jj);
+        } else if (randint == 0 && randeff == 0) {
+          yhat[jj] = Q_x*theta_b[jj];
+        }
       }
   
      for (k2 in 1:r) {
@@ -330,19 +336,38 @@ generated quantities {
   }
 
   // extract log lik
-  for (jj in 1:ny) {
-    for (n in 1:N) {
-         if (linknum == 1) {
-           log_lik[jj][n] = normal_lpdf(y[n] | X[n, ]*beta[jj] + Z[n,]*u[jj], eps[jj]);
-         }
-         // log link
-         else if (linknum == 2) {
-           log_lik[jj][n] = normal_lpdf(exp(y[n]) | X[n, ]*beta[jj] + Z[n,]*u[jj], eps[jj]);
-         }
-         // inverse link
-         else if (linknum == 3) {
-           log_lik[jj][n] = normal_lpdf(inv(y[n]) | X[n, ]*beta[jj] + Z[n,]*u[jj], eps[jj]);
-         }
-    }
+  if (randint > 0 || randeff > 0) {
+    for (jj in 1:ny) {
+      for (n in 1:N) {
+           if (linknum == 1) {
+             log_lik[jj][n] = normal_lpdf(y[n] | X[n, ]*beta[jj] + Z[n,]*u[jj], eps[jj]);
+           }
+           // log link
+           else if (linknum == 2) {
+             log_lik[jj][n] = normal_lpdf(exp(y[n]) | X[n, ]*beta[jj] + Z[n,]*u[jj], eps[jj]);
+           }
+           // inverse link
+           else if (linknum == 3) {
+             log_lik[jj][n] = normal_lpdf(inv(y[n]) | X[n, ]*beta[jj] + Z[n,]*u[jj], eps[jj]);
+           }
+      }
+    }    
+  } else {
+    for (jj in 1:ny) {
+      for (n in 1:N) {
+           if (linknum == 1) {
+             log_lik[jj][n] = normal_lpdf(y[n] | X[n, ]*beta[jj], eps[jj]);
+           }
+           // log link
+           else if (linknum == 2) {
+             log_lik[jj][n] = normal_lpdf(exp(y[n]) | X[n, ]*beta[jj], eps[jj]);
+           }
+           // inverse link
+           else if (linknum == 3) {
+             log_lik[jj][n] = normal_lpdf(inv(y[n]) | X[n, ]*beta[jj], eps[jj]);
+           }
+      }
+    }    
   }
+
 }
