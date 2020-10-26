@@ -115,7 +115,7 @@ parameters {
  // Define parameters to estimate
  vector[p] theta_b[ny];
 
- matrix[randint ? nrandint:0, randint ? ny:0] u_rint_transpose;
+ matrix[randint ? nrandint:0, randint ? ny:0] rint_u_transpose;
  vector<lower=0>[ny] lambda_rint;
 
  // nonparametric, if any
@@ -133,8 +133,8 @@ transformed parameters {
   vector[randeff ? nnp:0] theta_u[ny];
   vector[p] beta[ny];
   vector[nrandint+nnp] u[ny];
-  vector[randeff ? nnp:0] u_reff[ny];
-  vector[randint ? nrandint:0] u_rint[ny];
+  vector[randeff ? nnp:0] reff_u[ny];
+  vector[randint ? nrandint:0] rint_u[ny];
   
   /////////////////////////////////////////////////////////////
   // random intercept
@@ -196,7 +196,7 @@ transformed parameters {
       for (jj in 1:ny) {
         beta[jj] = R_x_inverse * theta_b[jj];
         if (randeff == 1) {
-           u_reff[jj] = R_z_inverse * theta_u[jj];
+           reff_u[jj] = R_z_inverse * theta_u[jj];
         }
 
       }
@@ -204,7 +204,7 @@ transformed parameters {
       for (jj in 1:ny) {
         beta[jj] = theta_b[jj];
        if (randeff == 1) {
-         u_reff[jj] = theta_u[jj];
+         reff_u[jj] = theta_u[jj];
        }
       }
   }
@@ -213,13 +213,13 @@ transformed parameters {
   for (jj in 1:ny) {
     if (randint == 1) {
       for (kk in 1:nrandint) {
-       u[jj][kk] = u_rint_transpose[kk][jj];
-       u_rint[jj][kk] = u_rint_transpose[kk][jj];
+       u[jj][kk] = rint_u_transpose[kk][jj];
+       rint_u[jj][kk] = rint_u_transpose[kk][jj];
       }      
     }
     if (randeff == 1) {
       for (ll in 1:nnp) {
-        u[jj][nrandint+ll] = u_reff[jj][ll]; 
+        u[jj][nrandint+ll] = reff_u[jj][ll]; 
       }      
     }
   }
@@ -240,7 +240,7 @@ model {
  }
 
  for (jj in 1:nrandint) {
-    u_rint_transpose[jj] ~ multi_normal(rep_vector(0.0, ny), sigma_u_random);
+    rint_u_transpose[jj] ~ multi_normal(rep_vector(0.0, ny), sigma_u_random);
  }
 
  for (j1 in 1:r) {
@@ -283,7 +283,7 @@ model {
       // multivariate response
       for (jj in 1:ny) {
         if (randint == 1 && randeff == 1) {
-         yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj] + Zint*col(u_rint_transpose, jj);
+         yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj] + Zint*col(rint_u_transpose, jj);
         } else if (randint == 0 && randeff == 1) {
          yhat[jj] = Q_x*theta_b[jj] +  Q_z[jj]*theta_u[jj];
         } 
@@ -346,4 +346,3 @@ generated quantities {
     }
   }
 }
-
