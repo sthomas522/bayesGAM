@@ -7,7 +7,7 @@ test_that("hmc testing", {
                  chains=1, seed=521)
   cf1 <- coef(f1)
   expect_equal(length(cf1), 8)
-  expect_true(all(cf1 != 0))
+  expect_true(sum(abs(cf1)) > 0)
   
   # linear: log
   f2 <- bayesGAM(weight ~ np(height), data = women, iter=500,
@@ -15,7 +15,7 @@ test_that("hmc testing", {
                  chains=1, beta=st(c(35, 0, 4)), seed=521)
   cf2 <- coef(f2)
   expect_equal(length(cf2), 8)
-  expect_true(all(cf2 != 0))
+  expect_true(sum(abs(cf2)) > 0)
   
   
   # linear: sqrt
@@ -25,7 +25,7 @@ test_that("hmc testing", {
                  beta = normal(c(0, 10)))
   cf3 <- coef(f3)
   expect_equal(length(cf3), 8)
-  expect_true(all(cf3 != 0))
+  expect_true(sum(abs(cf3)) > 0)
   
   # binomial models
   set.seed(651)
@@ -42,7 +42,7 @@ test_that("hmc testing", {
 
   cf4 <- coef(f4)
   expect_equal(length(cf4), 5)
-  expect_true(all(cf4 != 0))
+  expect_true(sum(abs(cf4)) > 0)
 
   # binomial: logit2 qr=FALSE
   f5 <- bayesGAM(y ~ . - 1, data=bdat, chains=1, iter=500,
@@ -52,7 +52,7 @@ test_that("hmc testing", {
 
   cf5 <- coef(f5)
   expect_equal(length(cf5), 5)
-  expect_true(all(cf5 != 0))
+  expect_true(sum(abs(cf5)) > 0)
 
   # binomial: probit
   f6 <- bayesGAM(y ~ . - 1, data=bdat, chains=1, iter=500,
@@ -62,7 +62,7 @@ test_that("hmc testing", {
 
   cf6 <- coef(f6)
   expect_equal(length(cf6), 5)
-  expect_true(all(cf6 != 0))
+  expect_true(sum(abs(cf6)) > 0)
 
   # binomial: cauchit
   f7 <- bayesGAM(y ~ . - 1, data=bdat, chains=1, iter=500,
@@ -72,7 +72,7 @@ test_that("hmc testing", {
 
   cf7 <- coef(f7)
   expect_equal(length(cf7), 5)
-  expect_true(all(cf7 != 0))
+  expect_true(sum(abs(cf7)) > 0)
   
 
   # binomial: logit3 with . in formula
@@ -85,7 +85,7 @@ test_that("hmc testing", {
 
   cf8 <- coef(f8)
   expect_equal(length(cf8), 6)
-  expect_true(all(cf8 != 0))
+  expect_true(sum(abs(cf8)) > 0)
 
   # binomial: cloglog
   data("PimaIndiansDiabetes2", package = "mlbench")
@@ -97,7 +97,7 @@ test_that("hmc testing", {
 
   cf9 <- coef(f9)
   expect_equal(length(cf9), 4)
-  expect_true(all(cf9 != 0))
+  expect_true(sum(abs(cf9)) > 0)
 
   # Poisson: log
   ## Dobson (1990) Page 93: Randomized Controlled Trial :
@@ -114,7 +114,7 @@ test_that("hmc testing", {
 
   cf10 <- coef(f10)
   expect_equal(length(cf10), 5)
-  expect_true(all(cf10 != 0))
+  expect_true(sum(abs(cf10)) > 0)
 
   # Poisson: sqrt
   f12 <- bayesGAM(counts ~ outcome + treatment, 
@@ -125,7 +125,7 @@ test_that("hmc testing", {
 
   cf12 <- coef(f12)
   expect_equal(length(cf12), 5)
-  expect_true(all(cf12 != 0))
+  expect_true(sum(abs(cf12)) > 0)
   
   
   # bivariate smoothing
@@ -137,14 +137,14 @@ test_that("hmc testing", {
   
   cf13 <- coef(f13)
   expect_equal(length(cf13), 42)
-  expect_true(all(cf13 != 0))
+  expect_true(sum(abs(cf13)) > 0)
   
   # autoregressive
   f15 <- bayesGAM(lh ~ L(lh), family=gaussian, cores=1, chains=1, 
                   seed=521)
   cf15 <- coef(f15)
   expect_equal(length(cf15), 3)
-  expect_true(all(cf15 != 0))
+  expect_true(sum(abs(cf15)) > 0)
   
   # posterior predict
   set.seed(981)
@@ -175,7 +175,9 @@ test_that("hmc testing", {
   f16 <- bayesGAM(cbind(y1, y2) ~ np(x), random = ~factor(id), data=dat, 
                 chains=1, iter=500)
   
-  expect_equal(length(coef(f16)), 55)
+  cf16 <- coef(f16)
+  expect_equal(length(cf16), 55)
+  expect_true(sum(abs(cf16)) > 0)
 })
 
 
