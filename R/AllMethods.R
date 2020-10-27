@@ -906,10 +906,12 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
               }
             } else if (object@multresponse & object@famnum %in% c(2, 3)) {
               if (ncol(object@Z) == 0) {
-                res <- rstan::sampling(stanmodels$multresponse_semipar_array_discrete, data = dat, ...)
+                #res <- rstan::sampling(stanmodels$multresponse_semipar_array_discrete, data = dat, ...)
+                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint_discrete, data = dat, ...)
               }
               else if (object@random_intercept == FALSE) {
-                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_discrete, data = dat, ...)
+                #res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_discrete, data = dat, ...)
+                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint_discrete, data = dat, ...)
               }
               else if (object@random_intercept == TRUE) {
                 res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint_discrete, data = dat, ...)

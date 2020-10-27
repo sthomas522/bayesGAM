@@ -67,7 +67,7 @@ test_that("test_each_stan_prog", {
                  data=dat, family=binomial, 
                  chains=1, iter=500)
   cf6 <- coef(f6)
-  expect_equal(length(cf6), 113)
+  expect_equal(length(cf6), 111)
   expect_true(sum(abs(cf6)) > 0)
   
   # random intercept only
