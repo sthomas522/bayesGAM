@@ -893,31 +893,10 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
             } else if (!object@multresponse & object@famnum %in% c(2, 3) & length(object@Z) > 0) {
               res <- rstan::sampling(stanmodels$glm_discrete_mixed_with_qr, data = dat, ...)
             } else if (object@multresponse & object@famnum == 1) {
-              if (ncol(object@Z) == 0) {
-                # res <- rstan::sampling(stanmodels$multresponse_semipar_array, data = dat, ...)
-                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)
-              }
-              else if (object@random_intercept == FALSE) {
-                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)
-                # res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed, data = dat, ...)
-              }
-              else if (object@random_intercept == TRUE) {
-                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)
-              }
+              res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)
             } else if (object@multresponse & object@famnum %in% c(2, 3)) {
-              if (ncol(object@Z) == 0) {
-                #res <- rstan::sampling(stanmodels$multresponse_semipar_array_discrete, data = dat, ...)
-                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint_discrete, data = dat, ...)
-              }
-              else if (object@random_intercept == FALSE) {
-                #res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_discrete, data = dat, ...)
-                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint_discrete, data = dat, ...)
-              }
-              else if (object@random_intercept == TRUE) {
-                res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint_discrete, data = dat, ...)
-              }
+              res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint_discrete, data = dat, ...)
             }
-
 
             else {
               stop("model not supported")
