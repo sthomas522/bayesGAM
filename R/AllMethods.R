@@ -885,7 +885,7 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
             print( (ncol(object@Znp) > 0) + 0)
             
             if (!object@multresponse & object@famnum == 1 & length(object@Z) == 0) {
-              res <- rstan::sampling(stanmodels$glm_continuous_with_qr, data = dat, ...)
+              res <- rstan::sampling(stanmodels$glm_continuous_mixed_with_qr, data = dat, ...)
             } else if (!object@multresponse & object@famnum %in% c(2, 3) & length(object@Z) == 0) {
               res <- rstan::sampling(stanmodels$glm_discrete_with_qr, data = dat, ...)
             } else if (!object@multresponse & object@famnum == 1 & length(object@Z) > 0) {
@@ -893,9 +893,9 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
             } else if (!object@multresponse & object@famnum %in% c(2, 3) & length(object@Z) > 0) {
               res <- rstan::sampling(stanmodels$glm_discrete_mixed_with_qr, data = dat, ...)
             } else if (object@multresponse & object@famnum == 1) {
-              res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint, data = dat, ...)
+              res <- rstan::sampling(stanmodels$multresponse_continuous, data = dat, ...)
             } else if (object@multresponse & object@famnum %in% c(2, 3)) {
-              res <- rstan::sampling(stanmodels$multresponse_semipar_array_mixed_randomint_discrete, data = dat, ...)
+              res <- rstan::sampling(stanmodels$multresponse_discrete, data = dat, ...)
             }
 
             else {

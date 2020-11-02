@@ -11,16 +11,16 @@ RcppExport SEXP _rcpp_module_boot_stan_fit4glm_continuous_mixed_with_qr_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4glm_continuous_with_qr_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4glm_discrete_mixed_with_qr_mod();
 RcppExport SEXP _rcpp_module_boot_stan_fit4glm_discrete_with_qr_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4multresponse_semipar_array_mixed_randomint_mod();
-RcppExport SEXP _rcpp_module_boot_stan_fit4multresponse_semipar_array_mixed_randomint_discrete_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4multresponse_continuous_mod();
+RcppExport SEXP _rcpp_module_boot_stan_fit4multresponse_discrete_mod();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rcpp_module_boot_stan_fit4glm_continuous_mixed_with_qr_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4glm_continuous_mixed_with_qr_mod, 0},
     {"_rcpp_module_boot_stan_fit4glm_continuous_with_qr_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4glm_continuous_with_qr_mod, 0},
     {"_rcpp_module_boot_stan_fit4glm_discrete_mixed_with_qr_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4glm_discrete_mixed_with_qr_mod, 0},
     {"_rcpp_module_boot_stan_fit4glm_discrete_with_qr_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4glm_discrete_with_qr_mod, 0},
-    {"_rcpp_module_boot_stan_fit4multresponse_semipar_array_mixed_randomint_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4multresponse_semipar_array_mixed_randomint_mod, 0},
-    {"_rcpp_module_boot_stan_fit4multresponse_semipar_array_mixed_randomint_discrete_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4multresponse_semipar_array_mixed_randomint_discrete_mod, 0},
+    {"_rcpp_module_boot_stan_fit4multresponse_continuous_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4multresponse_continuous_mod, 0},
+    {"_rcpp_module_boot_stan_fit4multresponse_discrete_mod", (DL_FUNC) &_rcpp_module_boot_stan_fit4multresponse_discrete_mod, 0},
     {NULL, NULL, 0}
 };
 
