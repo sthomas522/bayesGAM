@@ -881,13 +881,12 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
                         a_max_params = ncol(a_param),
                         a_param = a_param)
             
-            print(object@random_intercept + 0)
-            print( (ncol(object@Znp) > 0) + 0)
-            
             if (!object@multresponse & object@famnum == 1) {
               res <- rstan::sampling(stanmodels$glmm_continuous, data = dat, ...)
+              # res <- rstan::sampling(stanmodels$multresponse_continuous, data = dat, ...)
             } else if (!object@multresponse & object@famnum %in% c(2, 3)) {
               res <- rstan::sampling(stanmodels$glmm_discrete, data = dat, ...)
+              # res <- rstan::sampling(stanmodels$multresponse_discrete, data = dat, ...)
             } else if (object@multresponse & object@famnum == 1) {
               res <- rstan::sampling(stanmodels$multresponse_continuous, data = dat, ...)
             } else if (object@multresponse & object@famnum %in% c(2, 3)) {
