@@ -99,7 +99,7 @@ pastelim <- function(x, nparam, ...) {
   paste(x[1:nparam], ...)
 }
 
-# Gavin Simpson on stackoverflow:  get name of y
+# get name of y
 getResponse <- function(formula, data=NULL) {
   tt <- terms(formula, data=data)
   vars <- as.character(attr(tt, "variables"))[-1]

@@ -883,10 +883,8 @@ setMethod("bayesGAMfit", signature(object="glmModel"),
             
             if (!object@multresponse & object@famnum == 1) {
               res <- rstan::sampling(stanmodels$glmm_continuous, data = dat, ...)
-              # res <- rstan::sampling(stanmodels$multresponse_continuous, data = dat, ...)
             } else if (!object@multresponse & object@famnum %in% c(2, 3)) {
               res <- rstan::sampling(stanmodels$glmm_discrete, data = dat, ...)
-              # res <- rstan::sampling(stanmodels$multresponse_discrete, data = dat, ...)
             } else if (object@multresponse & object@famnum == 1) {
               res <- rstan::sampling(stanmodels$multresponse_continuous, data = dat, ...)
             } else if (object@multresponse & object@famnum %in% c(2, 3)) {
@@ -1008,10 +1006,6 @@ setMethod("getModelSlots", signature(object="bayesGAMfit"),
               object@model@X           
             } else if (name == "Z") {
               object@model@Z
-            #} else if (name == "Zlst") {
-            #  object@model@Zlst
-            #} else if (name == "Zarray") {
-            #  object@model@Zarray
             } else if (name == "max_col") {
               object@model@max_col
             } else if (name == "y") {
@@ -1051,9 +1045,7 @@ setMethod("getModelSlots", signature(object="bayesGAMfit"),
             } else if (name == "sub_form") {
               object@model@sub_form
             }
-
           })
-
 
 # ------------------ get model slots ---------------------------- # 
 
@@ -1103,7 +1095,6 @@ setMethod("getCovmat", signature(object="bayesGAMfit"),
             } else {
               simvals <- as.matrix(results)
             }
-            
 
             xnms <- colnames(simvals)[grepl("^beta", colnames(simvals), ignore.case = T)]
             znms <- colnames(simvals)[grepl("^u", colnames(simvals), ignore.case = T)]
@@ -1121,8 +1112,6 @@ setMethod("extract", signature("bayesGAMfit"),
           function(object, ...) {
             rstan::extract(as(object, "stanfit"), ...)
           })
-
-
 
 # ---------------- fitted values ---------------------------- #
 
@@ -1160,10 +1149,8 @@ setMethod("coefficients", signature("bayesGAMfit"),
               sims <- as.matrix(object@results)
             }
             
-            # vals <- apply(sims, 2, FUN)
-            vals <- robustbase::colMedians(sims, hasNA=FALSE)
+            vals <- apply(sims, 2, FUN)
 
-            # add ^ to regex
             pars <- paste0("^", params)
 
             whichpars <- unique (grep(paste(pars,collapse="|"),
@@ -1244,7 +1231,6 @@ setMethod("fitted", signature("bayesGAMfit"),
               
             } else {
               # pull coefficients
-              
               fitvals <- X%*%coef_beta
               
               if (object@model@mixed) {
@@ -1386,8 +1372,7 @@ setMethod("createPlotData", signature("bayesGAMfit"),
               
               pdata <-  createSmoothPdata(smoothobj, applylink=applylink, ...)
             }
-            
-            
+    
             return(pdata)
           })
 
@@ -1413,11 +1398,9 @@ setGeneric("smooth", function(object, applylink=TRUE, ...) {
   standardGeneric("smooth")
 })
 
-
 setMethod("smooth", signature("bayesGAMfit"),
           function(object, applylink=TRUE, ...) {
 
-            # pdata <- createPlotData(object, type="smooth",...)
             pdata <- object@pdata
             if (length(pdata) == 0) {
               pdata <- createPlotData(object, type="smooth", applylink=applylink, ...)
@@ -1505,10 +1488,6 @@ setMethod("smooth", signature("bayesGAMfit"),
                                                                         fill = ynm_all[yy])) +
                                                     ggplot2::geom_contour(colour="white", na.rm=TRUE)
 
-                    # p2 <- p2 + ggplot2::theme(legend.title = ggplot2::element_blank())
-                    
-                    # p2 <- p2 + ggplot2::labs(ggplot2::aes(x=grouping, y=grouping))
-                    # p2 <- p2 + ggplot2::xlab("") + ggplot2::ylab("")
                     p2 <- p2 + ggplot2::xlab(labels.list[[2]]) + ggplot2::ylab(labels.list[[1]])
                     p2 <- p2 + ggplot2::scale_fill_distiller(palette="Spectral", na.value="transparent")
                     p2 <- p2 + ggplot2::facet_wrap( ~ grouping, scales="free_x")
@@ -1575,7 +1554,6 @@ setMethod("initialize", "smoothPlotObject",
             xvars_np[ind_trunc_poly_univ] <- 
               paste0(xvars_np[ind_trunc_poly_univ], 1)
             
-            # overwrite NA
             if (length(npargs_v) == 0) {
               xvars_np <- character()
             }
@@ -1616,7 +1594,7 @@ setMethod("createSmoothPdata", signature("smoothPlotObject"),
           function(smoothobj, nvals=100, applylink=TRUE, rg=c(-1.96, 1.96),
                    probs = c(0.025, 0.975),
                    interval = "simulation", ...) {
-            # get back to these var names for X
+            
             betanms <- smoothobj@betanms
             unms <- smoothobj@unms
             betavals <- smoothobj@betavals
@@ -1645,8 +1623,6 @@ setMethod("createSmoothPdata", signature("smoothPlotObject"),
               mcmcres <- as.matrix(smoothobj@results)
             }
             
-            # create Xmeans matrix
-            # static
             Xmeans <- create_xmeans(xvars_static, Xorig, nvals, xvars_np, xvars_npargs,
                                     xvars_bivariate, xvars_basis,
                                     npdegree, has_intercept, betanms)
@@ -1686,7 +1662,6 @@ setMethod("createSmoothPdata", signature("smoothPlotObject"),
 
             pdata <- do.call(rbind, res)
             return(pdata)
-
           })
 
 
@@ -1787,7 +1762,6 @@ setMethod("getSamples", signature("bayesGAMfit"),
             }
 
             # get samples from rstan object
-            # mcmcres <- as.matrix(results)
             if (length(object@mcmcres) > 0) {
               mcmcres <- object@mcmcres  
             } else {
@@ -1805,7 +1779,6 @@ setMethod("getSamples", signature("bayesGAMfit"),
             # condition on famnum
             xnms <- colnames(mcmcres)[grepl("^beta", colnames(mcmcres), ignore.case = TRUE)]
             has_random_effects <- grepl("^u", colnames(mcmcres), ignore.case = TRUE)
-            
             
             if (any(has_random_effects)) {
               znms <- colnames(mcmcres)[has_random_effects]
@@ -1837,7 +1810,6 @@ setMethod("getSamples", signature("stanfit"),
             }
             
             # get samples from rstan object
-            
             if (is.null(results) | length(results) == 0) {
               mcmcres <- as.matrix(object)  
             } else {
@@ -1879,7 +1851,6 @@ setMethod("getSamples", signature("glmModel"),
   }
   
   # get samples from rstan object
-  # mcmcres <- as.matrix(results)
   mcmcres <- results
   nsim <- nrow(mcmcres)
   
@@ -1892,7 +1863,6 @@ setMethod("getSamples", signature("glmModel"),
   # condition on famnum
   xnms <- colnames(mcmcres)[grepl("^beta", colnames(mcmcres), ignore.case = TRUE)]
   has_random_effects <- grepl("^u", colnames(mcmcres), ignore.case = TRUE)
-  
   
   if (any(has_random_effects)) {
     znms <- colnames(mcmcres)[has_random_effects]
@@ -2976,7 +2946,6 @@ setMethod("predict", signature(object="bayesGAMfit"),
   nvals <- nrow(newdata)
   r <- object@model@r
   y <- object@model@y
-  # results <- object@results # stanfit
   if (length(object@mcmcres) > 0) {
     mcmcres <- object@mcmcres  
   } else {

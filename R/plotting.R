@@ -23,7 +23,6 @@ create_xmeans <- function(xvars_static, Xorig, nvals, xvars_np, xvars_npargs,
   X2 <- NULL
   X3 <- NULL
   
-  
   if (length(xvars_np) > 0) {
     # tps
     xvars_np_tps <- unlist(xvars_npargs[xvars_basis == "tps"])
@@ -67,7 +66,6 @@ create_xmeans <- function(xvars_static, Xorig, nvals, xvars_np, xvars_npargs,
     }
   }
   
-  
 
   Xmeans <- cbind(X1, X1b, X2, X3)
   if (has_intercept) {
@@ -88,14 +86,12 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
                                       interval = "simulation", multresponse, mcmcres) {
 
   
- 
   # classify type of variable
   if (length(xnm) == 2) {
     type <- "bivariate"
   } else if (xnm %in% xvars_static) {
     type <- "static"
   } else {
-    # which_np_var <- which(xnm %in% xvars_np)
     which_np_var <- which(xvars_np %in% xnm)
     type <- xvars_basis[which_np_var]
     degree <- npdegree[which_np_var]
@@ -117,11 +113,9 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
     Xplot[, which(colnames(Xplot) %in%  colnames(Xtpoly))] <- Xtpoly
   }
   
-  # which X variables are non-parametric
   Zplot <- NULL
   if (length(xvars_np) > 0) {
     
-    # which univariate
     univariate <- sapply(xvars_npargs, length) == 1
     knots_univ <- knots[univariate]
     xvars_basis_univ <- xvars_basis[univariate]
@@ -137,13 +131,11 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
     Zplot <- do.call(cbind, lapply(npres, function(xx) xx$Z))
   }
   
-  # losing xstatic here
   Zplot2 <- NULL
 
   if (length(xvars_bivariate) > 0) {
     which_bivariate <- sapply(xvars_npargs, length) == 2
 
-    # check bivariate vars
     knots_bivariate <- knots[which_bivariate]
 
     Xbivdatlst <- lapply(xvars_bivariate, function(xx) {
@@ -161,7 +153,6 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
     xplotvals <- Xplotbiv[, 2]
     yplotvals <- Xplotbiv[, 3]
 
-    # bivariate column numbers
     which_bivariate <- sapply(xvars_npargs, length) == 2
     xvars_npargs_biv <- xvars_npargs[which_bivariate]
     
@@ -189,7 +180,6 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
     Z1 <- matrix(0, nrow=nrow(Zplot2), ncol=zvars[1])
   } 
   
-  # Zplot mx: match dimensions of Zplot2 bivariate
   if (type == "bivariate" & !is.null(Zplot)) {
 
     zvals <- colMeans(Zplot)
@@ -230,7 +220,7 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
 
     #------------------------------------------------------------------
     #
-    # multresponse: modifications
+    # multresponse
     #
     #------------------------------------------------------------------
 
@@ -334,7 +324,6 @@ create_bivariate_smooth <-function(X, knots, nvals) {
 }
 
 # plot predictions
-
 ypred_plot <- function(object, lower.prob=0.025, upper.prob=0.975, ...) {
   
   ypredlst <- object@pp

@@ -90,7 +90,6 @@ bayesGAM <- function (formula, random=NULL,
     stop("'family' not recognized")
   }
 
-  # use just 2 stan files
   # family numbers
   # 1 = gaussian
   # 2 = binomial
@@ -153,7 +152,6 @@ bayesGAM <- function (formula, random=NULL,
 
   mf2 <- eval(mf2, Senv)
   
-  # get NA values from design matrix
   not.na.obs <- complete.cases(mf2)
   
   mf[[1L]] <- quote(stats::model.frame)
