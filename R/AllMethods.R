@@ -1916,7 +1916,7 @@ setMethod("show", "bayesGAMfit",
             }
 
             default_pars <- stanobj@sim$pars_oi
-            pars <- default_pars[default_pars %in% c("beta", "eps", "lambda_rint", "lambda_reff", object@model@names_beta, "a")]
+            pars <- default_pars[default_pars %in% c("beta", "eps", "lambda", object@model@names_beta, "a")]
             print(x=stanobj, pars=pars)
           })
 
