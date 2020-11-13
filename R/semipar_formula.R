@@ -367,10 +367,6 @@ bayesGAM <- function (formula, random=NULL,
                     offset = offset,
                     spcontrol = spcontrol)
 
-
-  # get covariance matrix
-  # spResults <- getCovmat(spResults)
-  
   if (store_plot_data) {
     spResults@mcmcres <- as.matrix(spResults@results)
     spResults@pdata <- createPlotData(spResults, type="smooth")  
