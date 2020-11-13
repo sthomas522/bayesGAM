@@ -23,7 +23,7 @@ Creates a correlation plot of the multivariate responses based on \code{corrplot
 require(MASS)
 sig <- matrix(c(1, 0.5, 0.5, 1), ncol=2)
 set.seed(123)
-Y <- mvrnorm(40, mu=c(-2, 2), Sigma=sig)
+Y <- mvrnorm(50, mu=c(-2, 2), Sigma=sig)
 dat <- data.frame(id = rep(1:5, each=10),
                   y1 = Y[, 1], 
                   y2 = Y[, 2])
