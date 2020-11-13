@@ -123,7 +123,7 @@ test_that("hmc testing", {
   # predict
   set.seed(432)
   f <- bayesGAM(weight ~ np(height), data = women,
-                family = gaussian, iter=1000)
+                family = gaussian, iter=500, chains=1)
   newheights <- with(women, rnorm(10, mean = mean(height)), sd=sd(height))
   women2 <- data.frame(height=newheights)
   

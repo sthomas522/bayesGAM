@@ -50,15 +50,6 @@ test_that("test_each_stan_prog", {
   expect_equal(length(cf5), 60)
   expect_true(sum(abs(cf5)) > 0)
   
-  f6 <- bayesGAM(cbind(y1, y2) ~ X.3 + 
-                   np(X.1, X.2), 
-                 random = ~idnum, 
-                 data=dat, family=binomial, 
-                 chains=1, iter=500)
-  cf6 <- coef(f6)
-  expect_equal(length(cf6), 111)
-  expect_true(sum(abs(cf6)) > 0)
-  
   # multresponse_semipar_array_mixed
   f8 <- bayesGAM(cbind(y1, y2) ~ X.3 + 
                    np(X.1, X.2), 
