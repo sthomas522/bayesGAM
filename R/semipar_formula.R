@@ -186,7 +186,6 @@ bayesGAM <- function (formula, random=NULL,
     matrix(, NROW(Y), 0L)
   }
 
-
   # check for random intercept
   e1 <- environment(mf$formula)
   assign("L", L, envir = e1)
@@ -232,7 +231,7 @@ bayesGAM <- function (formula, random=NULL,
       }
       res
     })
-
+    
     npargs <- lapply(allnp, function(xx) xx$Xnms)
 
     allZ <- lapply(allnp, function(xx) xx$Z)
@@ -245,7 +244,6 @@ bayesGAM <- function (formula, random=NULL,
     names(allknots) <- npt
   }
   
-
   X <- cbind(X, Xnp)
   Zlst <- c(Zlst, allZ)
 
@@ -258,8 +256,7 @@ bayesGAM <- function (formula, random=NULL,
     zvars <- sapply(Zlst, ncol)
     Z <- do.call(cbind, Zlst)
   }
-
-
+  
   mixed <- length(Z) > 0
 
   # name for dependent variable
@@ -276,7 +273,7 @@ bayesGAM <- function (formula, random=NULL,
     } else {
       Y <- Y[whichcomplete]
     }
-    X <- X[whichcomplete, ]
+    X <- X[whichcomplete, ,drop=FALSE]
     Z <- Z[whichcomplete, ]
     
   } else {
@@ -286,10 +283,9 @@ bayesGAM <- function (formula, random=NULL,
     } else {
       Y <- Y[whichcomplete]
     }
-    X <- X[whichcomplete, ]
+    X <- X[whichcomplete, ,drop=FALSE]
   }
   
-
   # offset
   nobs <- NROW(Y)
   if (is.null(offset))
@@ -308,7 +304,6 @@ bayesGAM <- function (formula, random=NULL,
   } else {
     Znp <- matrix(, nrow=0, ncol=0)
   }
-  
   
   spMCMCmodel <- new("glmModel",
                      famnum = famnum,
@@ -374,7 +369,7 @@ bayesGAM <- function (formula, random=NULL,
 
 
   # get covariance matrix
-  spResults <- getCovmat(spResults)
+  # spResults <- getCovmat(spResults)
   
   if (store_plot_data) {
     spResults@mcmcres <- as.matrix(spResults@results)

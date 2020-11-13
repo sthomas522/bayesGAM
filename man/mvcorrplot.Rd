@@ -19,15 +19,21 @@
 Creates a correlation plot of the multivariate responses based on \code{corrplot}
 }
 \examples{
+
+require(MASS)
+sig <- matrix(c(1, 0.5, 0.5, 1), ncol=2)
+set.seed(123)
+Y <- mvrnorm(40, mu=c(-2, 2), Sigma=sig)
 dat <- data.frame(id = rep(1:5, each=10),
-                  y1 = rnorm(50), 
-                  y2 = rexp(50), 
-                  x = runif(50))
-\dontrun{
-f <- bayesGAM(cbind(y1, y2) ~ np(x), random = ~factor(id), data=dat, 
-              chains=1, iter=500)
+                  y1 = Y[, 1], 
+                  y2 = Y[, 2])
+
+f <- bayesGAM(cbind(y1, y2) ~ 1, random = ~factor(id), 
+              data=dat, 
+              a = normal(c(0, 5)), 
+              chains = 1, iter = 500)
 mvcorrplot(f)
-}
+
 }
 \references{
 Taiyun Wei and Viliam Simko (2017). R package \emph{corrplot}: Visualization of a Correlation Matrix (Version 0.84).

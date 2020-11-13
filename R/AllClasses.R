@@ -141,7 +141,6 @@ setClass("glmModel",
 #' @slot model Object of custom type \code{glmModel} with the data and input parameters passed to \code{rstan}
 #' @slot offset Optionally numeric offset for the generalized additive model
 #' @slot spcontrol List of control parameters for \code{bayesGAMfit}
-#' @slot covmat Covariance matrix resulting from the MCMC simulation of the fixed effect parameters \eqn{\beta} and \eqn{u}
 #' @slot mcmcres Matrix of MCMC results for all chains, if plot data is stored
 #' @slot pdata Dataframe for default plot method, if plot data is stored.
 #' @rdname bayesGAMfit
@@ -151,7 +150,6 @@ setClass("bayesGAMfit",
                    model = "glmModel",
                    offset = "numeric",
                    spcontrol = "list",
-                   covmat = "matrix", 
                    mcmcres = "matrix", 
                    pdata = "data.frame"))
 
@@ -176,7 +174,6 @@ setClass("smoothPlotObject",
                    zvars = "integer",
                    Xorig ="matrix",
                    knots= "list",
-                   covmat = "matrix",
                    linkname = "character",
                    names_y = "character",
                    results = "stanfit",

@@ -81,7 +81,7 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
                                       xvars_npargs, xvars_basis,
                                       xvars_bivariate,
                                       npdegree, random_intercept, nvals, knots, zvars,
-                                      betanms, unms, betavals, uvals, covmat, linkname,
+                                      betanms, unms, betavals, uvals, linkname,
                                       applylink, rg, probs, names_y, simresults,
                                       interval = "simulation", multresponse, mcmcres) {
 
@@ -204,18 +204,7 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
   
   invlink <- linkinfo$linkinv
 
-  if (interval == "covmat") {
-    seGrid <- sqrt(diag(Cgrid %*% covmat %*% t(Cgrid)))
-
-    param_vals <- c(betavals, uvals)
-    yfitbase <- Cgrid %*% param_vals
-
-    yfit <- invlink(yfitbase)
-
-    ylower <- invlink(yfitbase + rg[1]*seGrid)
-    yupper <- invlink(yfitbase + rg[2]*seGrid)
-
-  } else if (interval == "simulation") {
+  if (interval == "simulation") {
     simvals <- getSamples(simresults, nsamp=nrow(Cgrid), results=mcmcres)
 
     #------------------------------------------------------------------
@@ -272,7 +261,7 @@ create_single_smooth_data <- function(xnm, Xorig, Xmeans, xvars_static, xvars_np
 
 
   } else {
-    stop("invalid interval parameter.  Must be covmat or simulation")
+    stop("invalid interval parameter")
   }
 
   colnames(Cgrid) <- c(betanms, unms)

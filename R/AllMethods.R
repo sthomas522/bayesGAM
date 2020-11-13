@@ -706,7 +706,7 @@ setMethod("showPrior", signature(object="bayesGAMfit"),
 
 
 setMethod("initialize", "bayesGAMfit",
-          function(.Object, results, model, offset, spcontrol, covmat, ...) {
+          function(.Object, results, model, offset, spcontrol, ...) {
 
             if (missing(offset)) {
               offset <- numeric(0)
@@ -719,7 +719,6 @@ setMethod("initialize", "bayesGAMfit",
             .Object@model <- model
             .Object@offset <- offset
             .Object@spcontrol <- spcontrol
-            .Object@covmat <- matrix(, nrow=0L, ncol=0L)
             .Object@mcmcres <- matrix(, nrow=0L, ncol=0L)
             .Object@pdata <- data.frame()
             return(.Object)
@@ -1077,35 +1076,6 @@ setMethod("getStanResults", signature(object="bayesGAMfit"),
             object@results
           })
 
-# ---------------- calculate covariance matrix ---------------------------- #
-
-setGeneric("getCovmat", function(object, ...) {
-  standardGeneric("getCovmat")
-})
-
-setMethod("getCovmat", signature(object="bayesGAMfit"),
-          function(object, ...) {
-
-            # stan object
-            results <- object@results
-
-            # simvals <- as.matrix(results)
-            if (length(object@mcmcres) > 0) {
-              simvals <- object@mcmcres  
-            } else {
-              simvals <- as.matrix(results)
-            }
-
-            xnms <- colnames(simvals)[grepl("^beta", colnames(simvals), ignore.case = T)]
-            znms <- colnames(simvals)[grepl("^u", colnames(simvals), ignore.case = T)]
-            allnms <- c(xnms, znms)
-            covmat <- cov(simvals)[allnms, allnms]
-            object@covmat <- covmat
-            return(object)
-          })
-
-
-
 # ---------------- rstan extract  ---------------------------- #
 
 setMethod("extract", signature("bayesGAMfit"),
@@ -1315,7 +1285,6 @@ setMethod("createPlotData", signature("bayesGAMfit"),
             npdegree <- model@npdegree
             npbasis <- model@basis
             npknots <- model@knots
-            covmat <- object@covmat
             betavals <- coefficients(object, params="beta")
             betanms <- object@model@names_beta
             uvals <- coefficients(object, params="u")
@@ -1363,7 +1332,6 @@ setMethod("createPlotData", signature("bayesGAMfit"),
                                Xorig = X,
                                knots = npknots,
                                zvars = zvars,
-                               covmat = covmat,
                                linkname = linkname,
                                names_y = names_y,
                                results = results,
@@ -1405,6 +1373,11 @@ setMethod("smooth", signature("bayesGAMfit"),
             if (length(pdata) == 0) {
               pdata <- createPlotData(object, type="smooth", applylink=applylink, ...)
             }
+            
+            if (is.null(pdata)) {
+              stop("plot not available for this model")
+            }
+            
             colnames(pdata) <- make.names(colnames(pdata))
 
             # split dataframe by bivariate
@@ -1512,7 +1485,7 @@ setMethod("initialize", "smoothPlotObject",
           function(.Object, betanms, unms, betavals, uvals, npargs, npbasis, npdegree,
                    xvars, xvars_static, zvals,
                    xvars_npargs, xvars_np, xvars_basis, has_intercept, random_intercept,
-                   Xorig, knots, zvars, covmat, linkname, names_y, results, multresponse,
+                   Xorig, knots, zvars, linkname, names_y, results, multresponse,
                    mcmcres, pdata, ...) {
 
 
@@ -1574,7 +1547,6 @@ setMethod("initialize", "smoothPlotObject",
             .Object@Xorig <- Xorig
             .Object@knots <- knots
             .Object@zvars <- zvars
-            .Object@covmat <- covmat
             .Object@linkname <- linkname
             .Object@names_y <- names_y
             .Object@results <- results
@@ -1611,7 +1583,6 @@ setMethod("createSmoothPdata", signature("smoothPlotObject"),
             Xorig <- smoothobj@Xorig
             knots <- smoothobj@knots
             zvars <- smoothobj@zvars
-            covmat <- smoothobj@covmat
             linkname <- smoothobj@linkname
             names_y <- smoothobj@names_y
             results <- smoothobj@results
@@ -1649,7 +1620,6 @@ setMethod("createSmoothPdata", signature("smoothPlotObject"),
                           unms=unms,
                           betavals=betavals,
                           uvals=uvals,
-                          covmat=covmat,
                           linkname=linkname,
                           applylink=applylink,
                           rg=rg,
@@ -1681,15 +1651,21 @@ setGeneric("mvcorrplot", function(object, ...) {
 #' @name mvcorrplot
 #' @export
 #' @examples
+#' 
+#' require(MASS)
+#' sig <- matrix(c(1, 0.5, 0.5, 1), ncol=2)
+#' set.seed(123)
+#' Y <- mvrnorm(40, mu=c(-2, 2), Sigma=sig)
 #' dat <- data.frame(id = rep(1:5, each=10),
-#'                   y1 = rnorm(50), 
-#'                   y2 = rexp(50), 
-#'                   x = runif(50))
-#' \dontrun{
-#' f <- bayesGAM(cbind(y1, y2) ~ np(x), random = ~factor(id), data=dat, 
-#'               chains=1, iter=500)
+#'                   y1 = Y[, 1], 
+#'                   y2 = Y[, 2])
+#' 
+#' f <- bayesGAM(cbind(y1, y2) ~ 1, random = ~factor(id), 
+#'               data=dat, 
+#'               a = normal(c(0, 5)), 
+#'               chains = 1, iter = 500)
 #' mvcorrplot(f)
-#' }
+#' 
 NULL
 
 #' @rdname mvcorrplot

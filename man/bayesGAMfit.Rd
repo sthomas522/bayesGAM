@@ -26,8 +26,6 @@ Returns object generated from model fit by \code{bayesGAM}
 
 \item{\code{spcontrol}}{List of control parameters for \code{bayesGAMfit}}
 
-\item{\code{covmat}}{Covariance matrix resulting from the MCMC simulation of the fixed effect parameters \eqn{\beta} and \eqn{u}}
-
 \item{\code{mcmcres}}{Matrix of MCMC results for all chains, if plot data is stored}
 
 \item{\code{pdata}}{Dataframe for default plot method, if plot data is stored.}
