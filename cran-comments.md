@@ -19,6 +19,6 @@
 
 * Moved beta and u parameters from generated quantities to transformed parameters in all stan files
 
-* Added additional set of tests to cover all Stan files
+* Added additional set of tests to cover all Stan files, reduced time of other tests. 
 
 * Revised the mvcorrplot example per submission comments, removing \dontrun
