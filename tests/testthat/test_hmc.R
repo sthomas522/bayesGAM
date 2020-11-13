@@ -16,17 +16,7 @@ test_that("hmc testing", {
   cf2 <- coef(f2)
   expect_equal(length(cf2), 8)
   expect_true(sum(abs(cf2)) > 0)
-  
-  
-  # linear: sqrt
-  f3 <- bayesGAM(weight ~ np(height), data = women, iter=500,
-                 family = gaussian(link="sqrt"), 
-                 chains=1, seed=521,
-                 beta = normal(c(0, 10)))
-  cf3 <- coef(f3)
-  expect_equal(length(cf3), 8)
-  expect_true(sum(abs(cf3)) > 0)
-  
+
   # binomial models
   set.seed(651)
   X <- matrix(rnorm(100*5), ncol=5)
@@ -63,17 +53,6 @@ test_that("hmc testing", {
   cf6 <- coef(f6)
   expect_equal(length(cf6), 5)
   expect_true(sum(abs(cf6)) > 0)
-
-  # binomial: cauchit
-  f7 <- bayesGAM(y ~ . - 1, data=bdat, chains=1, iter=500,
-                 family=binomial(link="cauchit"),
-                 spcontrol = list(qr = TRUE), 
-                 seed=521)
-
-  cf7 <- coef(f7)
-  expect_equal(length(cf7), 5)
-  expect_true(sum(abs(cf7)) > 0)
-  
 
   # binomial: logit3 with . in formula
   dat<- data.frame(abs(X),
@@ -116,18 +95,6 @@ test_that("hmc testing", {
   expect_equal(length(cf10), 5)
   expect_true(sum(abs(cf10)) > 0)
 
-  # Poisson: sqrt
-  f12 <- bayesGAM(counts ~ outcome + treatment, 
-                  data=pdata, chains=1, iter=500,
-                  family = poisson(link="sqrt"),
-                  spcontrol = list(qr = TRUE), 
-                  seed=521)
-
-  cf12 <- coef(f12)
-  expect_equal(length(cf12), 5)
-  expect_true(sum(abs(cf12)) > 0)
-  
-  
   # bivariate smoothing
   data(scallop)
   set.seed(982)

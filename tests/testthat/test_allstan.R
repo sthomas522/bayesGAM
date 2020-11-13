@@ -42,16 +42,6 @@ test_that("test_each_stan_prog", {
   expect_equal(length(cf3), 12)
   expect_true(sum(abs(cf3)) > 0)
   
-  # multresponse_semipar_array_mixed
-  f4 <- bayesGAM(cbind(y1cont, y2cont) ~ 
-                   np(X.1, X.2), 
-                 data=dat, family=gaussian, 
-                 chains=1, iter=500)
-  cf4 <- coef(f4)
-  expect_equal(length(cf4), 60)
-  expect_true(sum(abs(cf4)) > 0)
-  
-  # multresponse_semipar_array_mixed_discrete
   f5 <- bayesGAM(cbind(y1, y2) ~ X.3 + 
                    np(X.1, X.2), 
                  data=dat, family=binomial, 
@@ -60,7 +50,6 @@ test_that("test_each_stan_prog", {
   expect_equal(length(cf5), 60)
   expect_true(sum(abs(cf5)) > 0)
   
-  # multresponse_semipar_array_mixed_randomint_discrete
   f6 <- bayesGAM(cbind(y1, y2) ~ X.3 + 
                    np(X.1, X.2), 
                  random = ~idnum, 
@@ -69,15 +58,6 @@ test_that("test_each_stan_prog", {
   cf6 <- coef(f6)
   expect_equal(length(cf6), 111)
   expect_true(sum(abs(cf6)) > 0)
-  
-  # random intercept only
-  f7 <- bayesGAM(y1cont ~ X.1 + X.2 + X.3, 
-                 random = ~idnum, 
-                 family=gaussian, data=dat, 
-                 chains=1, iter=500)
-  cf7 <- coef(f7)
-  expect_equal(length(cf7), 26)
-  expect_true(sum(abs(cf7)) > 0)
   
   # multresponse_semipar_array_mixed
   f8 <- bayesGAM(cbind(y1, y2) ~ X.3 + 
