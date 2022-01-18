@@ -1,6 +1,6 @@
 Package: bayesGAM
 Title: Fit Multivariate Response Generalized Additive Models using Hamiltonian Monte Carlo
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     c(person(given = "Samuel",
              family = "Thomas",
