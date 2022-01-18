@@ -1893,7 +1893,7 @@ setMethod("show", "bayesGAMfit",
 
             default_pars <- stanobj@sim$pars_oi
             pars <- default_pars[default_pars %in% c("beta", "eps", "lambda", object@model@names_beta, "a")]
-            print(x=stanobj, pars=pars)
+            printbg(x=stanobj, pars=pars)
           })
 
 #' Summarizing Model Fits from \code{bayesGAM}

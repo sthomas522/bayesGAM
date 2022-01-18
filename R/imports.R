@@ -1,4 +1,4 @@
-#' @importMethodsFrom rstan plot extract show summary 
+#' @importMethodsFrom rstan plot extract summary
 #' @importFrom cluster clara
 #' @importFrom graphics abline
 #' @importFrom corrplot corrplot.mixed
