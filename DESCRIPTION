@@ -5,7 +5,7 @@ Authors@R:
     c(person(given = "Samuel",
              family = "Thomas",
              role = c("cre", "aut"),
-             email = "samthoma@iu.edu"),
+             email = "samthoma@alumni.iu.edu"),
       person(given = "Wanzhu",
              family = "Tu",
              role = "ctb",
@@ -22,7 +22,7 @@ Description: The 'bayesGAM' package is designed to provide a user friendly optio
     Agresti, Alan (2015) "Foundations of Linear and Generalized Linear Models ISBN: 978-1118730034, 
     Pinheiro, J., Bates, D. (2006) "Mixed-effects Models in S and S-Plus" ISBN: 978-1441903174.
     Ruppert, D., Wand, M. P., & Carroll, R. J. (2003). Semiparametric regression (No. 12). Cambridge university press. ISBN: 978-0521785167.
-Maintainer: Samuel Thomas <samthoma@iu.edu>
+Maintainer: Samuel Thomas <samthoma@alumni.iu.edu>
 Depends: R (>= 3.6)
 License: GPL-3
 Encoding: UTF-8
