@@ -2393,8 +2393,10 @@ setMethod("posterior_predict", signature(object="bayesGAMfit"),
       # retrieve samples from posterior
       thetasamp <- getSamples(object)
       nsamp <- nrow(thetasamp)
-      if (is.null(draws) | draws > nsamp) {
+      if (is.null(draws)) {
         draws <- nsamp
+      } else {
+        draws <- min(draws, nsamp)
       }
       useallsamples <- draws == nsamp
       
