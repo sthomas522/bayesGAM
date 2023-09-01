@@ -11,9 +11,9 @@ data {
  // Number of knots i.e. random effects
  int<lower=0> nk;
   // number of columns for each Z matrix
- int zvars[nk>0 ? q+1:0];
+ array[nk>0 ? q+1:0] int zvars;
  // Variables
- int y[N];
+ array[N] int y;
  // fixed effects design matrix
  matrix[N, p] X;
  // random effects design matrix
@@ -33,19 +33,19 @@ data {
   // link number
  int linknum;
   // offset
- vector[N] offset;
+ vector[N] input_offset;
 
  ////////////////////////////////////////////////////////
  // hyperpriors
  ////////////////////////////////////////////////////////
 
  // lambda
- int lambdanum[nk>0 ? (q+1):0];
+ array[nk>0 ? (q+1):0] int lambdanum;
  int lambda_max_params;
  matrix[nk>0 ? q:0, nk>0 ? lambda_max_params:0] lambda_param;
 
  // beta
- int betanum[p+1];
+ array[p+1] int betanum;
  int beta_max_params;
  matrix[p, beta_max_params] beta_param;
 }
@@ -62,9 +62,9 @@ transformed data {
   matrix[nk, nk] R_z_inverse;
 
   // qr for Z with array of matrices
-  matrix[N, max_col] qz[q];
-  matrix[max_col, max_col] rz[q];
-  matrix[max_col, max_col] rzinv[q];
+  array[q] matrix[N, max_col] qz;
+  array[q] matrix[max_col, max_col] rz;
+  array[q] matrix[max_col, max_col] rzinv;
 
 
   // thin and scale the QR decomposition
@@ -152,37 +152,37 @@ model {
      // logit link
      if (linknum == 4) {
         if (qr == 1) {
-          y ~ bernoulli_logit(Q_x*theta_b + Q_z*theta_u + offset);
+          y ~ bernoulli_logit(Q_x*theta_b + Q_z*theta_u + input_offset);
         } else {
-          y ~ bernoulli_logit(X*theta_b + Z*theta_u + offset);
+          y ~ bernoulli_logit(X*theta_b + Z*theta_u + input_offset);
         }
       // probit link
      } else if (linknum == 5) {
        if (qr == 1) {
-          y ~ bernoulli(Phi(Q_x*theta_b + Q_z*theta_u + offset));
+          y ~ bernoulli(Phi(Q_x*theta_b + Q_z*theta_u + input_offset));
         } else {
-          y ~ bernoulli(Phi(X*theta_b + Z*theta_u + offset));
+          y ~ bernoulli(Phi(X*theta_b + Z*theta_u + input_offset));
         }
       // cauchit link
      } else if (linknum == 6) {
        if (qr == 1) {
-          y ~ bernoulli(atan(Q_x*theta_b + Q_z*theta_u + offset) / pi() + 0.5);
+          y ~ bernoulli(atan(Q_x*theta_b + Q_z*theta_u + input_offset) / pi() + 0.5);
         } else {
-          y ~ bernoulli(atan(X*theta_b + Z*theta_u + offset) / pi() + 0.5);
+          y ~ bernoulli(atan(X*theta_b + Z*theta_u + input_offset) / pi() + 0.5);
         }
       // log link
      } else if (linknum == 2) {
        if (qr == 1) {
-          y ~ bernoulli(exp(Q_x*theta_b + Q_z*theta_u + offset));
+          y ~ bernoulli(exp(Q_x*theta_b + Q_z*theta_u + input_offset));
         } else {
-          y ~ bernoulli(exp(X*theta_b + Z*theta_u + offset));
+          y ~ bernoulli(exp(X*theta_b + Z*theta_u + input_offset));
         }
       // cloglog link
      } else if (linknum == 7) {
        if (qr == 1) {
-          y ~ bernoulli(inv_cloglog(Q_x*theta_b + Q_z*theta_u + offset));
+          y ~ bernoulli(inv_cloglog(Q_x*theta_b + Q_z*theta_u + input_offset));
         } else {
-          y ~ bernoulli(inv_cloglog(X*theta_b + Z*theta_u + offset));
+          y ~ bernoulli(inv_cloglog(X*theta_b + Z*theta_u + input_offset));
         }
      }
     // Poisson
@@ -190,23 +190,23 @@ model {
      // log link
      if (linknum == 2) {
         if (qr == 1) {
-          y ~ poisson_log(Q_x*theta_b + Q_z*theta_u + offset);
+          y ~ poisson_log(Q_x*theta_b + Q_z*theta_u + input_offset);
         } else {
-          y ~ poisson_log(X*theta_b + Z*theta_u + offset);
+          y ~ poisson_log(X*theta_b + Z*theta_u + input_offset);
         }
       // identity link
      } else if (linknum == 1) {
        if (qr == 1) {
-          y ~ poisson(Q_x*theta_b + Q_z*theta_u + offset);
+          y ~ poisson(Q_x*theta_b + Q_z*theta_u + input_offset);
         } else {
-          y ~ poisson(X*theta_b + Z*theta_u + offset);
+          y ~ poisson(X*theta_b + Z*theta_u + input_offset);
         }
       // sqrt link
      } else if (linknum == 8) {
        if (qr == 1) {
-          y ~ poisson(square(Q_x*theta_b + Q_z*theta_u + offset));
+          y ~ poisson(square(Q_x*theta_b + Q_z*theta_u + input_offset));
         } else {
-          y ~ poisson(square(X*theta_b + Z*theta_u + offset));
+          y ~ poisson(square(X*theta_b + Z*theta_u + input_offset));
         }
      }
   
@@ -216,37 +216,37 @@ model {
      // logit link
      if (linknum == 4) {
         if (qr == 1) {
-          y ~ bernoulli_logit(Q_x*theta_b + offset);
+          y ~ bernoulli_logit(Q_x*theta_b + input_offset);
         } else {
-          y ~ bernoulli_logit(X*theta_b + offset);
+          y ~ bernoulli_logit(X*theta_b + input_offset);
         }
       // probit link
      } else if (linknum == 5) {
        if (qr == 1) {
-          y ~ bernoulli(Phi(Q_x*theta_b + offset));
+          y ~ bernoulli(Phi(Q_x*theta_b + input_offset));
         } else {
-          y ~ bernoulli(Phi(X*theta_b + offset));
+          y ~ bernoulli(Phi(X*theta_b + input_offset));
         }
       // cauchit link
      } else if (linknum == 6) {
        if (qr == 1) {
-          y ~ bernoulli(atan(Q_x*theta_b + offset) / pi() + 0.5);
+          y ~ bernoulli(atan(Q_x*theta_b + input_offset) / pi() + 0.5);
         } else {
-          y ~ bernoulli(atan(X*theta_b + offset) / pi() + 0.5);
+          y ~ bernoulli(atan(X*theta_b + input_offset) / pi() + 0.5);
         }
       // log link
      } else if (linknum == 2) {
        if (qr == 1) {
-          y ~ bernoulli(exp(Q_x*theta_b + offset));
+          y ~ bernoulli(exp(Q_x*theta_b + input_offset));
         } else {
-          y ~ bernoulli(exp(X*theta_b + offset));
+          y ~ bernoulli(exp(X*theta_b + input_offset));
         }
       // cloglog link
      } else if (linknum == 7) {
        if (qr == 1) {
-          y ~ bernoulli(inv_cloglog(Q_x*theta_b + offset));
+          y ~ bernoulli(inv_cloglog(Q_x*theta_b + input_offset));
         } else {
-          y ~ bernoulli(inv_cloglog(X*theta_b + offset));
+          y ~ bernoulli(inv_cloglog(X*theta_b + input_offset));
         }
      }
     // Poisson
@@ -254,23 +254,23 @@ model {
      // log link
      if (linknum == 2) {
         if (qr == 1) {
-          y ~ poisson_log(Q_x*theta_b + offset);
+          y ~ poisson_log(Q_x*theta_b + input_offset);
         } else {
-          y ~ poisson_log(X*theta_b + offset);
+          y ~ poisson_log(X*theta_b + input_offset);
         }
       // identity link
      } else if (linknum == 1) {
        if (qr == 1) {
-          y ~ poisson(Q_x*theta_b + offset);
+          y ~ poisson(Q_x*theta_b + input_offset);
         } else {
-          y ~ poisson(X*theta_b + offset);
+          y ~ poisson(X*theta_b + input_offset);
         }
       // sqrt link
      } else if (linknum == 8) {
        if (qr == 1) {
-          y ~ poisson(square(Q_x*theta_b + offset));
+          y ~ poisson(square(Q_x*theta_b + input_offset));
         } else {
-          y ~ poisson(square(X*theta_b + offset));
+          y ~ poisson(square(X*theta_b + input_offset));
         }
      }
   

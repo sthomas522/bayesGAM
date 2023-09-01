@@ -13,14 +13,14 @@ data {
  int<lower=0> nk;
  int<lower=0> ny;
  // matrix[N, ny] y;
- int y[N, ny];
+ array[N, ny] int y;
  // Variables
  // fixed effects design matrix
  matrix[N, p] X;
  // max col of Z
  int max_col;
  // number of columns for each Z matrix
- int zvars[nk>0 ? q+1:0];
+ array[nk>0 ? q+1:0] int zvars;
   // number of columns for Z intercept
  int<lower=0> nrandint;
  // number of columns for Z nonparametric
@@ -52,18 +52,18 @@ data {
  ////////////////////////////////////////////////////////
 
  // beta
- int betanum[p*r+1];
+ array[p*r+1] int betanum;
  int beta_max_params;
  matrix[p*r, beta_max_params] beta_param;
 
   // lambda_reff for nonparametric
- int lambdanum[nk>0 ? q*r+1:0];
+ array[nk>0 ? q*r+1:0] int lambdanum;
  int lambda_max_params;
  matrix[nk>0 ? q*r:0, nk>0 ? lambda_max_params:0] lambda_param;
 
  // number of off-diagonal
  int a_num_offdiagonal;
- int anum[randint ? (a_num_offdiagonal+1):0];
+ array[randint ? (a_num_offdiagonal+1):0] int anum;
  int a_max_params;
  matrix[a_num_offdiagonal, randint ? a_max_params:0] a_param;
 }
@@ -106,27 +106,27 @@ transformed data {
 
 parameters {
  // Define parameters to estimate
- vector[p] theta_b[ny];
+ array[ny] vector[p] theta_b;
 
  matrix[randint ? nrandint:0, randint ? ny:0] rint_u_transpose;
  vector<lower=0>[randint == 1 ? ny:0] lambda_rint;
 
  // nonparametric, if any
- vector[randeff ? nnp:0] tau[ny];
+ array[ny] vector[randeff ? nnp:0] tau;
 
  // residual sd
- vector<lower=0>[randeff == 1 ? q_reff:0] lambda_reff[ny];
+ array[ny] vector<lower=0>[randeff == 1 ? q_reff:0] lambda_reff;
 
  // a parameters
  vector[mvindep ? 0 : a_num_offdiagonal] a;
 }
 
 transformed parameters {
-  vector[randeff ? nnp:0] theta_u[ny];
-  vector[p] beta[ny];
-  vector[nk>0 ? nrandint+nnp:0] u[ny];
-  vector[randeff ? nnp:0] reff_u[ny];
-  vector[randint ? nrandint:0] rint_u[ny];
+  array[ny] vector[randeff ? nnp:0] theta_u;
+  array[ny] vector[p] beta;
+  array[ny] vector[nk>0 ? nrandint+nnp:0] u;
+  array[ny] vector[randeff ? nnp:0] reff_u;
+  array[ny] vector[randint ? nrandint:0] rint_u;
   
   /////////////////////////////////////////////////////////////
   // random intercept
@@ -269,7 +269,7 @@ model {
   // binomial
   if (famnum == 2) {
       
-      vector[N] yhat[ny];
+      array[ny] vector[N] yhat;
         
       // multivariate response
       for (jj in 1:ny) {
@@ -308,7 +308,7 @@ model {
       }
     } else if (famnum == 3) {
       
-      vector[N] yhat[ny];
+      array[ny] vector[N] yhat;
         
       // multivariate response
       for (jj in 1:ny) {
@@ -341,7 +341,7 @@ model {
 generated quantities {
   vector[randint ? ny:0] dhalf_inv;
   matrix[randint ? ny:0, randint ? ny:0] sigma_u_correlation;
-  vector[N] log_lik[ny];
+  array[ny] vector[N] log_lik;
 
   // correlation matrix
   if (randint == 1) {
