@@ -11,7 +11,7 @@ data {
   // Number of knots i.e. random effects
  int<lower=0> nk;
  // number of columns for each Z matrix
- int zvars[nk>0 ? q+1:0];
+ array[nk>0 ? q+1:0] int zvars;
  // Variables
  vector[N] y;
  // fixed effects design matrix
@@ -34,24 +34,24 @@ data {
  // link number
  int linknum;
  // offset
- vector[N] offset;
+ vector[N] input_offset;
 
  ////////////////////////////////////////////////////////
  // hyperpriors
  ////////////////////////////////////////////////////////
 
  // lambda
- int lambdanum[nk>0 ? (q+1):0];
+ array[nk>0 ? (q+1):0] int lambdanum;
  int lambda_max_params;
  matrix[nk>0 ? q:0, nk>0 ? lambda_max_params:0] lambda_param;
 
  // epsilon
- int epsnum[r+1];
+ array[r+1] int epsnum;
  int eps_max_params;
  matrix[r, eps_max_params] eps_param;
 
  // beta
- int betanum[p+1];
+ array[p+1] int betanum;
  int beta_max_params;
  matrix[p, beta_max_params] beta_param;
 }
@@ -68,9 +68,9 @@ transformed data {
   matrix[nk, nk] R_z_inverse;
 
   // qr for Z with array of matrices
-  matrix[N, max_col] qz[q];
-  matrix[max_col, max_col] rz[q];
-  matrix[max_col, max_col] rzinv[q];
+  array[q] matrix[N, max_col] qz;
+  array[q] matrix[max_col, max_col] rz;
+  array[q] matrix[max_col, max_col] rzinv;
 
   // thin and scale the QR decomposition
   Q_x = qr_Q(X)[, 1:p] * sqrt(N - 1);
@@ -166,49 +166,49 @@ model {
     if (randeff == 1 || randint == 1) {
        if (linknum == 1) {
         if (qr == 1) {
-          y ~ normal(Q_x*theta_b + Q_z*theta_u + offset, eps[1]);
+          y ~ normal(Q_x*theta_b + Q_z*theta_u + input_offset, eps[1]);
   
         } else {
-          y ~ normal(X*theta_b + Z*theta_u + offset, eps[1]);
+          y ~ normal(X*theta_b + Z*theta_u + input_offset, eps[1]);
         }
       // log link
       } else if (linknum == 2) {
         if (qr == 1) {
-          y ~ normal(exp(Q_x*theta_b + Q_z*theta_u + offset), eps[1]);
+          y ~ normal(exp(Q_x*theta_b + Q_z*theta_u + input_offset), eps[1]);
   
         } else {
-          y ~ normal(exp(X*theta_b + Z*theta_u + offset), eps[1]);
+          y ~ normal(exp(X*theta_b + Z*theta_u + input_offset), eps[1]);
         }
       // inverse link
       } else if (linknum == 3) {
         if (qr == 1) {
-          y ~ normal(inv(Q_x*theta_b + Q_z*theta_u + offset), eps[1]);
+          y ~ normal(inv(Q_x*theta_b + Q_z*theta_u + input_offset), eps[1]);
         } else {
-          y ~ normal(inv(X*theta_b + Z*theta_u + offset), eps[1]);
+          y ~ normal(inv(X*theta_b + Z*theta_u + input_offset), eps[1]);
         }
       }     
     } else {
       if (linknum == 1) {
         if (qr == 1) {
-          y ~ normal(Q_x*theta_b + offset, eps[1]);
+          y ~ normal(Q_x*theta_b + input_offset, eps[1]);
   
         } else {
-          y ~ normal(X*theta_b + offset, eps[1]);
+          y ~ normal(X*theta_b + input_offset, eps[1]);
         }
       // log link
       } else if (linknum == 2) {
         if (qr == 1) {
-          y ~ normal(exp(Q_x*theta_b + offset), eps[1]);
+          y ~ normal(exp(Q_x*theta_b + input_offset), eps[1]);
   
         } else {
-          y ~ normal(exp(X*theta_b + offset), eps[1]);
+          y ~ normal(exp(X*theta_b + input_offset), eps[1]);
         }
       // inverse link
       } else if (linknum == 3) {
         if (qr == 1) {
-          y ~ normal(inv(Q_x*theta_b + offset), eps[1]);
+          y ~ normal(inv(Q_x*theta_b + input_offset), eps[1]);
         } else {
-          y ~ normal(inv(X*theta_b + offset), eps[1]);
+          y ~ normal(inv(X*theta_b + input_offset), eps[1]);
         }
       }     
     }
